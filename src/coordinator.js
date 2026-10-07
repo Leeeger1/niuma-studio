@@ -475,7 +475,7 @@ export class Coordinator extends EventEmitter {
   async makePlan(text) {
     if (!this.brain()) {
       return {
-        reply: '呜，一个在岗的项目组都没有，傻妞一个人可写不了代码。请先安装并登录 Claude Code（`npm i -g @anthropic-ai/claude-code`）或 Codex（`npm i -g @openai/codex`），或者在配置里接一个 API 项目组，然后重启我。',
+        reply: '呜，一个在岗的项目组都没有，傻妞一个人可写不了代码。点上面的「接入员工」请个员工来吧：Claude Code、Codex 一键安装登录，或者选 DeepSeek、通义、中转站这类 API 填上 Key，哪个都行，接好马上就能开工，不用重启。',
         tasks: [],
       }
     }

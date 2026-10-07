@@ -292,6 +292,8 @@ look: glasses
 
 ## 常见问题
 
+**没有 Claude Code 能用吗？** 能。傻妞自己没有固定的模型：她优先用 Claude 组动脑子（规划、开会拍板、验收、汇报），Claude 组不在岗时自动换成在岗的组里最强的那个。只接一个 DeepSeek、通义或者中转站 API 也能从头干到尾，Codex 也一样。想指定用哪个组，在 `~/.niuma/config.json` 里写 `"brain": "组的 id"`。注意 API 员工要支持工具调用（function calling）才能改文件。
+
 **项目组显示「未到岗」**：命令行组要能在终端里直接运行 `claude --version` / `codex --version`；装在别处就在组配置里写 `"command": "完整路径"`。API 组看提示：没配 Key、Key 被拒绝、或者连不上地址。
 
 **Opus 用不了怎么办？** Claude 组调用时会带上 `--fallback-model sonnet`，Opus 不可用或过载时自动退回 Sonnet。也可以直接改 `models`。
