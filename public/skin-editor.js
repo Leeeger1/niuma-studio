@@ -48,11 +48,13 @@
     ['pot', '花盆'],
     ['ink', '钟和字'],
   ]
-  const WINDOWS = [['sakura', '樱花'], ['city', '城市夜景'], ['cyber', '赛博城市'], ['garden', '花园'], ['sea', '大海'], ['sky', '只有天空'], ['image', '用我的图片']]
+  const WINDOWS = [['sakura', '樱花'], ['city', '城市夜景'], ['cyber', '赛博城市'], ['garden', '花园'], ['sea', '大海'], ['sky', '只有天空'], ['park', '科技园区'], ['mountains', '仙山'], ['space', '太空'], ['image', '用我的图片']]
+  const DECORS = [['none', '没有'], ['park', '园区横幅、打卡机'], ['xianxia', '卷轴、灯笼、红柱'], ['space', '舱壁仪表、警示条']]
   const PARTICLES = [['petals', '花瓣'], ['snow', '雪花'], ['stars', '星光'], ['bubbles', '泡泡'], ['none', '不要']]
+  const ARTS = [['anime', '动漫风'], ['chibi', 'Q 版']]
   const PATTERNS = [['none', '没有'], ['paws', '猫爪'], ['dots', '圆点'], ['stripes', '竖条'], ['grid', '霓虹格子']]
-  const FLAGS = [['catEars', '大家戴猫耳'], ['cat', '办公室养猫'], ['lamps', '工位台灯'], ['neon', '霓虹灯']]
-  const BASE_NAMES = { sakura: '樱花', night: '夜班', neon: '赛博霓虹', neko: '猫耳咖啡', pixel: '像素复古' }
+  const FLAGS = [['catEars', '大家戴猫耳'], ['cat', '办公室养猫'], ['lamps', '工位台灯'], ['neon', '霓虹灯'], ['shock', '出错挨电棍⚡']]
+  const BASE_NAMES = { sakura: '樱花', night: '夜班', neon: '赛博霓虹', neko: '猫耳咖啡', park: '996 园区', xianxia: '修仙宗门', space: '太空站', pixel: '像素复古' }
   const MAX_IMAGE = 4 * 1024 * 1024
 
   let host = null
@@ -108,6 +110,9 @@
         window: 'sakura',
         particles: 'none',
         wallPattern: 'none',
+        art: 'anime',
+        decor: 'none',
+        shock: false,
         catEars: false,
         cat: false,
         lamps: false,
@@ -219,6 +224,8 @@
             <label class="field"><span>窗外</span>${select('room.window', WINDOWS, draft.room.window)}</label>
             <label class="field"><span>飘落</span>${select('room.particles', PARTICLES, draft.room.particles)}</label>
             <label class="field"><span>墙上花纹</span>${select('room.wallPattern', PATTERNS, draft.room.wallPattern)}</label>
+            <label class="field"><span>墙上摆设</span>${select('room.decor', DECORS, draft.room.decor)}</label>
+            <label class="field"><span>角色画风</span>${select('room.art', ARTS, draft.room.art)}</label>
           </div>
           <div class="flags">${FLAGS.map(([k, n]) => `<label class="check"><input type="checkbox" data-k="room.${k}" ${draft.room[k] ? 'checked' : ''}> ${n}</label>`).join('')}</div>
           <div class="grid">${ROOM_MAIN.map(([k, n]) => swatch(`room.${k}`, n, getPath(draft.room, k))).join('')}</div>

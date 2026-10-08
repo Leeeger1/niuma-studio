@@ -28,6 +28,9 @@
     ['night', '夜班'],
     ['neon', '赛博霓虹'],
     ['neko', '猫耳咖啡'],
+    ['park', '996 园区'],
+    ['xianxia', '修仙宗门'],
+    ['space', '太空站'],
     ['pixel', '像素复古'],
   ]
   const LOCAL_SKINS = 'niuma.localSkins'

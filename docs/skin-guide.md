@@ -76,7 +76,7 @@
 | 项 | 意思 | 可以写 |
 |---|---|---|
 | `name` | 皮肤名字，显示在皮肤栏 | 24 个字以内 |
-| `base` | 从哪套内置皮肤改起，没写的项都照它来 | `sakura` 樱花、`night` 夜班、`neon` 赛博霓虹、`neko` 猫耳咖啡、`pixel` 像素复古 |
+| `base` | 从哪套内置皮肤改起，没写的项都照它来 | `sakura` 樱花、`night` 夜班、`neon` 赛博霓虹、`neko` 猫耳咖啡、`park` 996 园区、`xianxia` 修仙宗门、`space` 太空站、`pixel` 像素复古 |
 | `dark` | 深色皮肤 | `true` / `false` |
 | `author` | 作者 | 随便写 |
 | `font` | 标题「牛马工作室」的字体 | 电脑上装了的字体名 |
@@ -98,10 +98,13 @@
 
 | 项 | 意思 | 可以写 |
 |---|---|---|
-| `window` | 窗外风景 | `sakura` 樱花、`city` 城市夜景、`cyber` 赛博城市、`garden` 花园、`sea` 大海、`sky` 只有天空、`image` 用 `images.window` 的图片 |
+| `window` | 窗外风景 | `sakura` 樱花、`city` 城市夜景、`cyber` 赛博城市、`garden` 花园、`sea` 大海、`sky` 只有天空、`park` 科技园区、`mountains` 仙山、`space` 太空、`image` 用 `images.window` 的图片 |
+| `decor` | 墙上摆设 | `park` 园区横幅和打卡机、`xianxia` 卷轴灯笼和红柱、`space` 舱壁仪表和警示条、`none` |
 | `particles` | 飘落效果 | `petals` 花瓣、`snow` 雪花、`stars` 星光、`bubbles` 泡泡、`none` |
 | `wallPattern` | 墙上花纹 | `paws` 猫爪、`dots` 圆点、`stripes` 竖条、`grid` 霓虹格子、`none` |
+| `art` | 角色画风 | `anime` 动漫风（默认）、`chibi` Q 版 |
 | `catEars` / `cat` / `lamps` / `neon` | 大家戴猫耳 / 养猫 / 工位台灯 / 霓虹灯 | `true` / `false` |
+| `shock` | 出错挨电棍：员工出错时傻妞拿电棍过去电一下 | `true` / `false` |
 | `wall` `floor` | 墙、地板（上下渐变） | 两个颜色 `["#…", "#…"]` |
 | `sky` | 窗外天空（上、中、下） | 三个颜色 |
 | `plant` | 盆栽叶子（亮、暗） | 两个颜色 |

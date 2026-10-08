@@ -5,8 +5,8 @@
 ;(function (root) {
   'use strict'
 
-  const BUILTIN = ['sakura', 'night', 'neon', 'neko', 'pixel']
-  const DARK_BASES = ['night', 'neon']
+  const BUILTIN = ['sakura', 'night', 'neon', 'neko', 'park', 'xianxia', 'space', 'pixel']
+  const DARK_BASES = ['night', 'neon', 'space']
 
   // 界面颜色 → CSS 变量
   const COLOR_VARS = {
@@ -34,11 +34,13 @@
     ink: 1, plant: 2, pot: 1,
   }
   const ROOM_CHOICES = {
-    window: ['sakura', 'city', 'cyber', 'garden', 'sea', 'sky', 'image'],
+    window: ['sakura', 'city', 'cyber', 'garden', 'sea', 'sky', 'park', 'mountains', 'space', 'image'],
     particles: ['petals', 'snow', 'stars', 'bubbles', 'none'],
     wallPattern: ['paws', 'dots', 'stripes', 'grid', 'none'],
+    art: ['anime', 'chibi'],
+    decor: ['none', 'park', 'xianxia', 'space'],
   }
-  const ROOM_FLAGS = ['catEars', 'cat', 'lamps', 'neon']
+  const ROOM_FLAGS = ['catEars', 'cat', 'lamps', 'neon', 'shock']
   const IMAGE_KEYS = ['wall', 'window']
   const MAX_IMAGE_CHARS = 6 * 1024 * 1024
 

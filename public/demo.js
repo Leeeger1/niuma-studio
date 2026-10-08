@@ -96,6 +96,19 @@ src/
       }
       await wait(700)
       if (my !== epoch) return
+      // 演示一次出错：第一遍测试挂了，挨了一下（园区皮肤会挨电棍），改完再跑
+      if (t.failOnce && !t.failedOnce) {
+        t.failedOnce = true
+        const a = { kind: 'error', text: t.failOnce, ts: now() }
+        t.activity.push(a)
+        emit({ type: 'activity', id: t.agent, taskId: t.id, ...a })
+        agent(t.agent, { status: 'error', text: t.failOnce, taskId: t.id })
+        await wait(3200)
+        if (my !== epoch) return
+        agent(t.agent, { status: 'working', text: '马上改…', taskId: t.id })
+        await wait(1600)
+        if (my !== epoch) return
+      }
       Object.assign(t, { status: 'done', endedAt: now(), result: t.report })
       if (t.kind === 'review' || t.kind === 'verify') t.verdict = t.pass === false ? 'changes' : 'approve'
       put(t)
@@ -177,7 +190,7 @@ src/
         mk({ id: 't1', title: '搭项目骨架', agent: 'architect', difficulty: 'hard', why: '牵扯整体结构，交给最强的 Opus', prompt: '按会议纪要搭好 Vite 项目骨架和目录。', steps: STEPS.scaffold, report: '骨架搭好：Vite + 原生 JS，src/ui、src/core、src/store 三层，npm run build 通过。' }),
         mk({ id: 't4', title: '写 README 和使用说明', agent: 'writer', difficulty: 'easy', why: '文档活简单，交给便宜的 DeepSeek', prompt: '写 README：怎么安装、运行、使用。', steps: STEPS.docs, report: '写好了 README.md：安装、运行、截图位置、数据存在哪里。' }),
         mk({ id: 't2', title: '记账表单和流水列表', agent: 'frontend', deps: ['t1'], why: '界面活，前端对口', prompt: '实现记账表单、流水列表和分类统计图。只改 src/ui。', steps: STEPS.ui, report: '表单、列表、统计图都做好了，手机上布局正常。' }),
-        mk({ id: 't3', title: '数据存储和统计逻辑', agent: 'backend', deps: ['t1'], why: '数据和逻辑，后端对口', prompt: '实现 records/categories 存取和按月统计。只改 src/store、src/core。', steps: STEPS.core, report: '存储和统计完成，金额按分存整数，8 个测试全部通过。' }),
+        mk({ id: 't3', title: '数据存储和统计逻辑', agent: 'backend', deps: ['t1'], failOnce: '金额精度不对，测试挂了 2 个', why: '数据和逻辑，后端对口', prompt: '实现 records/categories 存取和按月统计。只改 src/store、src/core。', steps: STEPS.core, report: '存储和统计完成，金额按分存整数，8 个测试全部通过。' }),
         mk({ id: 't5', title: '审查主体改动', agent: 'reviewer', kind: 'review', deps: ['t2', 't3'], why: '审查专员，没参与写代码', prompt: '审查 t2、t3 的改动。', steps: STEPS.review, report: '结构清楚，没有阻塞问题。\n\nVERDICT: APPROVE' }),
       ]
     }

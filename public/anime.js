@@ -15,7 +15,6 @@
   const MARGIN = 18
   const PODGAP = 16
   const K = 0.22 // 角色设计坐标 → 场景坐标
-  const FEET = 110 * K
   const TABLE_Y = 212
 
   const SKINS = {
@@ -46,6 +45,27 @@
       desk: '#f7e5ca', deskTop: '#fff5e4', deskEdge: '#d4ad82', chair: '#f7b267', monitor: '#fffbf4', monitorEdge: '#dcc6a8',
       table: '#fff6e8', tableEdge: '#d9b78e', rug: '#f8dcbc', frame: '#fffdf8', frameEdge: '#dcae7e', boss: '#ffdcae', bossEdge: '#f2a04a',
       sky: ['#9fe3cc', '#d9f6e8', '#fff9ec'], ink: '#6a4f36', plant: ['#6cbf7a', '#4f9c5c'], pot: '#e89a5a',
+    },
+    park: {
+      name: '996 科技园区', dark: false, window: 'park', particles: 'none', decor: 'park', shock: true,
+      wall: ['#eef1f5', '#dde2ea'], wainscot: '#c7ceda', trim: '#e23b3b', floor: ['#cfd3da', '#bcc1ca'], floorLine: '#a3a9b4',
+      desk: '#dfe3ea', deskTop: '#f5f7fa', deskEdge: '#98a1ae', chair: '#4a5568', monitor: '#f7f9fc', monitorEdge: '#8a94a3',
+      table: '#e8ebf0', tableEdge: '#98a1ae', rug: '#d65252', frame: '#ffffff', frameEdge: '#8b95a3', boss: '#ffe3e3', bossEdge: '#e23b3b',
+      sky: ['#a3cdf0', '#d3e7f7', '#f0f5fa'], ink: '#3a4250', plant: ['#5aa872', '#3f8656'], pot: '#c8ced8',
+    },
+    xianxia: {
+      name: '修仙宗门', dark: false, window: 'mountains', particles: 'petals', decor: 'xianxia',
+      wall: ['#f7f0e2', '#ecdfc6'], wainscot: '#a8432c', trim: '#d9a441', floor: ['#a87a50', '#93683f'], floorLine: '#76522f',
+      desk: '#c89a6a', deskTop: '#e6c99f', deskEdge: '#7c5636', chair: '#9e2f2a', monitor: '#f5ecd8', monitorEdge: '#8a6a46',
+      table: '#b07a4a', tableEdge: '#6e4a2c', rug: '#9e2f2a', frame: '#7a3b2a', frameEdge: '#4e2318', boss: '#e0b56a', bossEdge: '#9e2f2a',
+      sky: ['#c2e1ee', '#e8f3f1', '#fbf6ea'], ink: '#4a2e1e', plant: ['#4f8f5a', '#356b42'], pot: '#3c5f86',
+    },
+    space: {
+      name: '太空站', dark: true, window: 'space', particles: 'stars', decor: 'space', lamps: false,
+      wall: ['#273246', '#1f2839'], wainscot: '#18202e', trim: '#4fd2ff', floor: ['#384357', '#2c3546'], floorLine: '#55647c',
+      desk: '#4a5568', deskTop: '#5e6b82', deskEdge: '#2b3445', chair: '#4fd2ff', monitor: '#152030', monitorEdge: '#4fd2ff',
+      table: '#3d4a60', tableEdge: '#4fd2ff', rug: '#243453', frame: '#5b677d', frameEdge: '#2b3445', boss: '#3f5a7a', bossEdge: '#4fd2ff',
+      sky: ['#02030a', '#0a0f2e', '#1a1f4c'], ink: '#d8f3ff', plant: ['#47c48a', '#2f8f63'], pot: '#5b677d',
     },
   }
 
@@ -80,6 +100,9 @@
         this.skinId = SKINS[skin] ? skin : 'sakura'
         this.S = SKINS[this.skinId]
       }
+      // 角色画风：anime（默认，动漫风）或 chibi（Q 版）
+      this.art = this.S.art === 'chibi' || !C.arts?.().includes('anime') ? 'chibi' : 'anime'
+      this.FEET = C.feet({ art: this.art }) * K
       this.canvas = scene.querySelector('canvas')
       if (this.canvas) this.canvas.style.display = 'none'
       this.svg = el('svg', { class: `anime-svg skin-${this.skinId}`, preserveAspectRatio: 'xMidYMid meet' })
@@ -119,7 +142,7 @@
     }
 
     look(emp) {
-      return C.lookFor(emp, { catEars: !!this.S.catEars })
+      return C.lookFor(emp, { catEars: !!this.S.catEars, art: this.art === 'anime' ? 'anime' : '' })
     }
 
     portrait(emp) {
@@ -200,6 +223,7 @@
           <radialGradient id="an-lamp" cx=".5" cy="0" r="1"><stop offset="0" stop-color="#ffd98a" stop-opacity=".55"/><stop offset="1" stop-color="#ffd98a" stop-opacity="0"/></radialGradient>
           <filter id="an-glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="2.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
           <filter id="an-gray"><feColorMatrix type="saturate" values="0.15"/></filter>
+          <filter id="an-zap"><feColorMatrix type="matrix" values="0 0 0 0 1  0 0 0 0 0.94  0 0 0 0 0.3  0 0 0 1 0"/></filter>
           <clipPath id="an-clip"><rect width="${W}" height="${H}"/></clipPath>
         </defs>
         <g clip-path="url(#an-clip)">
@@ -274,6 +298,51 @@
       for (const p of this.pods || []) spots.push(p.x - PODGAP / 2)
       for (const x of spots) if (Math.abs(x - this.cx) > CENTERW / 2 + 10) s += this.plant(x, FLOOR_Y + 10)
       if (S.cat) s += this.catTower(MARGIN + 6, FLOOR_Y + 12)
+      if (S.decor) s += this.decor(S.decor, winW)
+      return s
+    }
+
+    /** 主题摆设：挂在两扇窗和中间钟、白板之间的墙上 */
+    decor(kind, winW) {
+      const W = this.W
+      const cx = this.cx
+      const spots = [
+        [MARGIN + 30 + winW + 10, cx - 80],
+        [cx + 104, W - MARGIN - 30 - winW - 10],
+      ].filter(([a, b]) => b - a > 46)
+      let s = ''
+      if (kind === 'park') {
+        const slogans = ['996 是福报', 'KPI 冲冲冲', '今天不努力 明天就下岗', '工位就是家']
+        spots.forEach(([a, b], i) => {
+          const w = Math.min(b - a, 120)
+          const x = (a + b) / 2 - w / 2
+          s += `<g><rect x="${x}" y="14" width="${w}" height="16" fill="#d42f2f"/><rect x="${x}" y="14" width="${w}" height="2" fill="#a61f1f"/><text x="${x + w / 2}" y="25.5" text-anchor="middle" font-size="8.5" font-weight="900" fill="#ffe27a">${slogans[i % slogans.length]}</text>
+            <path d="M${x},14 l-4,-4 M${x + w},14 l4,-4" stroke="#7a1414" stroke-width="1.2"/></g>`
+          if (i === 0 && w > 70) s += `<g transform="translate(${x + 8},40)"><rect width="24" height="30" rx="2" fill="#3a4250"/><rect x="4" y="4" width="16" height="9" rx="1" fill="#8ff0b0"/><text x="12" y="11.4" text-anchor="middle" font-size="5" font-weight="900" fill="#1d4a2c">08:59</text><rect x="6" y="17" width="12" height="9" rx="1" fill="#566072"/><text x="12" y="38" text-anchor="middle" font-size="5.5" fill="#5a6474">打卡</text></g>
+            <g transform="translate(${x + w - 34},40)"><rect width="28" height="32" fill="#fff" stroke="#c9a640" stroke-width="2"/><circle cx="14" cy="13" r="6" fill="#ffd6a8"/><path d="M6,26 q8,-9 16,0Z" fill="#e23b3b"/><text x="14" y="40" text-anchor="middle" font-size="5" fill="#5a6474">月度牛马</text></g>`
+        })
+        // 天花板的日光灯，偶尔闪一下
+        for (let x = 40; x < W - 40; x += 120) s += `<rect class="${x % 240 === 40 ? 'flicker' : ''}" x="${x}" y="2" width="56" height="4" rx="2" fill="#f4fbff" stroke="#c9d3df"/>`
+      } else if (kind === 'xianxia') {
+        const words = [['闭', '关', '修', '炼'], ['道', '法', '自', '然'], ['渡', '劫', '中']]
+        spots.forEach(([a, b], i) => {
+          const x = (a + b) / 2
+          s += `<g transform="translate(${x},12)"><rect x="-11" y="0" width="22" height="66" fill="#fbf4e3" stroke="#8a6a46" stroke-width="1.5"/><rect x="-13" y="-2" width="26" height="4" rx="2" fill="#6e4a2c"/><rect x="-13" y="64" width="26" height="4" rx="2" fill="#6e4a2c"/>
+            ${words[i % words.length].map((c, k) => `<text x="0" y="${14 + k * 13}" text-anchor="middle" font-size="10" font-weight="700" fill="#2c1d12">${c}</text>`).join('')}</g>`
+          for (const dx of [-36, 36]) if (x + dx > a - 10 && x + dx < b + 10) s += `<g class="lantern" transform="translate(${x + dx},10)"><path d="M0,0 v8" stroke="#6e4a2c"/><ellipse cx="0" cy="17" rx="8" ry="10" fill="#d6402e"/><rect x="-5" y="6" width="10" height="3" fill="#d9a441"/><rect x="-5" y="25" width="10" height="3" fill="#d9a441"/><path d="M0,28 v6" stroke="#d9a441" stroke-width="1.5"/></g>`
+        })
+        for (const x of [MARGIN - 4, W - MARGIN - 6]) s += `<rect x="${x}" y="0" width="10" height="${FLOOR_Y}" fill="#a8432c"/><rect x="${x}" y="0" width="10" height="6" fill="#d9a441"/><rect x="${x}" y="${FLOOR_Y - 40}" width="10" height="4" fill="#d9a441"/>`
+      } else if (kind === 'space') {
+        s += `<rect y="0" width="${W}" height="8" fill="#1a2232"/><rect y="7" width="${W}" height="1.5" fill="#4fd2ff" opacity=".6"/>`
+        spots.forEach(([a, b], i) => {
+          const w = Math.min(b - a, 110)
+          const x = (a + b) / 2 - w / 2
+          s += `<g><rect x="${x}" y="16" width="${w}" height="26" rx="3" fill="#121a28" stroke="#4fd2ff" stroke-width="1.2"/><text x="${x + 6}" y="27" font-size="6.5" font-weight="700" fill="#4fd2ff">${i ? '氧气 98%' : '舱段 A-996'}</text>
+            <rect x="${x + 6}" y="31" width="${w - 12}" height="4" rx="2" fill="#24324a"/><rect class="${i ? '' : 'flicker'}" x="${x + 6}" y="31" width="${(w - 12) * (i ? 0.98 : 0.6)}" height="4" rx="2" fill="${i ? '#47c48a' : '#ffb84a'}"/></g>`
+          s += `<g opacity=".8"><rect x="${x}" y="${FLOOR_Y - 46}" width="${w}" height="5" fill="#e0b13a"/>${Array.from({ length: Math.floor(w / 10) }, (_, k) => `<path d="M${x + k * 10},${FLOOR_Y - 41} l5,-5 h4 l-5,5Z" fill="#1a2232"/>`).join('')}</g>`
+        })
+        s += `<path d="M0,${FLOOR_Y - 60} H${W}" stroke="#55647c" stroke-width="3"/><path d="M0,${FLOOR_Y - 54} H${W}" stroke="#3a4558" stroke-width="2"/>`
+      }
       return s
     }
 
@@ -289,6 +358,33 @@
         for (let i = 0; i < 6; i++) v += `<path class="wave" style="animation-delay:-${i * 0.7}s" d="M${(i * 41) % w},${h * 0.66 + (i % 3) * 6} q5,-3 10,0 q5,3 10,0" stroke="#e6f7ff" stroke-width="1.4" fill="none" opacity=".8"/>`
         v += `<path d="M0,${h} Q${w * 0.3},${h - 14} ${w * 0.62},${h - 6} T${w},${h - 8} V${h} Z" fill="#f6dfae"/>`
         v += `<path d="M${w * 0.12},${h - 30} l6,-12 l6,12 Z" fill="#fff" opacity=".95"/><rect x="${w * 0.12 + 5.5}" y="${h - 30}" width="1" height="6" fill="#8a6040"/>`
+      } else if (S.window === 'park') {
+        // 园区：几栋玻璃写字楼、楼顶的大招牌、门口的闸机和保安亭
+        const towers = [[0.02, 0.5, 0.22], [0.26, 0.18, 0.2], [0.5, 0.36, 0.18], [0.72, 0.1, 0.26]]
+        for (const [tx, ty, tw] of towers) {
+          const x0 = w * tx
+          const y0 = h * ty
+          const ww = w * tw
+          v += `<rect x="${x0}" y="${y0}" width="${ww}" height="${h - y0}" fill="#7f9bbb"/><rect x="${x0}" y="${y0}" width="${ww * 0.35}" height="${h - y0}" fill="#9db6d2"/>`
+          for (let yy = y0 + 5; yy < h - 6; yy += 6) v += `<rect x="${x0 + 2}" y="${yy}" width="${ww - 4}" height="1.2" fill="#5d7799" opacity=".55"/>`
+        }
+        v += `<rect x="${w * 0.73}" y="${h * 0.1 - 9}" width="${w * 0.24}" height="9" rx="1.5" fill="#e23b3b"/><text x="${w * 0.85}" y="${h * 0.1 - 2.4}" text-anchor="middle" font-size="6.4" font-weight="900" fill="#fff">牛马科技园</text>`
+        v += `<rect y="${h - 10}" width="${w}" height="10" fill="#c9ced6"/><rect x="${w * 0.12}" y="${h - 22}" width="16" height="13" fill="#eef1f5" stroke="#7c8696"/><text x="${w * 0.12 + 8}" y="${h - 13}" text-anchor="middle" font-size="4.6" fill="#3a4250" font-weight="700">保安</text>`
+        v += `<rect x="${w * 0.42}" y="${h - 16}" width="4" height="7" fill="#556072"/><rect class="barrier" x="${w * 0.42 + 2}" y="${h - 16}" width="${w * 0.2}" height="2.4" fill="#e23b3b"/><rect x="${w * 0.42 + 8}" y="${h - 16}" width="5" height="2.4" fill="#fff"/><rect x="${w * 0.42 + 18}" y="${h - 16}" width="5" height="2.4" fill="#fff"/>`
+      } else if (S.window === 'mountains') {
+        // 仙山：远近几层山、云、飞鹤和一座小塔
+        v += `<circle cx="${w * 0.8}" cy="${h * 0.24}" r="8" fill="#fff3c9" opacity=".9"/>`
+        v += `<path d="M0,${h * 0.62} L${w * 0.14},${h * 0.3} L${w * 0.3},${h * 0.58} L${w * 0.46},${h * 0.22} L${w * 0.64},${h * 0.56} L${w * 0.8},${h * 0.34} L${w},${h * 0.6} V${h} H0Z" fill="#b9cfd6" opacity=".85"/>`
+        v += `<path d="M0,${h * 0.8} L${w * 0.2},${h * 0.5} L${w * 0.36},${h * 0.76} L${w * 0.56},${h * 0.46} L${w * 0.76},${h * 0.78} L${w},${h * 0.56} V${h} H0Z" fill="#7fa3a6"/>`
+        v += `<g fill="#5e3a2a"><rect x="${w * 0.53}" y="${h * 0.36}" width="6" height="12"/><path d="M${w * 0.53 - 4},${h * 0.36} h14 l-7,-6Z M${w * 0.53 - 3},${h * 0.42} h12 l-6,-4Z"/></g>`
+        v += `<g class="clouds" fill="#fff" opacity=".85"><ellipse cx="${w * 0.24}" cy="${h * 0.7}" rx="26" ry="5"/><ellipse cx="${w * 0.7}" cy="${h * 0.62}" rx="30" ry="5"/></g>`
+        v += `<g class="crane" stroke="#3a3a3a" stroke-width="1.2" fill="none" stroke-linecap="round"><path d="M${w * 0.3},${h * 0.2} q4,-4 8,0 q4,-4 8,0"/><path d="M${w * 0.4},${h * 0.14} q3,-3 6,0 q3,-3 6,0"/></g>`
+      } else if (S.window === 'space') {
+        // 舷窗外：星星、带环的行星、地球的弧
+        for (let i = 0; i < 22; i++) v += `<circle class="twinkle" style="animation-delay:${(i * 0.41) % 3}s" cx="${(i * 41) % w}" cy="${(i * 17) % h}" r="${0.5 + (i % 3) * 0.4}" fill="#fff"/>`
+        v += `<circle cx="${w * 0.74}" cy="${h * 0.34}" r="12" fill="#e9a65c"/><circle cx="${w * 0.74 - 3}" cy="${h * 0.34 - 3}" r="12" fill="#f2c58a" opacity=".5"/><ellipse cx="${w * 0.74}" cy="${h * 0.34}" rx="22" ry="5" fill="none" stroke="#f7dcae" stroke-width="2" transform="rotate(-18 ${w * 0.74} ${h * 0.34})"/>`
+        v += `<path d="M0,${h} Q${w * 0.3},${h * 0.66} ${w * 0.62},${h} Z" fill="#2f78d6"/><path d="M${w * 0.08},${h} Q${w * 0.2},${h * 0.8} ${w * 0.34},${h * 0.86} Q${w * 0.4},${h * 0.92} ${w * 0.3},${h}Z" fill="#4fb36b" opacity=".9"/><path d="M0,${h} Q${w * 0.3},${h * 0.62} ${w * 0.64},${h}" stroke="#9fd8ff" stroke-width="2" fill="none" opacity=".7"/>`
+        v += `<g class="sat" transform="translate(${w * 0.26},${h * 0.28}) rotate(-20)"><rect x="-3" y="-2" width="6" height="4" fill="#cfd6e2"/><rect x="-13" y="-1.5" width="9" height="3" fill="#4f8fd6"/><rect x="4" y="-1.5" width="9" height="3" fill="#4f8fd6"/></g>`
       } else if (S.window === 'sky') {
         v += `<g class="clouds"><ellipse cx="${w * 0.3}" cy="22" rx="22" ry="8" fill="#fff" opacity=".9"/><ellipse cx="${w * 0.37}" cy="18" rx="12" ry="8" fill="#fff" opacity=".9"/><ellipse cx="${w * 0.75}" cy="40" rx="18" ry="6" fill="#fff" opacity=".8"/></g>`
       } else if (S.window === 'sakura') {
@@ -437,13 +533,13 @@
       g.innerHTML = `
         <ellipse cx="0" cy="40" rx="46" ry="5" fill="#000" opacity=".08"/>
         <g class="chair">${this.chairSvg(color)}</g>
-        <g class="char" transform="translate(0,6) scale(${K})">${body.main}</g>
+        <g class="char" transform="translate(0,6) scale(${K})"><g class="zap">${body.main}</g></g>
         <g class="desk">${this.deskSvg(color, s.boss)}</g>
         ${this.lampSvg(s.side)}
         ${this.monitorSvg(s.side, color)}
         <rect x="-15" y="-6" width="30" height="5" rx="2" fill="${this.S.neon ? '#2a1d55' : '#6f6a88'}" stroke="${this.S.neon ? '#00e5ff' : 'none'}" stroke-width=".8"/>
         ${s.boss ? '' : this.mugSvg(s.side)}
-        <g class="hands" transform="translate(0,6) scale(${K})">${body.hands}</g>
+        <g class="hands" transform="translate(0,6) scale(${K})"><g class="zap">${body.hands}</g></g>
         <g class="sweat"><path d="M24,-62 q-4,7 0,10 q4,-3 0,-10Z" fill="#8fd0ff" stroke="#5aa8e0" stroke-width=".8"/></g>
         <g class="gloom"><path d="M-18,-86 q6,-8 12,0 q6,-8 12,0 q6,-8 12,0" stroke="#7b7fa8" stroke-width="2" fill="none" opacity=".6"/></g>
         <g class="zzz"><text x="18" y="-70" font-size="10" font-weight="700" fill="#8f8bb8">Z</text><text x="27" y="-80" font-size="7" font-weight="700" fill="#8f8bb8">z</text></g>`
@@ -499,6 +595,7 @@
       }
       this.applyStatus(id)
       if (info.status === 'done' && prev !== 'done') this.sparkle(id)
+      if (info.status === 'error' && prev !== 'error' && this.S.shock && id !== 'shaniu') this.punish(id)
       if (info.status === 'walking') return
       if (s.status === 'thinking') this.say(id, '···', { kind: 'think', ttl: Infinity })
       else if (s.status === 'working') this.say(id, info.text || '开工', { ttl: Infinity })
@@ -660,10 +757,12 @@
           }
           a.moving = true
           a.carrying = !!c.carrying
+          a.armed = !!c.armed
           continue
         }
         a.moving = false
         a.carrying = false
+        a.armed = !!c.armed
         if (!c.arrived) {
           c.arrived = true
           c.since = t
@@ -687,10 +786,10 @@
         const layer = a.y < TABLE_Y + 2 ? this.layers.actorsBack : a.y <= AISLE + 1 ? this.layers.actorsMid : this.layers.actorsFront
         if (a.el.parentNode !== layer) layer.appendChild(a.el)
         const st = this.st[a.id]?.status
-        a.el.setAttribute('class', `actor${a.moving ? ' walking' : ''}${a.carrying ? ' carrying' : ''} st-${a.moving ? 'walk' : st === 'meeting' ? 'meeting' : 'idle'}`)
+        a.el.setAttribute('class', `actor${a.moving ? ' walking' : ''}${a.carrying ? ' carrying' : ''}${a.armed ? ' armed' : ''} st-${a.moving ? 'walk' : st === 'meeting' ? 'meeting' : 'idle'}`)
         const bob = a.moving ? Math.abs(Math.sin(t * 12)) * 1.6 : 0
         a.el.setAttribute('transform', `translate(${a.x.toFixed(1)},${a.y.toFixed(1)})`)
-        a.el.querySelector('.fig').setAttribute('transform', `translate(0,${(-FEET - bob).toFixed(1)}) scale(${K * a.facing},${K})`)
+        a.el.querySelector('.fig').setAttribute('transform', `translate(0,${(-this.FEET - bob).toFixed(1)}) scale(${K * a.facing},${K})`)
       }
     }
 
@@ -719,6 +818,68 @@
         this.layers.fx.appendChild(g)
         setTimeout(() => g.remove(), 2200)
       }
+    }
+
+    /** 出错挨电棍：傻妞拿着电棍走过去电一下；开会时她走不开，电棍自己飞过去。 */
+    punish(id) {
+      const seat = this.seats[id]
+      if (!seat || reduceMotion()) return this.shock(id)
+      const lines = ['滋——！再错一个试试？', '又出错？电一下就清醒了', '996 是福报，出错要挨电哦', '醒了没？接着干！']
+      const line = lines[(Math.random() * lines.length) | 0]
+      if (this.meetingOpen || (this.actors.get('shaniu')?.queue.length || 0) > 2) {
+        this.say('shaniu', line, { kind: 'warn', ttl: 2400 })
+        return this.shock(id, true)
+      }
+      const a = this.actor('shaniu')
+      // 站到工位旁边的过道上（别挡住挨电的人）
+      const stand = seat.x + (seat.x < this.cx ? 46 : -46)
+      a.queue.push(
+        { to: [[stand, AISLE]], armed: true },
+        {
+          hold: 1.4,
+          armed: true,
+          arrive: () => {
+            a.facing = seat.x < a.x ? -1 : 1
+            this.say('shaniu', line, { kind: 'warn', ttl: 2200 })
+            this.shock(id)
+          },
+        },
+        { to: [[this.cx, AISLE]], armed: true },
+      )
+    }
+
+    /** 电一下：人闪黄光发抖、冒电弧，结束后脸上一层黑灰、头顶冒烟。flying = 电棍自己飞过来 */
+    shock(id, flying = false) {
+      const s = this.seats[id]
+      const g = this.seatEls[id]
+      if (!s || !g) return
+      const yells = ['啊啊啊啊——', '我错了我错了！', '滋滋滋……', '马上改！']
+      setTimeout(() => this.say(id, yells[(Math.random() * yells.length) | 0], { kind: 'warn', ttl: 2600 }), 150)
+      if (reduceMotion()) return
+      const head = s.top - (this.art === 'anime' ? 52 : 46)
+      let fx = ''
+      for (let i = 0; i < 5; i++) {
+        const ang = (i / 5) * Math.PI * 2 + Math.random()
+        const r = 22 + Math.random() * 8
+        const x = Math.cos(ang) * r
+        const y = Math.sin(ang) * r * 0.9
+        fx += `<path class="bolt" style="animation-delay:${(i * 0.05).toFixed(2)}s" d="M${x.toFixed(1)},${y.toFixed(1)} l${(-x * 0.25 + 4).toFixed(1)},${(-y * 0.25 - 3).toFixed(1)} l-4,2 l${(-x * 0.3 + 3).toFixed(1)},${(-y * 0.3 - 2).toFixed(1)}" stroke="#fff27a" stroke-width="2.2" fill="none" stroke-linejoin="round" filter="url(#an-glow)"/>`
+      }
+      if (flying) fx += `<g class="baton-fly"><g transform="translate(${s.side * -28},-8) scale(${0.26 * -s.side},0.26)">${C.baton(0, 0)}</g></g>`
+      fx += `<text class="zap-text" x="0" y="-34" text-anchor="middle" font-size="12" font-weight="900" fill="#ffd400" stroke="#6b4b00" stroke-width=".7">滋啦——！</text>`
+      const box = el('g', { class: 'shock-fx', transform: `translate(${s.x},${head})` }, fx)
+      this.layers.fx.appendChild(box)
+      g.classList.add('shocked')
+      clearTimeout(g._soot)
+      setTimeout(() => {
+        g.classList.remove('shocked')
+        g.classList.add('sooty')
+        box.remove()
+        const smoke = el('g', { class: 'smoke', transform: `translate(${s.x},${head - 26})` }, '<circle r="5" fill="#8a8f99" opacity=".7"/><circle cx="6" cy="-4" r="4" fill="#9aa0aa" opacity=".6"/><circle cx="-5" cy="-6" r="3.5" fill="#a6abb5" opacity=".55"/>')
+        this.layers.fx.appendChild(smoke)
+        setTimeout(() => smoke.remove(), 2600)
+      }, 1300)
+      g._soot = setTimeout(() => g.classList.remove('sooty'), 9000)
     }
 
     flyPaper(x1, y1, x2, y2) {
@@ -752,7 +913,7 @@
         const seat = this.seats[id]
         const a = this.actors.get(id)
         const x = a ? a.x : seat.x
-        const y = a ? a.y - FEET - 78 : seat.top - 80
+        const y = a ? a.y - this.FEET - (this.art === 'anime' ? 84 : 78) : seat.top - 80
         const p = this.pct(Math.min(Math.max(x, 60), this.W - 60), y)
         b.el.style.left = p.left
         b.el.style.top = p.top

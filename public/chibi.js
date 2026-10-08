@@ -59,7 +59,7 @@
 
   /** 每位员工的长相由 id 决定，衣服颜色跟所在项目组走。 */
   function lookFor(emp, opts = {}) {
-    if (!emp || emp.id === 'shaniu') return { ...SHANIU, catEars: !!opts.catEars }
+    if (!emp || emp.id === 'shaniu') return { ...SHANIU, catEars: !!opts.catEars, art: opts.art || '' }
     const h = strHash(emp.id)
     const pick = (list, salt) => list[hash(h + salt) % list.length]
     const accent = emp.color || '#6b7a99'
@@ -75,6 +75,7 @@
       ribbon: shade(accent, -0.35),
       acc: emp.look || 'none',
       catEars: !!opts.catEars,
+      art: opts.art || '',
     }
   }
 
@@ -158,6 +159,8 @@
     s += `<ellipse cx="-56" cy="-150" rx="17" ry="9" fill="#ff7f9e" opacity=".38"/><ellipse cx="56" cy="-150" rx="17" ry="9" fill="#ff7f9e" opacity=".38"/>`
     s += `<g class="blush-lines" stroke="#ff6a8e" stroke-width="3" opacity=".55"><path d="M-66,-152 l6,-8 M-56,-152 l6,-8 M-46,-152 l6,-8"/><path d="M46,-152 l6,-8 M56,-152 l6,-8 M66,-152 l6,-8"/></g>`
     s += `<path d="M-2,-160 q3,4 5,1" stroke="${line}" stroke-width="3" fill="none" stroke-linecap="round"/>`
+    // 出错挨电以后的黑灰（平时不显示）
+    s += `<g class="soot" fill="#3a3436" opacity=".55"><ellipse cx="-48" cy="-172" rx="16" ry="9"/><ellipse cx="40" cy="-140" rx="12" ry="7"/><ellipse cx="10" cy="-262" rx="22" ry="7"/></g>`
     return s
   }
 
@@ -282,8 +285,28 @@
     return s
   }
 
+  /** 傻妞巡查用的电棍，握在右手 (x, y) 上；平时藏着，actor 带 armed 类时显示 */
+  function baton(x, y, k = 1) {
+    return `<g class="baton" transform="translate(${x},${y}) rotate(-38) scale(${k})">
+      <rect x="-6" y="-7" width="70" height="14" rx="6" fill="#24242c" stroke="#0c0c10" stroke-width="2.5"/>
+      <rect x="-6" y="-8" width="22" height="16" rx="5" fill="#3e3e4a"/><path d="M0,-8 v16 M6,-8 v16" stroke="#56566a" stroke-width="2"/>
+      <rect x="60" y="-6" width="10" height="12" rx="2" fill="#ffd400" stroke="#9a7a00" stroke-width="1.5"/>
+      <path class="arc" d="M70,-5 l9,-7 l-2,9 l10,-5" stroke="#fff27a" stroke-width="3.5" fill="none" stroke-linejoin="round"/>
+    </g>`
+  }
+
+  // 别的画风（anime-art.js）注册在这里；L.art 选用哪一种，没注册的就画 Q 版
+  const ARTS = {}
+  const artOf = (L) => ARTS[L && L.art] || null
+  function registerArt(name, impl) {
+    ARTS[name] = impl
+  }
+  /** 站着时脚底到腰的距离（设计坐标），场景用它把人放在地上 */
+  const feet = (L) => artOf(L)?.feet || 110
+
   /** 坐在工位上：main 画在桌子后面，hands 画在桌面上（打字的手）。 */
   function seated(L) {
+    if (artOf(L)) return artOf(L).seated(L)
     const ids = { iris: `ir${++uid}`, skin: `sk${uid}` }
     const main = `${defs(L, ids)}
       <g class="arms-rest"><g class="arm-rest-l">${sleeve(L, 'M-64,-100 C-84,-70 -80,-46 -46,-30')}</g><g class="arm-rest-r">${sleeve(L, 'M64,-100 C84,-70 80,-46 46,-30')}</g></g>
@@ -297,6 +320,7 @@
 
   /** 站着 / 走路的全身。 */
   function standing(L) {
+    if (artOf(L)) return artOf(L).standing(L)
     const ids = { iris: `ir${++uid}`, skin: `sk${uid}` }
     const leg = L.sailor || /long|twintail|bob|ponytail/.test(L.style) ? L.skin : '#3d4262'
     const skirt = L.sailor ? `<path d="M-84,4 L-100,58 Q0,74 100,58 L84,4Z" fill="${shade(L.outfit, -0.1)}" stroke="${shade(L.outfit, -0.45)}" stroke-width="4"/>` : ''
@@ -310,12 +334,13 @@
       <g class="arm-swing-r">${sleeve(L, 'M66,-100 C86,-70 90,-40 88,-8')}${hand(L, 88, 0)}</g>
       <g class="body">${torso(L)}</g>
       <g class="head">${head(L, ids)}</g>
-      <g class="paper"><rect x="82" y="-40" width="44" height="56" rx="4" fill="#fff" stroke="#b9b3c6" stroke-width="3"/><path d="M92,-26 h24 M92,-14 h24 M92,-2 h16" stroke="#c9c3d6" stroke-width="4"/></g>`
+      <g class="paper"><rect x="82" y="-40" width="44" height="56" rx="4" fill="#fff" stroke="#b9b3c6" stroke-width="3"/><path d="M92,-26 h24 M92,-14 h24 M92,-2 h16" stroke="#c9c3d6" stroke-width="4"/></g>${baton(88, 0, 1.3)}`
     return main
   }
 
   /** 聊天头像和团队卡片用的大头照（data: URL）。 */
   function portrait(L, bg = '#fff4f9') {
+    if (artOf(L)) return artOf(L).portrait(L, bg)
     const ids = { iris: `ir${++uid}`, skin: `sk${uid}` }
     const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="-150 -370 300 300"><style>${EXPRESSION_DEFAULTS}</style><rect x="-150" y="-370" width="300" height="300" fill="${bg}"/>${defs(L, ids)}<g>${torso(L)}</g>${head(L, ids)}</svg>`
     // base64：页面用 CSS url(...) 引用头像，SVG 里的括号会把未加引号的 url() 截断。
@@ -323,7 +348,11 @@
   }
 
   // 默认表情：只露出睁眼和微笑，其它表情由状态样式打开。
-  const EXPRESSION_DEFAULTS = '.eyes-happy,.eyes-cross,.eyes-sleep,.mouth-open,.mouth-o,.mouth-wave,.blush-lines,.arm-think,.arms-cheer,.paper{display:none}'
+  const EXPRESSION_DEFAULTS = '.eyes-happy,.eyes-cross,.eyes-sleep,.mouth-open,.mouth-o,.mouth-wave,.blush-lines,.arm-think,.arms-cheer,.paper,.baton{display:none}'
 
-  window.NiumaChibi = { lookFor, seated, standing, portrait, shade, strHash, SHANIU, EXPRESSION_DEFAULTS }
+  window.NiumaChibi = {
+    lookFor, seated, standing, portrait, shade, strHash, SHANIU, EXPRESSION_DEFAULTS,
+    registerArt, feet, arts: () => Object.keys(ARTS), baton,
+    accessorySvg: (L) => accessory(L), catEarsSvg: (L) => catEars(L),
+  }
 })()

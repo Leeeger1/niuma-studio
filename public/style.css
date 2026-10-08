@@ -321,7 +321,8 @@ button { font: inherit; color: inherit; }
 .anime-svg .eyes-happy, .anime-svg .eyes-cross, .anime-svg .eyes-sleep,
 .anime-svg .mouth-open, .anime-svg .mouth-o, .anime-svg .mouth-wave, .anime-svg .blush-lines,
 .anime-svg .arm-think, .anime-svg .arms-cheer, .anime-svg .paper,
-.anime-svg .sweat, .anime-svg .gloom, .anime-svg .zzz { display: none; }
+.anime-svg .sweat, .anime-svg .gloom, .anime-svg .zzz, .anime-svg .soot { display: none; }
+.anime-svg .st-thinking .art-anime .pupil { transform: translate(2.5px, -3.5px); }
 .anime-svg .seat.away .char, .anime-svg .seat.away .hands { display: none; }
 
 .anime-svg .st-done .eyes-open, .anime-svg .st-done .mouth-smile, .anime-svg .st-done .arms-rest, .anime-svg .st-done .hands { display: none; }
@@ -364,7 +365,22 @@ button { font: inherit; color: inherit; }
 .anime-svg .rain { animation: an-rain 1.2s linear infinite; }
 .anime-svg .tail { transform-box: fill-box; transform-origin: left bottom; animation: an-wag 1.4s ease-in-out infinite alternate; }
 .anime-svg .zz { animation: an-zzz 2.6s ease-in-out infinite; }
-.anime-svg .neon-strip, .anime-svg .holo { animation: an-flicker 4s steps(1) infinite; }
+.anime-svg .neon-strip, .anime-svg .holo, .anime-svg .flicker { animation: an-flicker 4s steps(1) infinite; }
+/* 出错挨电棍 */
+.anime-svg .baton { display: none; }
+.anime-svg .actor.armed .baton { display: inline; }
+.anime-svg .actor.armed .paper { display: none; }
+.anime-svg .baton .arc, .anime-svg .bolt { animation: an-bolt 0.12s steps(2) infinite; }
+.anime-svg .seat.shocked .zap { animation: an-jitter 0.07s steps(2) infinite, an-zapflash 0.16s steps(1) infinite; }
+.anime-svg .seat.shocked .eyes-open, .anime-svg .seat.shocked .mouth-smile, .anime-svg .seat.shocked .mouth-wave { display: none; }
+.anime-svg .seat.shocked .eyes-cross, .anime-svg .seat.shocked .mouth-open { display: inline; }
+.anime-svg .seat.sooty .soot { display: inline; }
+.anime-svg .zap-text { animation: an-float 1.3s ease-out forwards; }
+.anime-svg .smoke { animation: an-float 2.6s ease-out forwards; }
+.anime-svg .baton-fly { animation: an-poke 0.3s ease-in-out infinite alternate; }
+.anime-svg .lantern { transform-box: fill-box; transform-origin: top center; animation: an-sway 3s ease-in-out infinite alternate; }
+.anime-svg .barrier { transform-box: fill-box; transform-origin: left center; animation: an-gate 7s ease-in-out infinite; }
+.anime-svg .crane { animation: an-drift 9s ease-in-out infinite alternate; }
 .anime-svg .clouds { animation: an-drift 30s ease-in-out infinite alternate; }
 
 @keyframes an-blink { 0%, 93%, 100% { transform: scaleY(1); } 95% { transform: scaleY(0.08); } }
@@ -379,6 +395,12 @@ button { font: inherit; color: inherit; }
 @keyframes an-spark { 0% { transform: scale(0); opacity: 0; } 30% { transform: scale(1.3); opacity: 1; } 100% { transform: scale(0.4) translateY(-8px); opacity: 0; } }
 @keyframes an-fall { from { transform: translate(0, 0) rotate(0deg); } to { transform: translate(var(--dx, 80px), 330px) rotate(540deg); } }
 @keyframes an-twinkle { 0%, 100% { opacity: 0.2; } 50% { opacity: 1; } }
+@keyframes an-jitter { 0% { transform: translate(-1.6px, 0); } 100% { transform: translate(1.6px, -1px); } }
+@keyframes an-zapflash { 0% { filter: url(#an-zap); } 50% { filter: none; } }
+@keyframes an-bolt { 0% { opacity: 1; } 50% { opacity: 0.1; } }
+@keyframes an-poke { from { transform: translateX(-3px); } to { transform: translateX(3px); } }
+@keyframes an-sway { from { transform: rotate(-5deg); } to { transform: rotate(5deg); } }
+@keyframes an-gate { 0%, 40%, 100% { transform: rotate(0deg); } 50%, 85% { transform: rotate(-70deg); } }
 @keyframes an-rise { 0% { transform: translate(0, 0); opacity: 0; } 10% { opacity: 1; } 100% { transform: translate(14px, -330px); opacity: 0.2; } }
 @keyframes an-dust { 0%, 100% { transform: translate(0, 0); opacity: 0.1; } 50% { transform: translate(14px, -18px); opacity: 0.7; } }
 @keyframes an-rain { from { transform: translateY(0); } to { transform: translateY(90px); } }
@@ -412,6 +434,11 @@ button { font: inherit; color: inherit; }
 .scene[data-skin="neon"] .tag { background: #1b1236; color: #eafcff; }
 .scene[data-skin="neon"] .sign { background: transparent; color: #ffd3f7; text-shadow: 0 0 6px #ff2fd0, 0 0 14px #ff2fd0; box-shadow: inset 0 0 0 2px #ff2fd0, 0 0 12px #ff2fd0; }
 .scene[data-skin="night"] .tag { background: rgba(38, 42, 82, 0.92); color: #ecebff; }
+.scene[data-skin="space"] .speech { background: #121a2c; color: #e3f4ff; border-color: #4fd2ff; box-shadow: 0 0 10px rgba(79, 210, 255, 0.35); }
+.scene[data-skin="space"] .tag { background: #18233a; color: #e3f4ff; }
+.scene[data-skin="space"] .speech[data-id="shaniu"], .scene[data-skin="neon"] .speech[data-id="shaniu"] { background: #2a1638; color: #ffe3f3; border-color: #ff7eb6; }
+html[data-skin="park"] .wordmark { color: #e23b3b; }
+html[data-skin="xianxia"] .wordmark { color: #b0302a; text-shadow: 2px 2px 0 rgba(217, 164, 65, 0.45); }
 
 /* ==== 皮肤：界面配色（像素复古沿用上面的默认样式） ==== */
 html[data-skin="sakura"] {
@@ -429,6 +456,18 @@ html[data-skin="neon"] {
 html[data-skin="neko"] {
   --bg: #fff8ee; --panel: #fffdf8; --panel-2: #fdf1e0; --ink: #5b4330; --muted: #9d8468; --line: #f0dcc0;
   --edge: #e6c69e; --drop: rgba(200, 150, 90, 0.18); --accent: #f28c38; --on-accent: #ffffff; color-scheme: light;
+}
+html[data-skin="park"] {
+  --bg: #eef1f5; --panel: #ffffff; --panel-2: #f2f4f8; --ink: #262b35; --muted: #6b7380; --line: #dde2ea;
+  --edge: #c3cad6; --drop: rgba(40, 50, 70, 0.12); --accent: #e23b3b; --on-accent: #ffffff; color-scheme: light;
+}
+html[data-skin="xianxia"] {
+  --bg: #f8f2e6; --panel: #fffaf0; --panel-2: #f3e9d6; --ink: #3d2a1c; --muted: #8a6e55; --line: #e8dac2;
+  --edge: #d7c09a; --drop: rgba(120, 80, 30, 0.15); --accent: #b0302a; --on-accent: #fff8ec; color-scheme: light;
+}
+html[data-skin="space"] {
+  --bg: #0b1020; --panel: #121a2c; --panel-2: #18233a; --ink: #e3f4ff; --muted: #8ea6c4; --line: #22314d;
+  --edge: #2e4a6e; --drop: rgba(0, 0, 0, 0.4); --accent: #4fd2ff; --on-accent: #06121c; --ok: #5be3a0; --warn: #ffc864; --bad: #ff8a8a; color-scheme: dark;
 }
 html[data-skin]:not([data-skin="pixel"]) {
   --font-display: "ZCOOL KuaiLe", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
