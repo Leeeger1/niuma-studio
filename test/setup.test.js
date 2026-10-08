@@ -8,7 +8,7 @@ import { fileURLToPath } from 'node:url'
 import { startFakeOpenAI } from '../fake/openai-server.mjs'
 import { loadConfig } from '../src/config.js'
 import { Coordinator } from '../src/coordinator.js'
-import { createSetup, testApi, userConfigFile } from '../src/setup.js'
+import { createSetup, listModels, testApi, userConfigFile } from '../src/setup.js'
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const tmp = () => fs.mkdtempSync(path.join(os.tmpdir(), 'niuma-setup-'))
@@ -92,4 +92,50 @@ test('rehearsal mode refuses to connect real staff', async () => {
   const setup = createSetup({ coord, fake: true, reload: async () => {} })
   await assert.rejects(setup.saveApi({ preset: 'deepseek', apiKey: 'k' }), /彩排/)
   await assert.rejects(setup.install('claude'), /彩排/)
+})
+
+test('a relay with many models: read the list, group by family, pick models by difficulty', async (t) => {
+  const relay = await startFakeOpenAI(0, { models: ['claude-opus-4-5', 'claude-sonnet-4-5', 'claude-haiku-4-5', 'gpt-5', 'gpt-5-mini', 'text-embedding-3-small', 'dall-e-3', 'mystery-notools'] })
+  const denied = await refuse(401)
+  t.after(() => (relay.close(), denied.close()))
+  const r = await listModels({ baseUrl: relay.url, apiKey: 'k' })
+  assert.equal(r.ok, true, r.error)
+  assert.equal(r.total, 8)
+  assert.equal(r.skipped, 2, 'embedding and image models are skipped')
+  assert.deepEqual(r.families.map((f) => f.id), ['claude', 'gpt', 'other'])
+  const claude = r.families[0]
+  assert.deepEqual(claude.pick, { hard: 'claude-opus-4-5', medium: 'claude-sonnet-4-5', easy: 'claude-haiku-4-5' })
+  assert.deepEqual(r.families[1].pick, { hard: 'gpt-5', medium: 'gpt-5', easy: 'gpt-5-mini' })
+  assert.match((await listModels({ baseUrl: denied.url, apiKey: 'k' })).error, /Key 不对/)
+  assert.match((await listModels({ baseUrl: relay.url })).error, /API Key/)
+
+  // 会不会调用工具
+  assert.equal((await testApi({ baseUrl: relay.url, apiKey: 'k', models: { medium: 'gpt-5' } }, { tools: true })).tools, true)
+  assert.equal((await testApi({ baseUrl: relay.url, apiKey: 'k', models: { medium: 'mystery-notools' } }, { tools: true })).tools, false)
+
+  // 每家一个组，共用地址和 Key
+  const workdir = tmp()
+  const load = () => loadConfig({ workdir })
+  const coord = new Coordinator(load(), { mode: 'live', root })
+  await coord.team.check()
+  const setup = createSetup({ coord, reload: () => coord.reconfigure(load()) })
+  const saved = await setup.saveApi({
+    preset: 'relay',
+    baseUrl: relay.url,
+    apiKey: 'sk-relay',
+    name: '中转站',
+    families: [
+      { family: 'claude', name: 'Claude', models: claude.pick },
+      { family: 'other', name: '其他', models: { medium: 'mystery-notools' } },
+    ],
+  })
+  assert.equal(saved.ok, true, saved.error)
+  assert.deepEqual(saved.results.map((x) => [x.name, x.ok, x.tools]), [['中转站 Claude 组', true, true], ['中转站 其他 组', true, false]])
+  const [a, b] = saved.results.map((x) => coord.team.groups.get(x.id))
+  assert.equal(a.modelFor('hard'), 'claude-opus-4-5')
+  assert.equal(a.modelFor('easy'), 'claude-haiku-4-5')
+  assert.equal(b.modelFor('hard'), 'mystery-notools')
+  const onDisk = JSON.parse(fs.readFileSync(userConfigFile(), 'utf8')).groups.filter((g) => saved.results.some((x) => x.id === g.id))
+  assert.ok(onDisk.every((g) => g.baseUrl === relay.url && g.apiKey === 'sk-relay'))
+  assert.match(coord.messages.at(-1).text, /中转站 Claude 组[\s\S]*不会调用工具/)
 })

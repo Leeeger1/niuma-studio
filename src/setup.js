@@ -5,6 +5,8 @@ import { spawn } from 'node:child_process'
 import fs from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
+import { DEFAULTS } from './config.js'
+import { COST_ZH, FAMILIES, TIER_ZH, familyOf, isChatModel, modelProfile, suggestModels } from './models.js'
 import { isWin, truncate } from './util.js'
 
 export const PRESETS = [
@@ -161,46 +163,101 @@ function normalizeBase(url) {
   return u
 }
 
-/** 发一句最短的话试试接口通不通、Key 对不对、模型名对不对。 */
-export async function testApi({ baseUrl, apiKey, noKey, models = {} }, { timeoutMs = 30000 } = {}) {
+function httpWhy(status) {
+  return status === 401 || status === 403
+    ? 'Key 不对或者没权限'
+    : status === 404
+      ? '地址或模型名不对（地址要写到 /v1 这一级）'
+      : status === 402
+        ? '账户余额不足'
+        : status === 429
+          ? '请求太频繁或额度用完了'
+          : `接口报错 ${status}`
+}
+
+function checkInput({ baseUrl, apiKey, noKey }) {
   const base = normalizeBase(baseUrl)
-  const model = models.medium || models.hard || models.easy
-  if (!base) return { ok: false, error: '还没填接口地址' }
-  if (!/^https?:\/\//.test(base)) return { ok: false, error: '接口地址要以 http:// 或 https:// 开头' }
-  if (!model) return { ok: false, error: '还没填模型名' }
-  if (!apiKey && !noKey) return { ok: false, error: '还没填 API Key' }
+  if (!base) return { error: '还没填接口地址' }
+  if (!/^https?:\/\//.test(base)) return { error: '接口地址要以 http:// 或 https:// 开头' }
+  if (!apiKey && !noKey) return { error: '还没填 API Key' }
   const headers = { 'Content-Type': 'application/json' }
   if (apiKey) headers.Authorization = `Bearer ${apiKey}`
+  return { base, headers }
+}
+
+/**
+ * 发一句最短的话试试接口通不通、Key 对不对、模型名对不对。
+ * tools: true 再试一次工具调用：API 员工靠它读写文件，不会调用工具的模型只能帮傻妞动脑子。
+ */
+export async function testApi({ baseUrl, apiKey, noKey, models = {} }, { timeoutMs = 30000, tools = false } = {}) {
+  const model = models.medium || models.hard || models.easy
+  const c = checkInput({ baseUrl, apiKey, noKey })
+  if (c.error) return { ok: false, error: c.error }
+  if (!model) return { ok: false, error: '还没填模型名' }
+  const ask = (body) =>
+    fetch(`${c.base}/chat/completions`, { method: 'POST', headers: c.headers, body: JSON.stringify({ model, ...body }), signal: AbortSignal.timeout(timeoutMs) })
   let res
   try {
-    res = await fetch(`${base}/chat/completions`, {
-      method: 'POST',
-      headers,
-      body: JSON.stringify({ model, messages: [{ role: 'user', content: '只回复两个字：在岗' }], max_tokens: 16 }),
-      signal: AbortSignal.timeout(timeoutMs),
-    })
+    res = await ask({ messages: [{ role: 'user', content: '只回复两个字：在岗' }], max_tokens: 16 })
   } catch (e) {
-    return { ok: false, error: `连不上 ${base}（${e.cause?.code || e.message}）。检查地址和网络` }
+    return { ok: false, error: `连不上 ${c.base}（${e.cause?.code || e.message}）。检查地址和网络` }
   }
   const text = await res.text().catch(() => '')
-  if (res.ok) {
-    let reply = ''
+  if (!res.ok) return { ok: false, error: `${httpWhy(res.status)}：${truncate(text.replace(/\s+/g, ' '), 160)}` }
+  let reply = ''
+  try {
+    reply = JSON.parse(text).choices?.[0]?.message?.content || ''
+  } catch {}
+  const out = { ok: true, reply: truncate(String(reply).trim() || '（收到了回复）', 60), model }
+  if (tools) {
     try {
-      reply = JSON.parse(text).choices?.[0]?.message?.content || ''
-    } catch {}
-    return { ok: true, reply: truncate(String(reply).trim() || '（收到了回复）', 60), model }
+      const r = await ask({
+        messages: [{ role: 'user', content: '请调用 ping 工具，参数 text 填「在岗」。' }],
+        tools: [{ type: 'function', function: { name: 'ping', description: '报到', parameters: { type: 'object', properties: { text: { type: 'string' } }, required: ['text'] } } }],
+        max_tokens: 64,
+      })
+      const j = r.ok ? await r.json() : null
+      out.tools = !!j?.choices?.[0]?.message?.tool_calls?.length
+    } catch {
+      out.tools = false
+    }
   }
-  const why =
-    res.status === 401 || res.status === 403
-      ? 'Key 不对或者没权限'
-      : res.status === 404
-        ? '地址或模型名不对（地址要写到 /v1 这一级）'
-        : res.status === 402
-          ? '账户余额不足'
-          : res.status === 429
-            ? '请求太频繁或额度用完了'
-            : `接口报错 ${res.status}`
-  return { ok: false, error: `${why}：${truncate(text.replace(/\s+/g, ' '), 160)}` }
+  return out
+}
+
+/** 读接口后面有哪些模型（GET /models），按家族分好、按难度挑好，给「接入员工」面板选。 */
+export async function listModels({ baseUrl, apiKey, noKey }, { timeoutMs = 20000 } = {}) {
+  const c = checkInput({ baseUrl, apiKey, noKey })
+  if (c.error) return { ok: false, error: c.error }
+  let res
+  try {
+    res = await fetch(`${c.base}/models`, { headers: c.headers, signal: AbortSignal.timeout(timeoutMs) })
+  } catch (e) {
+    return { ok: false, error: `连不上 ${c.base}（${e.cause?.code || e.message}）。检查地址和网络` }
+  }
+  const text = await res.text().catch(() => '')
+  if (!res.ok) return { ok: false, error: `读不到模型列表，${httpWhy(res.status)}。也可以直接填模型名` }
+  let ids = []
+  try {
+    const j = JSON.parse(text)
+    const list = Array.isArray(j) ? j : j.data || j.models || []
+    ids = [...new Set(list.map((m) => String(typeof m === 'string' ? m : m.id || m.name || '')).filter(Boolean))]
+  } catch {
+    return { ok: false, error: '模型列表看不懂，直接填模型名吧' }
+  }
+  const chat = ids.filter(isChatModel)
+  const byFamily = new Map()
+  for (const id of chat) {
+    const f = familyOf(id)
+    if (!byFamily.has(f.id)) byFamily.set(f.id, { id: f.id, name: f.name, models: [] })
+    const p = modelProfile({ model: id, type: 'openai-api' })
+    byFamily.get(f.id).models.push({ id, tier: TIER_ZH[p.tier], cost: COST_ZH[p.cost] })
+  }
+  const order = [...FAMILIES.map(([id]) => id), 'other']
+  const families = [...byFamily.values()]
+    .sort((a, b) => order.indexOf(a.id) - order.indexOf(b.id))
+    .map((f) => ({ ...f, models: f.models.sort((a, b) => a.id.localeCompare(b.id)), pick: suggestModels(f.models.map((m) => m.id)) }))
+  return { ok: true, total: ids.length, skipped: ids.length - chat.length, families }
 }
 
 /**
@@ -247,8 +304,74 @@ export function createSetup({ coord, reload, fake = false }) {
       cli: [cli('claude', claude), cli('codex', codex)],
       groups,
       presets: PRESETS,
+      staff: staffView(),
+      skills: [...coord.team.skills.values()].filter((sk) => sk.id !== 'generalist').map((sk) => ({ id: sk.id, name: sk.name, description: sk.description })),
       configFile: userConfigFile(),
     }
+  }
+
+  /** 岗位安排：每个员工排在哪个组（group）、现在实际坐在哪（now，借调时不一样）。各组自动配的通才不列。 */
+  function staffView() {
+    const team = coord.team
+    const defaults = new Set(DEFAULTS.employees.map((e) => e.id))
+    const mine = new Set((readUserConfigSafe().employees || []).map((e) => e?.id))
+    const row = (e, extra) => ({ id: e.id, defaultStaff: defaults.has(e.id), changed: mine.has(e.id), removable: !defaults.has(e.id) && mine.has(e.id), ...extra })
+    const rows = team.employees
+      .filter((e) => !(e.skill.id === 'generalist' && team.groups.has(e.id)))
+      .map((e) => row(e, { name: e.name, skill: e.skill.id, skillName: e.skill.name, group: e.home, now: e.group, enabled: true }))
+    for (const e of team.offDuty) {
+      const sk = team.skills.get(e.skill || e.id)
+      rows.push(row(e, { name: e.name || sk?.name || e.id, skill: e.skill || e.id, skillName: sk?.name || e.id, group: e.group || '', now: '', enabled: false }))
+    }
+    return rows
+  }
+
+  /**
+   * 调整一个员工：换组（group）、放假（enabled: false）、叫回来（enabled: true）、
+   * 恢复默认 / 删掉自己加的（remove）、或者按某个岗位再加一个人（add + skill + group）。
+   * 改动写进 ~/.niuma/config.json 的 employees，默认安排不动。
+   */
+  async function staff({ id, skill, group, enabled, remove, add } = {}) {
+    guard()
+    if (coord.busy) throw new Error('傻妞手上还有活，等这一轮做完再调整')
+    const team = coord.team
+    const cfg = readUserConfig()
+    let list = Array.isArray(cfg.employees) ? cfg.employees.filter((e) => e && e.id) : []
+    const groupName = (gid) => team.groups.get(gid)?.name || gid
+    let msg
+    if (add) {
+      const sk = team.skills.get(skill)
+      if (!sk) throw new Error('没有这个岗位')
+      if (!team.groups.has(group)) throw new Error('没有这个项目组')
+      const taken = new Set([...team.employees.map((e) => e.id), ...team.offDuty.map((e) => e.id), ...list.map((e) => e.id), ...team.groups.keys()])
+      let nid = skill
+      let n = 1
+      while (taken.has(nid)) nid = `${skill}-${++n}`
+      const name = n > 1 ? `${sk.name}${n}` : sk.name
+      list.push({ id: nid, skill, group, name })
+      msg = `新同事到岗：**${name}**，坐在${groupName(group)}。`
+    } else {
+      const cur = staffView().find((r) => r.id === id)
+      if (!cur) throw new Error('找不到这个员工')
+      if (remove) {
+        list = list.filter((e) => e.id !== id)
+        msg = cur.defaultStaff ? `${cur.name}恢复成默认安排了。` : `${cur.name}离职了。`
+      } else {
+        if (group && !team.groups.has(group)) throw new Error('没有这个项目组')
+        let entry = list.find((e) => e.id === id)
+        if (!entry) list.push((entry = { id }))
+        entry.skill = cur.skill
+        entry.group = group || entry.group || cur.group
+        if (cur.name !== team.skills.get(cur.skill)?.name) entry.name = cur.name
+        if (enabled === false) entry.enabled = false
+        else delete entry.enabled
+        msg = enabled === false ? `${cur.name}放假了，要用再叫回来。` : `${cur.name}去${groupName(entry.group)}上班了。`
+      }
+    }
+    writeUserConfig({ ...cfg, employees: list })
+    await reload()
+    coord.addMessage('shaniu', `好的～ ${msg}`)
+    return { ok: true }
   }
 
   function readUserConfigSafe() {
@@ -321,43 +444,75 @@ export function createSetup({ coord, reload, fake = false }) {
     return { ok: false, error: needLogin ? '还没登录，点「登录」' : truncate(r.out.trim().split('\n').slice(-3).join(' '), 200) || `退出码 ${r.code}` }
   }
 
+  /**
+   * 接入 API 组：先测试（连得上、模型对、会不会调用工具），通过了才写进 ~/.niuma/config.json。
+   * input.families 有值时是中转站的多家模型：每家一个组（傻妞能按各家特长派活），共用地址和 Key。
+   */
   async function saveApi(input) {
     guard()
     if (coord.busy) throw new Error('傻妞手上还有活，等这一轮做完再接入新员工')
     const preset = PRESETS.find((p) => p.id === input.preset) || PRESETS.find((p) => p.id === 'custom')
-    const models = Object.fromEntries(['hard', 'medium', 'easy'].map((k) => [k, String(input.models?.[k] || '').trim()]).filter(([, v]) => v))
-    // 没填中档就拿难活或杂活的模型顶上：派活时找不到模型名会直接失败。
-    if (!models.medium && (models.hard || models.easy)) models.medium = models.hard || models.easy
-    const group = {
+    const cleanModels = (m) => {
+      const models = Object.fromEntries(['hard', 'medium', 'easy'].map((k) => [k, String(m?.[k] || '').trim()]).filter(([, v]) => v))
+      // 没填中档就拿难活或杂活的模型顶上：派活时找不到模型名会直接失败。
+      if (!models.medium && (models.hard || models.easy)) models.medium = models.hard || models.easy
+      return models
+    }
+    const conn = {
       baseUrl: normalizeBase(input.baseUrl || preset.baseUrl),
       apiKey: String(input.apiKey || '').trim(),
       noKey: !!(input.noKey ?? preset.noKey),
-      models,
     }
-    const t = await testApi(group)
-    if (!t.ok) return t
+    const multi = Array.isArray(input.families) && input.families.length > 0
+    const plans = multi
+      ? input.families.map((f) => ({ family: String(f.family || 'other'), familyName: String(f.name || familyOf(f.models?.medium || '').name), models: cleanModels(f.models) }))
+      : [{ models: cleanModels(input.models) }]
+    const tests = await Promise.all(plans.map((p) => testApi({ ...conn, models: p.models }, { tools: true })))
+    if (!multi && !tests[0].ok) return tests[0]
+    if (tests.every((t) => !t.ok)) return { ok: false, error: tests.map((t, i) => `${plans[i].familyName}：${t.error}`).join('；') }
+
     const cfg = readUserConfig()
     const groups = Array.isArray(cfg.groups) ? cfg.groups : []
-    let id = String(input.id || '').trim()
-    if (!id) {
-      id = preset.id === 'custom' ? 'api' : preset.id
-      const taken = new Set([...groups.map((g) => g.id), ...coord.team.groups.keys()])
-      for (let n = 2; taken.has(id); n++) id = `${preset.id === 'custom' ? 'api' : preset.id}-${n}`
+    const taken = new Set([...groups.map((g) => g.id), ...coord.team.groups.keys()])
+    const prefix = preset.id === 'custom' ? 'api' : preset.id
+    const unique = (want) => {
+      let id = want
+      for (let n = 2; taken.has(id); n++) id = `${want}-${n}`
+      taken.add(id)
+      return id
     }
-    const name = String(input.name || '').trim() || preset.group || `${id} 组`
-    const entry = { id, name, type: 'openai-api', baseUrl: group.baseUrl, models }
-    if (group.noKey) entry.noKey = true
-    else entry.apiKey = group.apiKey
-    if (preset.maxParallel) entry.maxParallel = preset.maxParallel
-    const i = groups.findIndex((g) => g.id === id)
-    if (i === -1) groups.push(entry)
-    else groups[i] = { ...groups[i], ...entry }
+    const baseName = (String(input.name || '').trim() || preset.group || '接口组').replace(/\s*组$/, '')
+    const results = []
+    plans.forEach((p, i) => {
+      const t = tests[i]
+      const name = multi ? `${baseName} ${p.familyName} 组` : String(input.name || '').trim() || preset.group || `${prefix} 组`
+      if (!t.ok) return results.push({ name, ok: false, error: t.error })
+      const id = !multi && input.id ? String(input.id).trim() : unique(multi ? `${prefix}-${p.family}` : prefix)
+      const entry = { id, name, type: 'openai-api', ...(conn.noKey ? { noKey: true } : { apiKey: conn.apiKey }), baseUrl: conn.baseUrl, models: p.models }
+      if (preset.maxParallel) entry.maxParallel = preset.maxParallel
+      const at = groups.findIndex((g) => g.id === id)
+      if (at === -1) groups.push(entry)
+      else groups[at] = { ...groups[at], ...entry }
+      results.push({ id, name, ok: true, model: t.model, reply: t.reply, tools: t.tools })
+    })
     writeUserConfig({ ...cfg, groups })
     await reload()
-    const g = coord.team.groups.get(id)
-    const staff = coord.team.employees.filter((e) => e.group === id).map((e) => e.name)
-    coord.addMessage('shaniu', g?.available ? `新同事到岗啦！**${name}**（${staff.join('、') || '通才'}）已经坐进工位，模型是 ${t.model}。` : `${name}接上了，可是检查没通过：${g?.note || '不在岗'}。`)
-    return { ok: true, id, reply: t.reply, available: !!g?.available }
+
+    const lines = []
+    for (const r of results) {
+      if (!r.ok) {
+        lines.push(`- ${r.name}：没接上，${r.error}`)
+        continue
+      }
+      const g = coord.team.groups.get(r.id)
+      r.available = !!g?.available
+      const staff = coord.team.employees.filter((e) => e.group === r.id).map((e) => e.name)
+      const warn = r.tools === false ? '（⚠️ 这个模型好像不会调用工具，只能帮傻妞动脑子，改不了文件）' : ''
+      lines.push(g?.available ? `- **${r.name}**（${staff.join('、') || '通才'}），模型 ${g.modelFor('hard')} / ${g.modelFor('medium')} / ${g.modelFor('easy')}${warn}` : `- ${r.name}：接上了，可是检查没通过：${g?.note || '不在岗'}`)
+    }
+    coord.addMessage('shaniu', `新同事到岗啦！\n${lines.join('\n')}`)
+    const first = results.find((r) => r.ok)
+    return { ok: true, id: first?.id, reply: first?.reply, available: results.some((r) => r.available), tools: first?.tools, results }
   }
 
   async function remove(id) {
@@ -380,5 +535,5 @@ export function createSetup({ coord, reload, fake = false }) {
     return { ok: true }
   }
 
-  return { status, install, installInTerminal, login, testCli, testApi, saveApi, remove, recheck }
+  return { status, install, installInTerminal, login, testCli, testApi, listModels, saveApi, remove, recheck, staff }
 }

@@ -25,11 +25,12 @@ function reply(body) {
   return { content: job.mode === 'verify' ? verify(job) : finalText(job) }
 }
 
-export function startFakeOpenAI(port = 0) {
+/** models：GET /models 列出的模型（假装是中转站）；名字里带 notools 的模型不会调用工具。 */
+export function startFakeOpenAI(port = 0, { models = ['deepseek-v4-flash', 'deepseek-v4-pro', 'qwen3-coder'] } = {}) {
   const server = http.createServer(async (req, res) => {
     if (req.method === 'GET' && req.url.endsWith('/models')) {
       res.writeHead(200, { 'Content-Type': 'application/json' })
-      return res.end(JSON.stringify({ data: [{ id: 'deepseek-v4-flash' }, { id: 'deepseek-v4-pro' }, { id: 'qwen3-coder' }] }))
+      return res.end(JSON.stringify({ data: models.map((id) => ({ id, object: 'model' })) }))
     }
     let raw = ''
     for await (const c of req) raw += c
@@ -37,6 +38,7 @@ export function startFakeOpenAI(port = 0) {
     try {
       body = JSON.parse(raw)
     } catch {}
+    if (/notools/.test(body.model || '')) delete body.tools
     await sleep(body.tools ? 900 + Math.random() * 900 : 1400)
     const message = { role: 'assistant', ...reply(body) }
     res.writeHead(200, { 'Content-Type': 'application/json' })

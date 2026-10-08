@@ -190,6 +190,7 @@ button { font: inherit; color: inherit; }
 }
 .face { grid-row: 1 / 3; width: 28px; height: 28px; background: var(--panel-2) center / 100% no-repeat; image-rendering: pixelated; }
 .ename { font-weight: 600; font-size: 13px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ename .borrow { font-weight: 400; font-size: 10.5px; padding: 0 5px; border: 1px dashed var(--accent); color: var(--accent); border-radius: 999px; vertical-align: 1px; }
 .estate { font-size: 11px; padding: 0 5px; border: 1px solid currentColor; color: var(--muted); white-space: nowrap; }
 .emp[data-s="working"] .estate, .emp[data-s="done"] .estate { color: var(--ok); }
 .emp[data-s="meeting"] .estate, .emp[data-s="thinking"] .estate { color: var(--accent); }
@@ -641,3 +642,26 @@ html[data-skin="pixel"] .setup { --r: 0; }
 .se-foot .errors ul { margin: 4px 0 0; padding-left: 18px; }
 html[data-skin="pixel"] .skin-editor { --r: 0; }
 html[data-skin="pixel"] .skin-editor input[type="color"] { border-radius: 0; }
+
+/* 岗位安排 */
+.setup .staff-list li b { min-width: 6.5em; }
+.setup .staff-list li .muted { font-size: 11.5px; }
+.setup .staff-list li select { margin-left: auto; }
+.setup .staff-list li .chip + select { margin-left: 0; }
+.setup .staff-list li.off b { color: var(--muted); text-decoration: line-through; }
+.setup .staff-list select, .setup .staff-add select {
+  min-width: 0; max-width: 100%; padding: 4px 8px; font: 12.5px/1.4 var(--font-body); color: var(--ink);
+  background: var(--panel); border: 1px solid var(--line); border-radius: var(--r);
+}
+.setup .staff-add { align-items: center; font-size: 13px; }
+.setup .btn-link-inline { padding: 0; border: 0; background: none; color: var(--accent); text-decoration: underline; cursor: pointer; font: inherit; }
+
+/* 中转站：按家族选模型 */
+.setup .families { margin-top: 10px; }
+.setup .fam-wrap { overflow-x: auto; margin: 6px 0; border: 1px solid var(--line); border-radius: var(--r); }
+.setup table.fam { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+.setup table.fam th, .setup table.fam td { padding: 5px 8px; border-top: 1px solid var(--line); text-align: left; white-space: nowrap; }
+.setup table.fam thead th { border-top: 0; color: var(--muted); font-weight: 600; }
+.setup table.fam tbody th small { color: var(--muted); font-weight: 400; }
+.setup table.fam tr.off th, .setup table.fam tr.off select { opacity: 0.45; }
+.setup table.fam select { max-width: 220px; padding: 3px 6px; font: 12px/1.4 var(--font-mono); color: var(--ink); background: var(--panel); border: 1px solid var(--line); border-radius: var(--r); }

@@ -990,7 +990,8 @@ export class Coordinator extends EventEmitter {
       lines.push(`**${g.name}**（${g.available ? '在岗' : `不在岗：${g.note}`}）${this.team.modelsLine(g)}`)
       for (const e of this.team.employees.filter((x) => x.group === g.id)) {
         const s = this.stats[e.id]
-        lines.push(`- \`${e.id}\` ${e.name}：${e.skill.description}${s ? `（完成 ${s.done}，失败 ${s.failed}）` : ''}`)
+        const from = e.home !== e.group ? `（从${this.team.groups.get(e.home)?.name || e.home}借调）` : ''
+        lines.push(`- \`${e.id}\` ${e.name}${from}：${e.skill.description}${s ? `（完成 ${s.done}，失败 ${s.failed}）` : ''}`)
       }
     }
     return lines.join('\n')

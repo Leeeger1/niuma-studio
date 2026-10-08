@@ -350,7 +350,7 @@
     const badge = task && status === 'working' ? `<span class="timer" data-since="${task.startedAt || ''}"></span>` : esc(AGENT_STATUS[status] || status)
     return `<li class="emp" data-s="${esc(status)}" title="${esc(e.description)}">
       <span class="face" style="background-image:url(${face(e.id)})"></span>
-      <span class="ename">${esc(e.name)}</span>
+      <span class="ename">${esc(e.name)}${e.home ? ` <span class="borrow" title="${esc(e.homeName)}不在岗，先借调过来干活">借调</span>` : ''}</span>
       <span class="estate">${badge}</span>
       <span class="edoing">${esc(doing)}</span></li>`
   }

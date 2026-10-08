@@ -165,10 +165,12 @@ export function createServer(coord, { publicDir, host, token, setup, skins = ski
             install: () => setup.install(body.tool),
             'install-terminal': () => setup.installInTerminal(body.tool),
             login: () => setup.login(body.tool),
-            test: () => (body.tool ? setup.testCli(body.tool) : setup.testApi(body.api || {})),
+            test: () => (body.tool ? setup.testCli(body.tool) : setup.testApi(body.api || {}, { tools: true })),
+            models: () => setup.listModels(body.api || {}),
             api: () => setup.saveApi(body),
             remove: () => setup.remove(body.id),
             recheck: () => setup.recheck(),
+            staff: () => setup.staff(body),
           }
           const act = actions[url.pathname.slice('/api/setup/'.length)]
           if (!act) return send(res, 404, 'Not found')

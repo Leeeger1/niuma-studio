@@ -1,5 +1,5 @@
 // The company: project groups (项目组, one per model backend) and employees (员工, one per skill).
-import { COST_ZH, TIER_ZH } from './models.js'
+import { COST_ZH, TIER_ZH, fitScore, power } from './models.js'
 import { loadSkills, skillDirs } from './skills.js'
 import { ToolCatalog } from './tools.js'
 import { ClaudeCliWorker, CodexCliWorker } from './workers/cli.js'
@@ -16,6 +16,8 @@ const BRAND_COLORS = [
 ]
 const PALETTE = ['#3d6fd9', '#8e5cd9', '#c98a0c', '#4f9e3a', '#b5533a', '#2f95b5']
 const DIFFS = ['hard', 'medium', 'easy']
+// 借调时按岗位找合适的组：难的岗位要强模型，杂活要便宜模型
+const SKILL_LEVEL = { architect: 'hard', reviewer: 'hard', debugger: 'hard', writer: 'easy' }
 
 export class Team {
   constructor(config, { root, workdir, logDir }) {
@@ -56,16 +58,21 @@ export class Team {
       let eid = String(id || s.id)
       if (this.employees.some((e) => e.id === eid)) eid = `${eid}-${group}`
       if (this.employees.some((e) => e.id === eid)) return
-      this.employees.push({ id: eid, name: name || s.name, skill: s, group })
+      // home：配置里安排的组；group：现在坐在哪个组（home 不在岗时会被借调走）
+      this.employees.push({ id: eid, name: name || s.name, skill: s, group, home: group })
     }
     for (const e of this.config.employees || []) if (e && e.enabled !== false) add(e)
+    // 放假的员工（配置里 enabled: false），给「岗位安排」面板看
+    this.offDuty = (this.config.employees || []).filter((e) => e && e.id && e.enabled === false)
     // Groups nobody was assigned to in the config get a generalist, even after skill files hire more people.
     const staffed = new Set(this.employees.map((e) => e.group))
     for (const g of this.groups.values()) {
       if (!staffed.has(g.id)) add({ id: g.id, skill: 'generalist', group: g.id, name: `${g.name.replace(/\s*组$/, '')}通才` })
     }
+    // 自己写的岗位文件里写了 group 的，自动入职；配置里已经安排过（换了组、放了假）就听配置的
+    const configured = new Set((this.config.employees || []).flatMap((e) => (e ? [e.id, e.skill] : [])))
     for (const s of this.skills.values()) {
-      if (s.group && s.source !== 'builtin' && !this.employees.some((e) => e.skill.id === s.id && e.group === s.group)) {
+      if (s.group && s.source !== 'builtin' && !configured.has(s.id) && !this.employees.some((e) => e.skill.id === s.id)) {
         add({ id: s.id, skill: s.id, group: s.group })
       }
     }
@@ -73,6 +80,28 @@ export class Team {
 
   async check() {
     await Promise.all([...this.groups.values()].map((g) => g.check().catch(() => (g.available = false))))
+    this.reassign()
+  }
+
+  /**
+   * 借调：员工原来的组不在岗（比如没装 Claude Code），就先坐到在岗的组里干活，岗位不会跟着放假。
+   * 难的岗位找强模型，杂活找便宜模型，人多的组少分一点。原来的组回来了，下次点名就回去。
+   * 通才是各组自己的，不借。配置里 borrowStaff: false 可以关掉。
+   */
+  reassign() {
+    for (const e of this.employees) e.group = e.home
+    if (this.config.borrowStaff === false) return
+    const on = [...this.groups.values()].filter((g) => g.available)
+    if (!on.length) return
+    const load = new Map(on.map((g) => [g.id, this.employees.filter((e) => e.group === g.id).length]))
+    for (const e of this.employees) {
+      if (this.groups.get(e.home)?.available || e.skill.id === 'generalist') continue
+      const level = SKILL_LEVEL[e.skill.id] || 'medium'
+      const fit = (g) => (level === 'hard' ? power(g.profileFor('hard')) : fitScore(g.profileFor(level), level))
+      const best = on.map((g) => ({ g, score: fit(g) - load.get(g.id) * 2 })).sort((a, b) => b.score - a.score)[0].g
+      e.group = best.id
+      load.set(best.id, load.get(best.id) + 1)
+    }
   }
 
   employee(id) {
@@ -158,6 +187,8 @@ export class Team {
         look: e.skill.look || 'none',
         color: g.color,
         available: g.available,
+        home: e.home !== e.group ? e.home : '',
+        homeName: e.home !== e.group ? this.groups.get(e.home)?.name || e.home : '',
       }
     })
     return { groups, employees }

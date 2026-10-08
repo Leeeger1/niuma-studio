@@ -5,8 +5,8 @@
 
   const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c])
   const DESC = {
-    claude: 'Anthropic 的编程助手。Claude 组的员工（架构师、前端、审查员）用它干活。',
-    codex: 'OpenAI 的编程助手。Codex 组的员工（后端、测试、排错）用它干活。',
+    claude: 'Anthropic 的编程助手。默认架构师、前端、审查员在 Claude 组，下面「岗位安排」里可以调。',
+    codex: 'OpenAI 的编程助手。默认后端、测试、排错专家在 Codex 组，下面「岗位安排」里可以调。',
   }
   const TYPE = { 'claude-cli': 'Claude Code', 'codex-cli': 'Codex', 'openai-api': 'API' }
 
@@ -22,6 +22,7 @@
     ],
     groups: [
       { id: 'claude', name: 'Claude 组', type: 'claude-cli', available: true, model: 'sonnet' },
+      { id: 'codex', name: 'Codex 组', type: 'codex-cli', available: false, note: '没找到 codex 命令' },
       { id: 'deepseek', name: 'DeepSeek 组', type: 'openai-api', available: true, model: 'deepseek-v4-flash', removable: true },
     ],
     presets: [
@@ -35,6 +36,18 @@
       { id: 'ollama', name: '本地模型', note: 'Ollama / LM Studio，不用 Key', group: '本地组', baseUrl: 'http://localhost:11434/v1', noKey: true, models: { medium: 'qwen3-coder' } },
       { id: 'custom', name: '自定义', note: '任何 OpenAI 兼容接口', custom: true, models: {} },
     ],
+    staff: [
+      { id: 'architect', name: '架构师', skill: 'architect', skillName: '架构师', group: 'claude', now: 'claude', enabled: true, defaultStaff: true },
+      { id: 'frontend', name: '前端工程师', skill: 'frontend', skillName: '前端工程师', group: 'claude', now: 'claude', enabled: true, defaultStaff: true },
+      { id: 'reviewer', name: '代码审查员', skill: 'reviewer', skillName: '代码审查员', group: 'deepseek', now: 'deepseek', enabled: true, defaultStaff: true, changed: true },
+      { id: 'backend', name: '后端工程师', skill: 'backend', skillName: '后端工程师', group: 'codex', now: 'deepseek', enabled: true, defaultStaff: true },
+      { id: 'tester', name: '测试工程师', skill: 'tester', skillName: '测试工程师', group: 'codex', now: 'claude', enabled: true, defaultStaff: true },
+      { id: 'debugger', name: '排错专家', skill: 'debugger', skillName: '排错专家', group: 'codex', now: '', enabled: false, defaultStaff: true, changed: true },
+    ],
+    skills: [
+      { id: 'architect', name: '架构师' }, { id: 'frontend', name: '前端工程师' }, { id: 'backend', name: '后端工程师' }, { id: 'reviewer', name: '代码审查员' },
+      { id: 'tester', name: '测试工程师' }, { id: 'debugger', name: '排错专家' }, { id: 'writer', name: '文档专员' },
+    ],
     configFile: '~/.niuma/config.json',
   }
 
@@ -42,6 +55,8 @@
   let ctx = { request: null }
   let st = null
   let pick = null // 正在填的 API 预设
+  let found = null // 「读取模型列表」读到的：{ preset, total, skipped, families }
+  let typed = {} // 表单里已经填的（重画面板时留住）
   const logs = { claude: [], codex: [] }
   const notes = {} // 各卡片下面的一行结果
 
@@ -53,6 +68,7 @@
     document.body.appendChild(dlg)
     dlg.addEventListener('click', onClick)
     dlg.addEventListener('submit', onSubmit)
+    dlg.addEventListener('change', onChange)
     dlg.addEventListener('click', (e) => {
       if (e.target === dlg) dlg.close()
     })
@@ -120,27 +136,75 @@
     }</li>`
   }
 
+  function staffSection() {
+    if (!st.staff) return ''
+    const groups = st.groups || []
+    const gname = (id) => groups.find((g) => g.id === id)?.name || id
+    const options = (sel, off) =>
+      groups.map((g) => `<option value="${esc(g.id)}"${!off && g.id === sel ? ' selected' : ''}>${esc(g.name)}${g.available ? '' : '（未到岗）'}</option>`).join('') +
+      `<option value="__off"${off ? ' selected' : ''}>放假</option>`
+    const rows = st.staff
+      .map((r) => {
+        const borrowed = r.enabled && r.now && r.now !== r.group ? chip(`${gname(r.group)}不在岗，暂时借调到${gname(r.now)}`, 'busy') : ''
+        const sub = r.name !== r.skillName ? `<span class="muted">${esc(r.skillName)}</span>` : ''
+        const undo = r.removable
+          ? `<button type="button" class="ghost" data-act="staff-remove" data-id="${esc(r.id)}">删掉</button>`
+          : r.changed && r.defaultStaff
+            ? `<button type="button" class="ghost" data-act="staff-remove" data-id="${esc(r.id)}" title="回到最开始的安排">恢复默认</button>`
+            : ''
+        return `<li${r.enabled ? '' : ' class="off"'}><b>${esc(r.name)}</b>${sub}${borrowed}<select data-staff="${esc(r.id)}" aria-label="${esc(r.name)}在哪个组">${options(r.group, !r.enabled)}</select>${undo}</li>`
+      })
+      .join('')
+    const skills = (st.skills || []).map((k) => `<option value="${esc(k.id)}">${esc(k.name)}</option>`).join('')
+    return `<section><h3>岗位安排 <small>谁去哪个组干活都能调，不调就是默认安排</small></h3>
+      <ul class="groups staff-list">${rows}</ul>
+      <div class="row staff-add"><span>再加一个</span><select id="add-skill" aria-label="岗位">${skills}</select><span>坐到</span><select id="add-group" aria-label="项目组">${groups.map((g) => `<option value="${esc(g.id)}">${esc(g.name)}</option>`).join('')}</select><button type="button" data-act="staff-add">加上</button></div>
+      <p class="desc">想要新岗位（比如数据库专家、产品经理）：<button type="button" class="btn-link-inline" data-act="hire">跟傻妞说「/招人 …」</button>，她会写好岗位说明。</p>
+      ${noteHtml('staff')}</section>`
+  }
+
+  function familyTable() {
+    const rows = found.families
+      .map((f) => {
+        const opts = (sel) => f.models.map((m) => `<option value="${esc(m.id)}"${m.id === sel ? ' selected' : ''}>${esc(m.id)}（${esc(m.tier)}·${esc(m.cost)}）</option>`).join('')
+        const sel = (k) => `<td><select data-fam-k="${esc(f.id)}.${k}" aria-label="${esc(f.name)}${{ hard: '难活', medium: '中档', easy: '杂活' }[k]}">${opts(f.pick[k])}</select></td>`
+        return `<tr${f.on ? '' : ' class="off"'}><td><input type="checkbox" data-fam="${esc(f.id)}" ${f.on ? 'checked' : ''} aria-label="接入 ${esc(f.name)}"></td><th>${esc(f.name)} <small>${f.models.length} 个</small></th>${sel('hard')}${sel('medium')}${sel('easy')}</tr>`
+      })
+      .join('')
+    return `<div class="families">
+      <p class="desc">读到 ${found.total} 个模型${found.skipped ? `（${found.skipped} 个是画图、语音、向量之类的，跳过了）` : ''}，按家族分好了。勾上要接的，<b>每家单独成一个组</b>，傻妞能按各家的特长派活；难活 / 中档 / 杂活用哪个模型已经挑好，也可以自己换。</p>
+      <div class="fam-wrap"><table class="fam"><thead><tr><th></th><th>家族</th><th>难活</th><th>中档</th><th>杂活</th></tr></thead><tbody>${rows}</tbody></table></div>
+      <button type="button" class="btn-link-inline" data-act="models-manual">不用列表，自己填模型名</button>
+    </div>`
+  }
+
   function apiForm(p) {
     const m = p.models || {}
+    const v = typed.preset === p.id ? typed : {}
+    const val = (k, d) => (v[k] != null && v[k] !== '' ? v[k] : d)
     const custom = !!p.custom
+    const list = found && found.preset === p.id
     const field = (name, label, value, attrs = '') => `<label><span>${label}</span><input name="${name}" value="${esc(value || '')}" ${attrs}></label>`
+    const mv = (k) => v.models?.[k] || m[k] || ''
     return `<form class="card api-form" data-preset="${esc(p.id)}">
       <div class="head"><b>接入 ${esc(p.name)}</b><span class="muted">${esc(p.note || '')}</span><button type="button" class="ghost close-form" data-act="close-form" aria-label="收起">收起</button></div>
-      ${custom ? field('baseUrl', '接口地址', p.baseUrl, 'placeholder="https://你的中转站地址/v1" required') : ''}
-      ${p.noKey ? '' : `<label><span>API Key</span><input name="apiKey" type="password" autocomplete="off" placeholder="sk-…" required>${p.keyUrl ? `<a href="${esc(p.keyUrl)}" target="_blank" rel="noopener">去拿 Key ↗</a>` : ''}</label>`}
-      ${custom || !m.medium ? field('medium', '模型名', m.medium, `placeholder="${custom ? '比如 deepseek-v4-flash、gpt-5' : '平台上的模型全名'}" required`) : ''}
-      <details ${custom ? 'open' : ''}><summary>高级：地址、按难度分别用的模型、组名</summary>
-        ${custom ? '' : field('baseUrl', '接口地址', p.baseUrl)}
-        <div class="models">${field('hard', '难活用', m.hard, 'placeholder="不填就用中档"')}${custom || !m.medium ? '' : field('medium', '中档', m.medium)}${field('easy', '杂活用', m.easy, 'placeholder="不填就用中档"')}</div>
-        ${field('name', '项目组名', p.group, 'placeholder="比如 中转站组"')}
+      ${custom ? field('baseUrl', '接口地址', val('baseUrl', p.baseUrl), 'placeholder="https://你的中转站地址/v1" required') : ''}
+      ${p.noKey ? '' : `<label><span>API Key</span><input name="apiKey" type="password" autocomplete="off" placeholder="sk-…" value="${esc(v.apiKey || '')}" required>${p.keyUrl ? `<a href="${esc(p.keyUrl)}" target="_blank" rel="noopener">去拿 Key ↗</a>` : ''}</label>`}
+      ${list ? familyTable() : custom || !m.medium ? field('medium', '模型名', mv('medium'), `placeholder="${custom ? '比如 deepseek-v4-flash、gpt-5；不知道就点「读取模型列表」' : '平台上的模型全名'}" required`) : ''}
+      <details ${custom && !list ? 'open' : ''}><summary>高级：${list ? '' : '地址、按难度分别用的模型、'}组名</summary>
+        ${custom ? '' : field('baseUrl', '接口地址', val('baseUrl', p.baseUrl))}
+        ${list ? '' : `<div class="models">${field('hard', '难活用', mv('hard'), 'placeholder="不填就用中档"')}${custom || !m.medium ? '' : field('medium', '中档', mv('medium'))}${field('easy', '杂活用', mv('easy'), 'placeholder="不填就用中档"')}</div>`}
+        ${field('name', list ? '组名前缀' : '项目组名', val('name', p.group), `placeholder="${list ? '比如 中转站（会变成「中转站 Claude 组」）' : '比如 中转站组'}"`)}
       </details>
-      <div class="row"><button type="button" data-act="test-api">测试连接</button><button type="submit" class="primary">测试并接入</button></div>
+      <div class="row"><button type="button" data-act="list-models">${list ? '重新读取模型列表' : '读取模型列表'}</button>${list ? '' : '<button type="button" data-act="test-api">测试连接</button>'}<button type="submit" class="primary">测试并接入</button></div>
       ${noteHtml('api')}
     </form>`
   }
 
   function render(loading) {
     if (!dlg) return
+    const form = dlg.querySelector('form.api-form')
+    if (form) typed = formData(form)
     if (loading || !st) {
       dlg.innerHTML = `<div class="setup-head"><h2>接入员工</h2><button type="button" class="ghost" data-act="close">关闭</button></div><p class="loading">正在看看电脑上都装了什么…</p>`
       return
@@ -165,6 +229,7 @@
       <div class="setup-head"><h2>接入员工</h2><button type="button" class="ghost" data-act="recheck">重新检查</button><button type="button" class="ghost" data-act="close">关闭</button></div>
       ${banner}
       <section><h3>现在的项目组</h3><ul class="groups">${st.groups.map(groupRow).join('') || '<li class="muted">还没有项目组</li>'}</ul>${noteHtml('groups')}</section>
+      ${staffSection()}
       <section><h3>命令行员工</h3>${node}<div class="cards">${st.cli.map(cliCard).join('')}</div></section>
       <section><h3>API 员工 <small>选一家，填上 Key 就能接</small></h3><div class="presets">${presets}</div>${pick ? apiForm(pick) : ''}</section>
       <p class="foot">Key 只保存在你自己的电脑上：<code>${esc(st.configFile)}</code></p>`
@@ -208,6 +273,8 @@
     if (act === 'pick') {
       pick = st.presets.find((p) => p.id === id) || null
       notes.api = null
+      found = null
+      typed = {}
       render()
       dlg.querySelector('.api-form input')?.focus()
       return
@@ -247,13 +314,80 @@
       const d = formData(form)
       const p = st.presets.find((x) => x.id === d.preset) || {}
       const r = await call('/api/setup/test', { api: { baseUrl: d.baseUrl || p.baseUrl, apiKey: d.apiKey, noKey: p.noKey, models: { ...p.models, ...Object.fromEntries(Object.entries(d.models).filter(([, v]) => v)) } } }, 'api', '正在试着发一句话…')
-      if (r?.ok) note('api', `连上了！模型 ${r.model} 回复：${r.reply}`, 'ok')
+      if (r?.ok) note('api', r.tools === false ? `连上了（${r.model} 回复：${r.reply}），可是它好像不会调用工具：只能帮傻妞动脑子，改不了文件。换个模型试试。` : `连上了！模型 ${r.model} 回复：${r.reply}，也会调用工具，能干活。`, r.tools === false ? 'bad' : 'ok')
+      return
+    }
+    if (act === 'list-models') {
+      const form = b.closest('form')
+      const d = formData(form)
+      const p = st.presets.find((x) => x.id === d.preset) || {}
+      const r = await call('/api/setup/models', { api: { baseUrl: d.baseUrl || p.baseUrl, apiKey: d.apiKey, noKey: p.noKey } }, 'api', '正在读模型列表…')
+      if (!r?.ok) return
+      if (!r.families.length) return note('api', '没读到能写代码的模型，直接填模型名吧。', 'bad')
+      // 默认勾上有强模型的几家（最多 4 家），一家都没有就勾第一家
+      let n = 0
+      const families = r.families.map((f) => {
+        const strong = f.models.find((x) => x.id === f.pick.hard)?.tier === '强'
+        return { ...f, on: strong && n++ < 4 }
+      })
+      if (!families.some((f) => f.on)) families[0].on = true
+      found = { preset: d.preset, total: r.total, skipped: r.skipped, families }
+      typed = d
+      render()
+      return note('api', `认出 ${families.length} 家：${families.map((f) => f.name).join('、')}。勾好了点「测试并接入」。`, 'ok')
+    }
+    if (act === 'models-manual') {
+      found = null
+      render()
+      return
+    }
+    if (act === 'staff-add') {
+      const r = await call('/api/setup/staff', { add: true, skill: dlg.querySelector('#add-skill').value, group: dlg.querySelector('#add-group').value }, 'staff', '正在安排…')
+      if (r?.ok) await refresh(), note('staff', '加好了，已经坐进工位。', 'ok')
+      return
+    }
+    if (act === 'staff-remove') {
+      const r = await call('/api/setup/staff', { id, remove: true }, 'staff', '正在调整…')
+      if (r?.ok) await refresh(), note('staff', '好了。', 'ok')
+      return
+    }
+    if (act === 'hire') {
+      dlg.close()
+      const input = document.getElementById('input')
+      if (input) {
+        input.value = '/招人 '
+        input.focus()
+      }
       return
     }
     if (act === 'remove') {
       const r = await call('/api/setup/remove', { id }, 'groups', '正在让他们回家…')
       if (r?.ok) refresh()
     }
+  }
+
+  async function onChange(e) {
+    const fam = e.target.closest('[data-fam], [data-fam-k]')
+    if (fam && found) {
+      if (fam.dataset.fam) {
+        const f = found.families.find((x) => x.id === fam.dataset.fam)
+        if (f) f.on = fam.checked
+        fam.closest('tr')?.classList.toggle('off', !fam.checked)
+      } else {
+        const [fid, k] = fam.dataset.famK.split('.')
+        const f = found.families.find((x) => x.id === fid)
+        if (f) f.pick = { ...f.pick, [k]: fam.value }
+      }
+      return
+    }
+    const sel = e.target.closest('select[data-staff]')
+    if (!sel) return
+    const off = sel.value === '__off'
+    const r = await call('/api/setup/staff', off ? { id: sel.dataset.staff, enabled: false } : { id: sel.dataset.staff, group: sel.value, enabled: true }, 'staff', '正在调整…')
+    if (r?.ok) {
+      await refresh()
+      note('staff', off ? '放假了，要用的时候在这里选个组就回来。' : '调好了，下一个活就按新安排派。', 'ok')
+    } else if (!ctx.request) render()
   }
 
   async function onSubmit(e) {
@@ -263,12 +397,26 @@
     const d = formData(form)
     const p = st.presets.find((x) => x.id === d.preset) || {}
     d.models = { ...p.models, ...Object.fromEntries(Object.entries(d.models).filter(([, v]) => v)) }
-    const r = await call('/api/setup/api', d, 'api', '正在测试并接入…')
+    if (found && found.preset === d.preset) {
+      d.families = found.families.filter((f) => f.on).map((f) => ({ family: f.id, name: f.name, models: f.pick }))
+      if (!d.families.length) return note('api', '一家都没勾，至少勾一家。', 'bad')
+    }
+    const r = await call('/api/setup/api', d, 'api', d.families ? `正在测试 ${d.families.length} 家模型…` : '正在测试并接入…')
     if (r?.ok) {
-      note('api', r.available ? `接好了！模型回复：${r.reply}。新同事已经坐进工位。` : '接上了，但检查没通过，看看上面的状态。', r.available ? 'ok' : 'bad')
+      const res = r.results || []
+      const good = res.filter((x) => x.ok)
+      const bad = res.filter((x) => !x.ok)
+      const noTools = good.filter((x) => x.tools === false).map((x) => x.name)
+      const msg = [
+        good.length ? `接好了：${good.map((x) => x.name).join('、')}，已经坐进工位。` : '',
+        bad.length ? `没接上：${bad.map((x) => `${x.name}（${x.error}）`).join('；')}` : '',
+        noTools.length ? `注意：${noTools.join('、')} 好像不会调用工具，只能帮傻妞动脑子，改不了文件。` : '',
+      ].filter(Boolean).join(' ')
+      found = null
+      typed = {}
       pick = null
       await refresh()
-      note('groups', r.available ? '新同事到岗啦！' : '', 'ok')
+      note('groups', msg || (r.available ? '新同事到岗啦！' : '接上了，但检查没通过。'), bad.length || noTools.length || !r.available ? 'bad' : 'ok')
     }
   }
 

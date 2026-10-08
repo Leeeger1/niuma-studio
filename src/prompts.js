@@ -17,7 +17,8 @@ export function teamText(team, stats) {
       const g = team.groups.get(e.group)
       const s = stats[e.id]
       const record = s && s.done + s.failed ? `；战绩：完成 ${s.done}，失败 ${s.failed}` : ''
-      return `- ${e.id}｜${e.name}｜${g.name}${g.available ? '' : '（不在岗）'}｜${e.skill.description}${record}`
+      const borrowed = e.home && e.home !== e.group ? `（${team.groups.get(e.home)?.name || e.home}不在岗，借调过来）` : ''
+      return `- ${e.id}｜${e.name}｜${g.name}${g.available ? '' : '（不在岗）'}${borrowed}｜${e.skill.description}${record}`
     })
     .join('\n')
   return `### 项目组（模型）\n${groups}\n\n### 员工（id｜岗位｜所属组｜擅长）\n${people}${toolsText(team)}`
