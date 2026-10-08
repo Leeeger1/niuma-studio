@@ -120,3 +120,34 @@ test('saving from the editor writes a folder with image files; replace and delet
   assert.throws(() => deleteSkin('../..', { dir }), /不认识/)
   assert.throws(() => deleteSkin('nope', { dir }), /找不到/)
 })
+
+test('portraits (cast): checked like images, saved as files, served by name, copied between skins', async () => {
+  const dir = tmp()
+  const { skinFile } = await import('../src/skins.js')
+  const img = `data:image/png;base64,${PNG.toString('base64')}`
+  const s = F.normalize({ name: 'x', cast: { architect: img, shaniu: { happy: img }, 'bad/role': img, reviewer: { idle: 'https://evil.example/x.png' } } })
+  assert.deepEqual(Object.keys(s.cast), ['architect', 'shaniu'])
+  assert.equal(s.cast.shaniu.idle, img, 'a role with only one picture uses it as the idle one')
+  assert.ok(s.warnings.some((w) => /不是角色名/.test(w)) && s.warnings.some((w) => /cast\.reviewer\.idle/.test(w)))
+
+  const saved = saveSkin({ name: '立绘', cast: { architect: { idle: img, error: img }, default: img } }, { dir })
+  const folder = path.join(dir, '立绘')
+  assert.deepEqual(fs.readdirSync(folder).sort(), ['cast-architect-error.png', 'cast-architect-idle.png', 'cast-default-idle.png', 'skin.json'])
+  assert.deepEqual(F.parse(fs.readFileSync(path.join(folder, 'skin.json'), 'utf8')).cast.architect, { idle: 'cast-architect-idle.png', error: 'cast-architect-error.png' })
+  // 页面拿到的是地址，不是一大串 data URL
+  const listed = listSkins({ dir }).skins[0]
+  assert.equal(listed.cast.architect.idle, '/api/skins/file?skin=%E7%AB%8B%E7%BB%98&name=cast-architect-idle.png')
+  assert.equal(skinFile('立绘', 'cast-architect-idle.png', { dir }).mime, 'image/png')
+  assert.throws(() => skinFile('立绘', '../立绘/skin.json', { dir }))
+  assert.throws(() => skinFile('..', 'x.png', { dir }))
+  assert.throws(() => skinFile('立绘', 'skin.json', { dir }), /找不到/)
+
+  // 改的时候：留着的图沿用，去掉的图删文件
+  saveSkin({ id: '立绘', name: '立绘', cast: { architect: { idle: listed.cast.architect.idle } } }, { dir, replace: true })
+  assert.deepEqual(fs.readdirSync(folder).sort(), ['cast-architect-idle.png', 'skin.json'])
+  // 另存为新皮肤：别的皮肤的立绘拷一份过来
+  const copy = saveSkin({ name: '立绘二', cast: { architect: { idle: listed.cast.architect.idle } } }, { dir })
+  assert.ok(fs.existsSync(path.join(dir, copy.id, 'cast-architect-idle.png')))
+  deleteSkin('立绘', { dir })
+  assert.ok(fs.existsSync(path.join(dir, copy.id, 'cast-architect-idle.png')), 'the copy survives deleting the original')
+})

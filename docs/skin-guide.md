@@ -116,6 +116,13 @@
 | `boss` `bossEdge` | 傻妞的桌子、描边 | 颜色 |
 | `ink` `pot` | 钟的指针、花盆 | 颜色 |
 
+**角色立绘 `cast`**（把代码画的角色换成真正的插画，详见 [角色立绘指南](cast-guide.md)）
+
+| 项 | 意思 |
+|---|---|
+| `cast.角色` | 角色：`shaniu` 傻妞、`architect` `frontend` `reviewer` `backend` `tester` `debugger` `writer` 各岗位、`default` 其他所有人；也可以写员工的 id |
+| `idle` / `happy` / `error` | 平时 / 开心 / 出错 三张图，后两张可以不放；只写一个文件名就是平时那张 |
+
 **图片 `images`**
 
 | 项 | 意思 |

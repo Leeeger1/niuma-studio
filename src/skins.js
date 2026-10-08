@@ -1,7 +1,8 @@
 // 自制皮肤：放在 ~/.niuma/skins/ 里。两种放法都认：
 //   ~/.niuma/skins/海边.json                 一个文件（图片放在同一个文件夹，写文件名）
 //   ~/.niuma/skins/海边/skin.json + 图片      一个文件夹（「做皮肤」编辑器存的就是这种）
-// 页面拿到的是检查过的皮肤，图片已经转成 data URL，不用另开静态文件目录。
+// 页面拿到的是检查过的皮肤：墙纸、窗外图片转成 data URL；角色立绘又多又大，给的是地址
+// （/api/skins/file?skin=…&name=…），页面要用的时候再取。
 import { spawn } from 'node:child_process'
 import fs from 'node:fs'
 import os from 'node:os'
@@ -37,6 +38,30 @@ function inlineImage(dir, folder, name) {
   return `data:${mime};base64,${fs.readFileSync(p).toString('base64')}`
 }
 
+/** 立绘文件名 → 页面能取的地址。ref 是皮肤在文件夹里的名字（文件夹名或 json 的文件名） */
+const castUrl = (ref, name) => `/api/skins/file?skin=${encodeURIComponent(ref)}&name=${encodeURIComponent(name)}`
+
+function castRefs(dir, folder, ref, cast, problems) {
+  const out = {}
+  for (const [role, v] of Object.entries(cast && typeof cast === 'object' ? cast : {})) {
+    const states = typeof v === 'string' ? { idle: v } : v && typeof v === 'object' ? v : {}
+    out[role] = {}
+    for (const [st, name] of Object.entries(states)) {
+      if (typeof name !== 'string' || !name) continue
+      if (name.startsWith('data:') || name.startsWith('/api/')) {
+        out[role][st] = name
+        continue
+      }
+      const p = path.resolve(folder, name)
+      if (!inside(dir, p) || path.dirname(p) !== path.resolve(folder)) problems.push(`立绘 ${name} 要放在皮肤文件旁边`)
+      else if (!MIME[path.extname(p).toLowerCase()]) problems.push(`立绘 ${name} 只支持 png、jpg、gif、webp`)
+      else if (!fs.existsSync(p)) problems.push(`找不到立绘 ${name}`)
+      else out[role][st] = castUrl(ref, name)
+    }
+  }
+  return out
+}
+
 function readSkin(dir, file, folder, id, withImages) {
   const raw = F.parse(fs.readFileSync(file, 'utf8'))
   const problems = []
@@ -52,9 +77,24 @@ function readSkin(dir, file, folder, id, withImages) {
       problems.push(e.message)
     }
   }
-  const skin = F.normalize({ ...raw, images }, { id })
+  const cast = withImages ? castRefs(dir, folder, id, raw.cast, problems) : {}
+  const skin = F.normalize({ ...raw, images, cast }, { id })
   skin.warnings.unshift(...problems)
   return skin
+}
+
+/** 立绘文件：ref 是皮肤的文件夹名（或 json 文件名去掉 .json），name 是文件名 */
+export function skinFile(ref, name, { dir = skinsDir() } = {}) {
+  const bad = (x) => !x || /[\\/\0]/.test(x) || x === '.' || x === '..'
+  if (bad(ref) || bad(name)) throw new Error('文件名不对')
+  let folder = null
+  if (fs.existsSync(path.join(dir, ref, 'skin.json'))) folder = path.join(dir, ref)
+  else if (fs.existsSync(path.join(dir, `${ref}.json`))) folder = dir
+  if (!folder) throw new Error('找不到这个皮肤')
+  const p = path.join(folder, name)
+  const mime = MIME[path.extname(p).toLowerCase()]
+  if (!inside(dir, p) || !mime || !fs.existsSync(p)) throw new Error('找不到这张图')
+  return { path: p, mime }
 }
 
 /** 列出所有自制皮肤。坏掉的文件不影响别的，原因放在 errors 里给页面看。images: false 只要名字（桌面版菜单用）。 */
@@ -135,8 +175,48 @@ export function saveSkin(input, { replace = false, dir = skinsDir() } = {}) {
     fs.writeFileSync(path.join(where.folder, name), Buffer.from(m[2], 'base64'))
     files[k] = name
   }
-  fs.writeFileSync(where.file, F.toFile({ ...skin, id }, files))
-  return { ...skin, id, file: where.file }
+  // 立绘：新上传的（data URL）写成文件；原来就有的（地址）沿用，别的皮肤的就拷一份过来
+  const cast = {}
+  const keep = new Set()
+  for (const [role, states] of Object.entries(skin.cast || {})) {
+    cast[role] = {}
+    for (const [st, v] of Object.entries(states)) {
+      let buf
+      let ext
+      const m = v.match(/^data:(image\/[a-z]+);base64,(.*)$/)
+      if (m) {
+        buf = Buffer.from(m[2], 'base64')
+        ext = EXT[m[1]]
+      } else {
+        const q = new URLSearchParams(v.split('?')[1] || '')
+        let src
+        try {
+          src = skinFile(q.get('skin'), q.get('name'), { dir })
+        } catch {
+          continue
+        }
+        if (path.dirname(src.path) === path.resolve(where.folder)) {
+          cast[role][st] = path.basename(src.path)
+          keep.add(path.basename(src.path))
+          continue
+        }
+        buf = fs.readFileSync(src.path)
+        ext = EXT[src.mime]
+      }
+      const name = `${where.prefix}cast-${role}-${st}${ext}`
+      fs.writeFileSync(path.join(where.folder, name), buf)
+      cast[role][st] = name
+      keep.add(name)
+    }
+    if (!Object.keys(cast[role]).length) delete cast[role]
+  }
+  for (const f of fs.readdirSync(where.folder)) {
+    if (f.startsWith(`${where.prefix}cast-`) && !keep.has(f)) fs.rmSync(path.join(where.folder, f), { force: true })
+  }
+  fs.writeFileSync(where.file, F.toFile({ ...skin, id }, files, cast))
+  const ref = where.folder === dir ? path.basename(where.file, '.json') : path.basename(where.folder)
+  const castOut = Object.fromEntries(Object.entries(cast).map(([r, sts]) => [r, Object.fromEntries(Object.entries(sts).map(([st, n]) => [st, castUrl(ref, n)]))]))
+  return { ...skin, id, cast: castOut, file: where.file }
 }
 
 export function deleteSkin(id, { dir = skinsDir() } = {}) {
@@ -146,6 +226,7 @@ export function deleteSkin(id, { dir = skinsDir() } = {}) {
   if (where.folder === dir) {
     fs.rmSync(where.file)
     for (const k of F.IMAGE_KEYS) for (const ext of Object.values(EXT)) fs.rmSync(path.join(dir, `${where.prefix}${k}${ext}`), { force: true })
+    for (const f of fs.readdirSync(dir)) if (f.startsWith(`${where.prefix}cast-`)) fs.rmSync(path.join(dir, f), { force: true })
   } else fs.rmSync(where.folder, { recursive: true, force: true })
   return { ok: true }
 }

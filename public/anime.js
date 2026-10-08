@@ -96,10 +96,14 @@
           windowImage: skin.images?.window || '',
           portraitBg: skin.colors?.panel2 || '',
         }
+        this.cast = skin.cast || {}
       } else {
         this.skinId = SKINS[skin] ? skin : 'sakura'
         this.S = SKINS[this.skinId]
       }
+      this.cast ||= {}
+      this.avatars = new Map()
+      this.onFaces = null // 立绘头像截好了：页面重画头像
       // 角色画风：anime（默认，动漫风）或 chibi（Q 版）
       this.art = this.S.art === 'chibi' || !C.arts?.().includes('anime') ? 'chibi' : 'anime'
       this.FEET = C.feet({ art: this.art }) * K
@@ -146,7 +150,65 @@
     }
 
     portrait(emp) {
-      return C.portrait(this.look(emp), this.S.portraitBg || (this.S.dark ? '#2a2d55' : '#fff4f9'))
+      const bg = this.S.portraitBg || (this.S.dark ? '#2a2d55' : '#fff4f9')
+      const cast = this.castFor(emp && emp.id !== 'shaniu' ? emp : { id: 'shaniu' })
+      if (cast && window.NiumaCast) {
+        const got = this.avatars.get(cast.idle)
+        if (got) return got
+        if (got === undefined) {
+          this.avatars.set(cast.idle, null)
+          window.NiumaCast.avatar(cast.idle, bg)
+            .then((url) => {
+              this.avatars.set(cast.idle, url)
+              if (this.alive) this.onFaces?.()
+            })
+            .catch(() => {})
+        }
+      }
+      return C.portrait(this.look(emp), bg)
+    }
+
+    // ---- 角色立绘（自制皮肤里的 cast）------------------------------------------------------
+
+    /** 这个人用哪套立绘：先按员工 id，再按岗位，最后用 default */
+    castFor(emp) {
+      const c = this.cast
+      if (!emp || !c || !Object.keys(c).length) return null
+      if (emp.id === 'shaniu') return c.shaniu || null
+      return c[emp.id] || c[emp.skill] || c.default || null
+    }
+
+    /** 立绘多高（设计坐标）：全身图（瘦长）和半身图按比例放，量好宽高比以前先当全身图 */
+    castHeight(url, full, half) {
+      const a = window.NiumaCast?.aspect(url, () => this.rebuildSoon())
+      return a && a < 1.6 ? half : full
+    }
+
+    rebuildSoon() {
+      clearTimeout(this.rebuildTimer)
+      this.rebuildTimer = setTimeout(() => this.alive && this.build(), 60)
+    }
+
+    castImages(cast, y, full, half, extra = '') {
+      const img = (st) => {
+        const url = cast[st]
+        const h = this.castHeight(url, full, half)
+        return `<image class="pose pose-${st}" href="${String(url).replace(/&/g, '&amp;')}" x="-220" y="${typeof y === 'function' ? y(h) : y}" width="440" height="${h}" preserveAspectRatio="xMidYMin meet"/>`
+      }
+      return `<g class="cast${cast.happy ? ' has-happy' : ''}${cast.error ? ' has-error' : ''}">${img('idle')}${cast.happy ? img('happy') : ''}${cast.error ? img('error') : ''}${extra}</g>`
+    }
+
+    /** 坐着：头顶对齐 -362，桌子挡住下半身；没有单独的手 */
+    castSeated(cast) {
+      const soot = '<g class="soot" fill="#3a3436" opacity=".5"><ellipse cx="-22" cy="-292" rx="16" ry="9"/><ellipse cx="20" cy="-270" rx="12" ry="7"/></g>'
+      return { main: this.castImages(cast, -362, 640, 420, soot), hands: '' }
+    }
+
+    /** 站着 / 走路：全身图脚踩地上，半身图像视觉小说那样浮着 */
+    castStanding(cast) {
+      const feet = this.FEET / K
+      const paper = '<g class="paper"><rect x="74" y="-58" width="34" height="44" rx="3" fill="#fff" stroke="#b9b3c6" stroke-width="1.6"/><path d="M80,-48 h22 M80,-40 h22 M80,-32 h14" stroke="#c9c3d6" stroke-width="2.4"/></g>'
+      return this.castImages(cast, (h) => (h >= 500 ? feet - h : feet - h - 60), 560, 380, `${paper}${C.baton(84, -40, 0.9)}`)
     }
 
     // ---- 布局 --------------------------------------------------------------------------------------
@@ -528,7 +590,8 @@
       const emp = s.emp
       const color = s.boss ? '#ff7eb6' : emp.color || s.pod?.g.color || '#8a8aa6'
       const L = this.look(s.boss ? { id: 'shaniu' } : emp)
-      const body = C.seated(L)
+      const cast = this.castFor(s.boss ? { id: 'shaniu' } : emp)
+      const body = cast ? this.castSeated(cast) : C.seated(L)
       const g = el('g', { class: 'seat', 'data-id': id, transform: `translate(${s.x},${s.top})` })
       g.innerHTML = `
         <ellipse cx="0" cy="40" rx="46" ry="5" fill="#000" opacity=".08"/>
@@ -778,9 +841,10 @@
       for (const a of this.actors.values()) {
         if (!a.el) {
           const s = this.seats[a.id]
-          const L = this.look(s?.boss ? { id: 'shaniu' } : s?.emp)
+          const who = s?.boss ? { id: 'shaniu' } : s?.emp
+          const cast = this.castFor(who)
           a.el = el('g', { class: 'actor' })
-          a.el.innerHTML = `<ellipse class="shadow" cx="0" cy="0" rx="16" ry="4" fill="#000" opacity=".12"/><g class="fig">${C.standing(L)}</g>`
+          a.el.innerHTML = `<ellipse class="shadow" cx="0" cy="0" rx="16" ry="4" fill="#000" opacity=".12"/><g class="fig">${cast ? this.castStanding(cast) : C.standing(this.look(who))}</g>`
           this.applyStatus(a.id)
         }
         const layer = a.y < TABLE_Y + 2 ? this.layers.actorsBack : a.y <= AISLE + 1 ? this.layers.actorsMid : this.layers.actorsFront

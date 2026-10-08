@@ -1,6 +1,7 @@
 import fs from 'node:fs'
 import http from 'node:http'
 import path from 'node:path'
+import { generateImage, listImageModels } from './cast.js'
 import * as skinStore from './skins.js'
 
 const TYPES = {
@@ -120,7 +121,24 @@ export function createServer(coord, { publicDir, host, token, setup, skins = ski
           return json(res, 500, { ok: false, error: e.message })
         }
       }
-      if (url.pathname.startsWith('/api/skins/') && !fromThisComputer(req)) {
+      // 立绘图片：页面用地址取（局域网里也要带 token）
+      if (req.method === 'GET' && url.pathname === '/api/skins/file') {
+        let f
+        try {
+          f = skins.skinFile(url.searchParams.get('skin'), url.searchParams.get('name'))
+        } catch {
+          return send(res, 404, 'Not found')
+        }
+        const st = fs.statSync(f.path)
+        const mtime = st.mtime.toUTCString()
+        if (req.headers['if-modified-since'] === mtime) {
+          res.writeHead(304)
+          return res.end()
+        }
+        res.writeHead(200, { 'Content-Type': f.mime, 'Content-Length': st.size, 'Last-Modified': mtime, 'Cache-Control': 'no-cache', 'X-Content-Type-Options': 'nosniff' })
+        return fs.createReadStream(f.path).pipe(res)
+      }
+      if ((url.pathname.startsWith('/api/skins/') || url.pathname.startsWith('/api/cast/')) && !fromThisComputer(req)) {
         return json(res, 403, { ok: false, error: '只能在运行牛马工作室的那台电脑上改皮肤' })
       }
 
@@ -131,8 +149,8 @@ export function createServer(coord, { publicDir, host, token, setup, skins = ski
         }
         let body = {}
         try {
-          // 皮肤可能带图片，放宽到 12MB
-          body = JSON.parse((await readBody(req, url.pathname === '/api/skins/save' ? 12_000_000 : 200_000)) || '{}')
+          // 皮肤可能带一整套立绘，放宽到 64MB
+          body = JSON.parse((await readBody(req, url.pathname === '/api/skins/save' ? 64_000_000 : 200_000)) || '{}')
         } catch {
           return send(res, 400, 'Bad JSON')
         }
@@ -145,6 +163,17 @@ export function createServer(coord, { publicDir, host, token, setup, skins = ski
         if (url.pathname === '/api/stop') {
           coord.stop()
           return json(res, 200, { ok: true })
+        }
+        if (url.pathname === '/api/cast/models' || url.pathname === '/api/cast/generate') {
+          // 用已经接入的 API 组的地址和 Key 画立绘
+          const g = coord.team?.groups.get(String(body.group || ''))
+          if (!g || g.type !== 'openai-api') return json(res, 200, { ok: false, error: '先选一个接入了的 API 组（比如中转站）' })
+          try {
+            const r = url.pathname === '/api/cast/models' ? await listImageModels(g) : await generateImage(g, { model: String(body.model || '').trim(), prompt: String(body.prompt || ''), size: body.size })
+            return json(res, 200, r)
+          } catch (e) {
+            return json(res, 200, { ok: false, error: e.message })
+          }
         }
         if (url.pathname.startsWith('/api/skins/')) {
           const actions = {

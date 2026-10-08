@@ -57,7 +57,9 @@
   const BASE_NAMES = { sakura: '樱花', night: '夜班', neon: '赛博霓虹', neko: '猫耳咖啡', park: '996 园区', xianxia: '修仙宗门', space: '太空站', pixel: '像素复古' }
   const MAX_IMAGE = 4 * 1024 * 1024
 
+  const CAST_GEN = 'niuma.castGen' // 上次画立绘用的接口和模型
   let host = null
+  let genStop = false // 一键画全部：点「停」就不画后面的了
   let dlg = null
   let draft = null
   let editing = null // 正在改的自制皮肤 id；null = 新皮肤
@@ -121,6 +123,7 @@
         ...(skin.room || {}),
       },
       images: { ...(skin.images || {}) },
+      cast: JSON.parse(JSON.stringify(skin.cast || {})),
     }
   }
 
@@ -143,6 +146,7 @@
       colors: { ...draft.colors },
       room: draft.base === 'pixel' ? {} : { ...draft.room },
       images: { ...draft.images },
+      cast: draft.base === 'pixel' ? {} : JSON.parse(JSON.stringify(draft.cast || {})),
     }
     // 空的颜色（读不到的）不要写进去
     for (const [k, v] of Object.entries(raw.colors)) if (!v) delete raw.colors[k]
@@ -237,7 +241,8 @@
           <h3>图片 <small>png / jpg / gif / webp，不超过 4MB</small></h3>
           ${imageRow('wall', '墙纸', '没有，用上面的墙色')}
           ${imageRow('window', '窗外', '没有，用上面选的风景')}
-        </section>`
+        </section>
+        ${castSection(info)}`
         }
         <section>
           <details><summary>作者和字体</summary>
@@ -262,6 +267,134 @@
         } · <a href="https://github.com/Leeeger1/niuma-studio/blob/main/docs/skin-guide.md" target="_blank" rel="noopener">皮肤说明</a></p>
         ${info.errors?.length ? `<details class="errors"><summary>有 ${info.errors.length} 个皮肤文件读的时候出了问题</summary><ul>${info.errors.map((e) => `<li><code>${esc(e.file)}</code>：${esc(e.message)}</li>`).join('')}</ul></details>` : ''}
       </div>`
+  }
+
+  // ---- 角色立绘 ---------------------------------------------------------------------------
+
+  function castSection(info) {
+    const NC = window.NiumaCast
+    if (!NC) return ''
+    const gen = loadGen()
+    const groups = host.apiGroups?.() || []
+    const thumb = (role, st, label) => {
+      const url = draft.cast?.[role]?.[st]
+      return `<div class="cast-slot${url ? ' has' : ''}">
+        <label class="cast-pic" title="${label}：点一下换图片">${url ? `<img src="${esc(url)}" alt="">` : `<span>${label}</span>`}<input type="file" accept="image/png,image/jpeg,image/webp" data-cast="${role}.${st}" hidden></label>
+        ${url ? `<button type="button" class="cast-x" data-act="cast-clear" data-cast="${role}.${st}" aria-label="去掉${label}">×</button>` : ''}
+      </div>`
+    }
+    const rows = NC.ROLES.map(
+      ([role, name]) => `<div class="cast-row"><div class="cast-name"><b>${name}</b>
+        <span class="cast-acts"><button type="button" class="link" data-act="cast-copy" data-role="${role}">复制提示词</button>${info.server && groups.length ? ` · <button type="button" class="link" data-act="cast-gen" data-role="${role}">AI 画</button>` : ''}</span></div>
+        <div class="cast-slots">${NC.STATES.map(([st, label]) => thumb(role, st, label)).join('')}</div></div>`,
+    ).join('')
+    const ai = info.server
+      ? groups.length
+        ? `<div class="cast-ai">
+            <label class="field"><span>用哪个接口画</span><select id="cast-group">${groups.map((g) => `<option value="${esc(g.id)}"${g.id === gen.group ? ' selected' : ''}>${esc(g.name)}${g.available ? '' : '（未到岗）'}</option>`).join('')}</select></label>
+            <label class="field"><span>画图模型</span><input id="cast-model" list="cast-models" value="${esc(gen.model || '')}" placeholder="比如 gpt-image-1、dall-e-3、flux、seedream"><datalist id="cast-models">${(gen.models || []).map((m) => `<option value="${esc(m)}">`).join('')}</datalist></label>
+            <div class="row"><button type="button" data-act="cast-models">读取画图模型</button><button type="button" class="primary" data-act="cast-gen-all">一键画全部</button><button type="button" data-act="cast-stop" hidden>停</button></div>
+            <label class="check"><input type="checkbox" id="cast-moods" ${gen.moods ? 'checked' : ''}> 连「开心」「出错」两张表情一起画（时间和花费是 3 倍）</label>
+          </div>`
+        : '<p class="muted">想让 AI 直接画：先在「接入员工」里接一个带画图模型的接口（比如中转站），回来就能一键画全部。</p>'
+      : '<p class="muted">网页演示里不能用 AI 画；可以复制提示词去即梦、豆包、通义万相、Midjourney 画好再传上来。</p>'
+    return `<section class="cast">
+      <h3>角色立绘 <small>换成真正的动漫插画</small></h3>
+      <p class="muted">每个角色放一张<b>全身立绘</b>（白底或透明底都行），坐在工位上露上半身，开会走路露全身；「开心」「出错」可以不放。不会画就点「复制提示词」，拿去 AI 绘图工具里画，画好点格子传上来。</p>
+      <label class="check"><input type="checkbox" id="cast-bg" checked> 传图时自动去掉白底、裁掉空白边</label>
+      <div class="cast-grid">${rows}</div>
+      ${ai}
+    </section>`
+  }
+
+  function loadGen() {
+    try {
+      return JSON.parse(localStorage.getItem(CAST_GEN) || '{}')
+    } catch {
+      return {}
+    }
+  }
+  function saveGen(patch) {
+    try {
+      localStorage.setItem(CAST_GEN, JSON.stringify({ ...loadGen(), ...patch }))
+    } catch {}
+  }
+
+  function setCast(role, st, url) {
+    draft.cast ||= {}
+    draft.cast[role] ||= {}
+    if (url) draft.cast[role][st] = url
+    else delete draft.cast[role][st]
+    if (!Object.keys(draft.cast[role]).length) delete draft.cast[role]
+    dirty = true
+  }
+
+  async function castUpload(key, file) {
+    const [role, st] = key.split('.')
+    if (!/^image\/(png|jpeg|webp)$/.test(file.type)) return note('立绘只支持 png、jpg、webp', 'bad')
+    if (file.size > 20 * 1024 * 1024) return note('图片太大了（超过 20MB）', 'bad')
+    note('正在处理图片…', 'busy')
+    try {
+      const raw = await new Promise((resolve, reject) => {
+        const r = new FileReader()
+        r.onload = () => resolve(String(r.result))
+        r.onerror = () => reject(new Error('读不了这张图'))
+        r.readAsDataURL(file)
+      })
+      const removeBg = dlg.querySelector('#cast-bg')?.checked !== false
+      setCast(role, st, await window.NiumaCast.clean(raw, { removeBg }))
+      render()
+      preview()
+      note(`${roleName(role)}的立绘换好了。`, 'ok')
+    } catch (e) {
+      note(e.message, 'bad')
+    }
+  }
+
+  const roleName = (role) => (window.NiumaCast.ROLES.find(([r]) => r === role) || [role, role])[1]
+
+  /** 让 AI 画一张：返回去好白底的图 */
+  async function castDraw(role, st) {
+    const group = dlg.querySelector('#cast-group')?.value
+    const model = dlg.querySelector('#cast-model')?.value.trim()
+    if (!model) throw new Error('先填画图模型（不知道就点「读取画图模型」）')
+    saveGen({ group, model, moods: !!dlg.querySelector('#cast-moods')?.checked })
+    const p = window.NiumaCast.prompt(role, st, { color: castColor(role) })
+    const r = await host.request('POST', '/api/cast/generate', { group, model, prompt: p.en })
+    if (!r.ok) throw new Error(r.error || '没画出来')
+    return window.NiumaCast.clean(r.image, { removeBg: true })
+  }
+
+  // 衣服颜色跟这个岗位现在所在的项目组走
+  function castColor(role) {
+    const emp = host.employees?.().find((e) => e.skill === role || e.id === role)
+    return emp?.color
+  }
+
+  async function castGenerate(roles) {
+    const moods = !!dlg.querySelector('#cast-moods')?.checked
+    const jobs = roles.flatMap((role) => (moods && roles.length > 1 ? ['idle', 'happy', 'error'] : ['idle']).map((st) => [role, st]))
+    genStop = false
+    const stop = dlg.querySelector('[data-act="cast-stop"]')
+    if (stop) stop.hidden = jobs.length < 2
+    let done = 0
+    const failed = []
+    for (const [role, st] of jobs) {
+      if (genStop) break
+      note(`正在画 ${done + 1}/${jobs.length}：${roleName(role)}（${window.NiumaCast.STATES.find(([x]) => x === st)[1]}）…一张大概要半分钟`, 'busy')
+      try {
+        setCast(role, st, await castDraw(role, st))
+        done++
+        render()
+        preview()
+      } catch (e) {
+        failed.push(`${roleName(role)}：${e.message}`)
+        if (jobs.length === 1 || /Key|余额|不能画图|模型/.test(e.message)) break
+      }
+    }
+    if (stop) stop.hidden = true
+    if (failed.length) note(`画好 ${done} 张，没画成：${failed.join('；')}`, 'bad')
+    else note(genStop ? `停了，已经画好 ${done} 张。` : `画好了 ${done} 张！看着满意就点「保存」。`, 'ok')
   }
 
   function note(text, kind = '') {
@@ -296,12 +429,13 @@
     const t = e.target
     const k = t.dataset.k
     if (t.dataset.img && t.files?.[0]) return loadImage(t.dataset.img, t.files[0])
+    if (t.dataset.cast && t.files?.[0]) return castUpload(t.dataset.cast, t.files[0])
     if (t.dataset.act === 'import' && t.files?.[0]) return importFile(t.files[0])
     if (!k) return
     dirty = true
     if (k === 'base') {
       // 换底子：颜色和摆设都换成那一套的，名字和图片留着
-      const keep = { name: draft.name, author: draft.author, font: draft.font, images: draft.images }
+      const keep = { name: draft.name, author: draft.author, font: draft.font, images: draft.images, cast: draft.cast }
       draft = { ...fullDraft({ base: t.value }), ...keep }
       render()
       return preview()
@@ -362,6 +496,39 @@
       preview()
       return note(act === 'random' ? '随机配了一套，不喜欢就再点一次🎲' : '配好了，还可以单独调每个颜色。', 'ok')
     }
+    if (act === 'cast-clear') {
+      const [role, st] = b.dataset.cast.split('.')
+      setCast(role, st, '')
+      render()
+      return preview()
+    }
+    if (act === 'cast-copy') {
+      const p = window.NiumaCast.prompt(b.dataset.role, 'idle', { color: castColor(b.dataset.role) })
+      const text = `${p.zh}\n\n（英文版，给 Midjourney 之类用）${p.en}`
+      try {
+        await navigator.clipboard.writeText(text)
+        return note(`复制好了「${roleName(b.dataset.role)}」的提示词，粘贴到 AI 绘图工具里就行。开心、出错的表情在提示词里把动作换成「双手举高欢呼」「慌张冒冷汗、双手抱头」。`, 'ok')
+      } catch {
+        return prompt('复制下面的提示词：', text)
+      }
+    }
+    if (act === 'cast-models') {
+      const group = dlg.querySelector('#cast-group')?.value
+      note('正在读画图模型…', 'busy')
+      const r = await host.request('POST', '/api/cast/models', { group })
+      if (!r.ok) return note(r.error, 'bad')
+      saveGen({ group, models: r.models })
+      const model = dlg.querySelector('#cast-model')?.value
+      render()
+      if (model) dlg.querySelector('#cast-model').value = model
+      return note(r.models.length ? `找到 ${r.models.length} 个画图模型：${r.models.slice(0, 8).join('、')}${r.models.length > 8 ? '…' : ''}，在「画图模型」里选一个。` : `这个接口的 ${r.total} 个模型里没认出画图模型，知道名字的话直接填。`, r.models.length ? 'ok' : 'bad')
+    }
+    if (act === 'cast-gen') return castGenerate([b.dataset.role])
+    if (act === 'cast-gen-all') return castGenerate(window.NiumaCast.ROLES.map(([r]) => r))
+    if (act === 'cast-stop') {
+      genStop = true
+      return note('画完这一张就停。', 'busy')
+    }
     if (act === 'clear-img') {
       delete draft.images[b.dataset.img]
       if (b.dataset.img === 'window' && draft.room.window === 'image') draft.room.window = 'sky'
@@ -394,7 +561,14 @@
       }
     }
     if (act === 'export') {
-      const skin = F.normalize(skinFromDraft())
+      const raw = skinFromDraft()
+      // 服务器上的立绘打包进文件里，发给别人也能用
+      try {
+        for (const states of Object.values(raw.cast || {})) for (const [st, u] of Object.entries(states)) states[st] = await window.NiumaCast.toDataUrl(u)
+      } catch (e) {
+        return note(`打包立绘失败：${e.message}`, 'bad')
+      }
+      const skin = F.normalize(raw)
       const blob = new Blob([F.toFile(skin)], { type: 'application/json' })
       const a = document.createElement('a')
       a.href = URL.createObjectURL(blob)

@@ -96,7 +96,14 @@
     root.dataset.skinId = def.id
     applyVars(def)
     if (def.base === 'pixel' || !window.AnimeOffice) return new window.ShaniuOffice($('#office'), $('#overlay'), $('#scene'))
-    return new window.AnimeOffice($('#scene'), $('#overlay'), def.builtin ? def.id : def)
+    const o = new window.AnimeOffice($('#scene'), $('#overlay'), def.builtin ? def.id : def)
+    // 立绘头像是慢慢截出来的，截好了就换上
+    o.onFaces = () => {
+      faces.clear()
+      renderTeam()
+      renderMessages()
+    }
+    return o
   }
   let office = makeOffice(current)
 
@@ -146,9 +153,16 @@
       if (transport?.request) {
         try {
           const r = await transport.request('GET', '/api/skins')
+          // 局域网里看：立绘地址也要带上 token
+          let token = ''
+          try {
+            token = sessionStorage.getItem('niuma-token') || ''
+          } catch {}
+          const withToken = (u) => (token && u.startsWith('/api/') && !u.includes('&token=') ? `${u}&token=${token}` : u)
           files = (r.skins || []).flatMap((raw) => {
             try {
-              return [{ ...F.normalize(raw, { id: raw.id }), id: raw.id }]
+              const cast = Object.fromEntries(Object.entries(raw.cast || {}).map(([k, v]) => [k, Object.fromEntries(Object.entries(v).map(([st, u]) => [st, withToken(u)]))]))
+              return [{ ...F.normalize({ ...raw, cast }, { id: raw.id }), id: raw.id }]
             } catch {
               return []
             }
@@ -243,6 +257,10 @@
     remove: removeSkin,
     openFolder: () => (transport?.request ? transport.request('POST', '/api/skins/open-folder', {}) : Promise.resolve({ ok: false, error: '网页演示里没有皮肤文件夹' })),
     info: () => ({ server: !!transport?.request, dir: skinDir, errors: skinErrors }),
+    // 画立绘用：能用的 API 组、员工（衣服颜色跟组走）、发请求
+    apiGroups: () => (state.roster.groups || []).filter((g) => g.type === 'openai-api'),
+    employees: () => state.roster.employees || [],
+    request: (method, url, body) => transport.request(method, url, body),
   }
 
   // ---- helpers ---------------------------------------------------------------

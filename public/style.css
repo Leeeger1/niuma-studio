@@ -366,6 +366,19 @@ button { font: inherit; color: inherit; }
 .anime-svg .tail { transform-box: fill-box; transform-origin: left bottom; animation: an-wag 1.4s ease-in-out infinite alternate; }
 .anime-svg .zz { animation: an-zzz 2.6s ease-in-out infinite; }
 .anime-svg .neon-strip, .anime-svg .holo, .anime-svg .flicker { animation: an-flicker 4s steps(1) infinite; }
+/* 角色立绘 */
+.anime-svg .cast .pose { display: none; }
+.anime-svg .cast .pose-idle { display: inline; }
+.anime-svg .st-done .cast.has-happy .pose-idle, .anime-svg .st-error .cast.has-error .pose-idle, .anime-svg .shocked .cast.has-error .pose-idle { display: none; }
+.anime-svg .st-done .cast.has-happy .pose-happy, .anime-svg .st-error .cast.has-error .pose-error, .anime-svg .shocked .cast.has-error .pose-error { display: inline; }
+.anime-svg .seat .cast { transform-box: fill-box; transform-origin: bottom center; animation: an-breathe 3.4s ease-in-out infinite; }
+.anime-svg .seat:nth-child(2n) .cast { animation-delay: -1.2s; }
+.anime-svg .seat.st-working .cast { animation: an-type-bob 0.45s ease-in-out infinite alternate; }
+.anime-svg .seat.st-done .cast { animation: an-hop 0.4s ease-in-out infinite alternate; }
+.anime-svg .seat.st-thinking .cast { animation: an-tilt 2.4s ease-in-out infinite alternate; }
+@keyframes an-type-bob { from { transform: translateY(0); } to { transform: translateY(6px); } }
+@keyframes an-hop { from { transform: translateY(0); } to { transform: translateY(-28px); } }
+@keyframes an-tilt { from { transform: rotate(-2deg); } to { transform: rotate(2deg); } }
 /* 出错挨电棍 */
 .anime-svg .baton { display: none; }
 .anime-svg .actor.armed .baton { display: inline; }
@@ -704,3 +717,27 @@ html[data-skin="pixel"] .skin-editor input[type="color"] { border-radius: 0; }
 .setup table.fam tbody th small { color: var(--muted); font-weight: 400; }
 .setup table.fam tr.off th, .setup table.fam tr.off select { opacity: 0.45; }
 .setup table.fam select { max-width: 220px; padding: 3px 6px; font: 12px/1.4 var(--font-mono); color: var(--ink); background: var(--panel); border: 1px solid var(--line); border-radius: var(--r); }
+
+/* 做皮肤：角色立绘 */
+.skin-editor .cast-grid { display: grid; gap: 6px; margin: 8px 0; }
+.skin-editor .cast-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 8px; padding: 6px 8px; border: 1px solid var(--line); border-radius: var(--r); background: var(--panel-2); }
+.skin-editor .cast-name { display: grid; gap: 2px; min-width: 0; font-size: 13px; }
+.skin-editor .cast-acts { font-size: 11.5px; color: var(--muted); }
+.skin-editor .cast-acts .link { font-size: 11.5px; }
+.skin-editor .cast-slots { display: flex; gap: 6px; }
+.skin-editor .cast-slot { position: relative; }
+.skin-editor .cast-pic {
+  display: grid; place-items: center; width: 44px; height: 62px; overflow: hidden; cursor: pointer;
+  font-size: 10.5px; color: var(--muted); background: var(--panel); border: 1px dashed var(--line); border-radius: 6px;
+}
+.skin-editor .cast-pic:hover { border-color: var(--accent); color: var(--accent); }
+.skin-editor .cast-slot.has .cast-pic { border-style: solid; background: repeating-conic-gradient(var(--panel-2) 0 25%, var(--panel) 0 50%) 0 0 / 10px 10px; }
+.skin-editor .cast-pic img { width: 100%; height: 100%; object-fit: contain; object-position: top; }
+.skin-editor .cast-x {
+  position: absolute; top: -6px; right: -6px; width: 18px; height: 18px; padding: 0; justify-content: center;
+  font-size: 12px; line-height: 1; border-radius: 50%; color: var(--bad);
+}
+.skin-editor .cast-ai { margin-top: 8px; padding: 8px 10px; border: 1px solid var(--line); border-radius: var(--r); }
+.skin-editor .cast-ai .field { grid-template-columns: 7em minmax(0, 1fr); }
+.skin-editor .cast-ai input:not([type]), .skin-editor #cast-model { width: 100%; }
+.skin-editor input#cast-model { min-width: 0; padding: 6px 9px; font: 13px/1.4 var(--font-mono); color: var(--ink); background: var(--panel-2); border: 1px solid var(--line); border-radius: var(--r); }

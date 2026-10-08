@@ -42,12 +42,19 @@
   }
   const ROOM_FLAGS = ['catEars', 'cat', 'lamps', 'neon', 'shock']
   const IMAGE_KEYS = ['wall', 'window']
+  // 角色立绘：每个角色一张平时的立绘（idle），可以再加开心（happy）、出错（error）两张
+  const CAST_STATES = ['idle', 'happy', 'error']
+  const CAST_ROLES = ['shaniu', 'architect', 'frontend', 'reviewer', 'backend', 'tester', 'debugger', 'writer', 'generalist', 'default']
+  const MAX_CAST = 40
+  // 服务器上的立绘文件，用地址引用（太大了不塞进皮肤列表里）
+  const CAST_URL = /^\/api\/skins\/file\?skin=[\w%.-]+&name=[\w%.-]+(?:&token=\w+)?$/
   const MAX_IMAGE_CHARS = 6 * 1024 * 1024
 
   const HEX = /^#(?:[0-9a-f]{3,4}|[0-9a-f]{6}|[0-9a-f]{8})$/i
   const FUNC = /^(?:rgb|rgba|hsl|hsla)\(\s*[-+0-9.%\s,/deg]+\)$/i
   const NAMED = /^[a-z]{3,20}$/i
   const IMAGE = /^data:image\/(?:png|jpeg|gif|webp);base64,[A-Za-z0-9+/=]+$/
+  const isCastImage = (v) => typeof v === 'string' && v.length <= MAX_IMAGE_CHARS && (IMAGE.test(v) || CAST_URL.test(v))
   const ID = /^[\w一-鿿-]{1,40}$/
   const FONT = /^[\w\s一-鿿.-]{1,40}$/
 
@@ -158,6 +165,25 @@
       if (typeof v === 'string' && v.length <= MAX_IMAGE_CHARS && IMAGE.test(v.replace(/\s+/g, ''))) skin.images[k] = v.replace(/\s+/g, '')
       else warnings.push(`images.${k} 用不了（只支持 png、jpg、gif、webp，不超过 4MB）`)
     }
+    // 角色立绘
+    skin.cast = {}
+    const cast = raw.cast && typeof raw.cast === 'object' && !Array.isArray(raw.cast) ? raw.cast : {}
+    for (const [role, v] of Object.entries(cast).slice(0, MAX_CAST)) {
+      if (!ID.test(role)) {
+        warnings.push(`cast 里的「${text(role, 20)}」不是角色名`)
+        continue
+      }
+      const states = typeof v === 'string' ? { idle: v } : v && typeof v === 'object' ? v : {}
+      const out = {}
+      for (const st of CAST_STATES) {
+        const img = typeof states[st] === 'string' ? states[st].replace(/\s+/g, '') : ''
+        if (!img) continue
+        if (isCastImage(img)) out[st] = img
+        else warnings.push(`cast.${role}.${st} 用不了（只支持 png、jpg、gif、webp 图片）`)
+      }
+      if (!out.idle) out.idle = out.happy || out.error
+      if (out.idle) skin.cast[role] = out
+    }
     if (skin.room.window === 'image' && !skin.images.window) {
       delete skin.room.window
       warnings.push('room.window 写了 image，但 images.window 没有图片')
@@ -173,13 +199,14 @@
   }
 
   /** 存成文件时的样子（去掉内部字段；图片由调用方决定写成文件名还是 data URL） */
-  function toFile(skin, images = skin.images) {
+  function toFile(skin, images = skin.images, cast = skin.cast) {
     const o = { name: skin.name, base: skin.base, dark: skin.dark }
     if (skin.author) o.author = skin.author
     if (skin.font) o.font = skin.font
     o.colors = { ...skin.colors }
     if (skin.base !== 'pixel') o.room = { ...skin.room }
     if (images && Object.keys(images).length) o.images = { ...images }
+    if (cast && Object.keys(cast).length) o.cast = JSON.parse(JSON.stringify(cast))
     return `// 牛马工作室皮肤「${skin.name}」。可以直接改这个文件，说明见 docs/skin-guide.md\n${JSON.stringify(o, null, 2)}\n`
   }
 
@@ -266,6 +293,9 @@
     ROOM_CHOICES,
     ROOM_FLAGS,
     IMAGE_KEYS,
+    CAST_STATES,
+    CAST_ROLES,
+    CAST_URL,
     isColor,
     toId,
     parse,
