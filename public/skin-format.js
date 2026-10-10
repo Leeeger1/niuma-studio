@@ -37,7 +37,7 @@
     window: ['sakura', 'city', 'cyber', 'garden', 'sea', 'sky', 'park', 'mountains', 'space', 'image'],
     particles: ['petals', 'snow', 'stars', 'bubbles', 'none'],
     wallPattern: ['paws', 'dots', 'stripes', 'grid', 'none'],
-    art: ['anime', 'chibi'],
+    art: ['cast', 'anime', 'chibi'],
     decor: ['none', 'park', 'xianxia', 'space'],
   }
   const ROOM_FLAGS = ['catEars', 'cat', 'lamps', 'neon', 'shock']

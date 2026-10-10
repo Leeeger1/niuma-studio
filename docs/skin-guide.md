@@ -102,7 +102,7 @@
 | `decor` | 墙上摆设 | `park` 园区横幅和打卡机、`xianxia` 卷轴灯笼和红柱、`space` 舱壁仪表和警示条、`none` |
 | `particles` | 飘落效果 | `petals` 花瓣、`snow` 雪花、`stars` 星光、`bubbles` 泡泡、`none` |
 | `wallPattern` | 墙上花纹 | `paws` 猫爪、`dots` 圆点、`stripes` 竖条、`grid` 霓虹格子、`none` |
-| `art` | 角色画风 | `anime` 动漫风（默认）、`chibi` Q 版 |
+| `art` | 人物画风（只在没动过皮肤栏「人物」开关时生效） | `cast` 内置立绘（默认）、`anime` 代码画的动漫风、`chibi` Q 版 |
 | `catEars` / `cat` / `lamps` / `neon` | 大家戴猫耳 / 养猫 / 工位台灯 / 霓虹灯 | `true` / `false` |
 | `shock` | 出错挨电棍：员工出错时傻妞拿电棍过去电一下 | `true` / `false` |
 | `wall` `floor` | 墙、地板（上下渐变） | 两个颜色 `["#…", "#…"]` |

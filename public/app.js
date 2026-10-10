@@ -75,6 +75,11 @@
   // 想要的是 ~/.niuma/skins 里的皮肤：等连上服务器读到了再换过去
   let pendingSkin = current.id === wantedSkin ? null : wantedSkin || null
   let setVars = []
+  // 人物画风：立绘（内置的一整套插画，默认）、动漫风或 Q 版（代码画的）。没选过就看皮肤里写的。
+  const ARTS = [['cast', '立绘'], ['anime', '动漫'], ['chibi', 'Q 版']]
+  const okArt = (a) => ARTS.some(([id]) => id === a)
+  let artPref = okArt(store.get('niuma.art')) ? store.get('niuma.art') : ''
+  const artOf = (def) => artPref || (!def.builtin && okArt(def.room?.art) ? def.room.art : 'cast')
 
   function applyVars(def) {
     const root = document.documentElement
@@ -94,9 +99,10 @@
     const root = document.documentElement
     root.dataset.skin = def.base
     root.dataset.skinId = def.id
+    root.dataset.art = artOf(def)
     applyVars(def)
     if (def.base === 'pixel' || !window.AnimeOffice) return new window.ShaniuOffice($('#office'), $('#overlay'), $('#scene'))
-    const o = new window.AnimeOffice($('#scene'), $('#overlay'), def.builtin ? def.id : def)
+    const o = new window.AnimeOffice($('#scene'), $('#overlay'), def.builtin ? def.id : def, { art: artOf(def) })
     // 立绘头像是慢慢截出来的，截好了就换上
     o.onFaces = () => {
       faces.clear()
@@ -134,15 +140,29 @@
     return true
   }
 
+  /** 换人物画风（记住选择） */
+  function setArt(a) {
+    if (!okArt(a)) return false
+    artPref = a
+    store.set('niuma.art', a)
+    showSkin(current)
+    renderSkins()
+    return true
+  }
+
   function renderSkins() {
     const box = $('#skins')
     if (!box) return
     const btn = (d, cls = '') => `<button type="button" data-skin="${esc(d.id)}"${cls} aria-pressed="${d.id === current.id}">${esc(d.name)}</button>`
+    const art = artOf(current)
     box.innerHTML =
       '<span class="skins-label">皮肤</span>' +
       BUILTIN.map(([id, name]) => btn({ id, name })).join('') +
       customSkins.map((d) => btn(d, ` class="custom" title="自制皮肤${d.author ? ` · ${esc(d.author)}` : ''}"`)).join('') +
-      `<button type="button" class="make-skin" data-act="make-skin">${current.builtin ? '＋ 做皮肤' : '✎ 改皮肤'}</button>`
+      `<button type="button" class="make-skin" data-act="make-skin">${current.builtin ? '＋ 做皮肤' : '✎ 改皮肤'}</button>` +
+      (current.base === 'pixel'
+        ? ''
+        : `<span class="arts" role="group" aria-label="人物画风"><span class="skins-label">人物</span>${ARTS.map(([id, name]) => `<button type="button" data-art="${id}" aria-pressed="${id === art}">${name}</button>`).join('')}</span>`)
   }
 
   /** 读一遍自制皮肤（~/.niuma/skins + 这个浏览器里的）。手改了皮肤文件，回到窗口就会重新读。 */
@@ -252,6 +272,8 @@
     preview: (def) => showSkin(def),
     restore: () => showSkin(current),
     set: setSkin,
+    art: () => artOf(current),
+    setArt,
     reload: loadSkins,
     save: saveSkin,
     remove: removeSkin,
@@ -764,6 +786,8 @@
   $('#skins')?.addEventListener('click', (e) => {
     const b = e.target.closest('button[data-skin]')
     if (b) setSkin(b.dataset.skin)
+    const a = e.target.closest('button[data-art]')
+    if (a) setArt(a.dataset.art)
     if (e.target.closest('[data-act="make-skin"]')) window.NiumaSkinEditor?.open()
   })
   renderSkins()
