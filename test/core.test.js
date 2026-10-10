@@ -11,7 +11,7 @@ import { fitScore, modelProfile } from '../src/models.js'
 import { loadSkills, parseSkill } from '../src/skills.js'
 import { Team } from '../src/team.js'
 import { createClaudeParser, createCodexParser, describeClaudeTool } from '../src/workers/cli.js'
-import { extractJson } from '../src/util.js'
+import { extractJson, isLoginError } from '../src/util.js'
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const tmp = () => fs.mkdtempSync(path.join(os.tmpdir(), 'niuma-test-'))
@@ -152,10 +152,14 @@ test('claude and codex output parsers', () => {
 
 // ---- full rehearsals with the fake company -----------------------------------------------
 
-async function rehearsal(t, overrides = {}) {
+/** login: { claude: 'out' | 'expired', codex: … } makes that fake CLI logged out (see fake/claude.mjs). */
+async function rehearsal(t, overrides = {}, login = {}) {
   process.env.NIUMA_FAKE_SPEED = '0.02'
   const r = await rehearsalConfig(loadConfig({ workdir: root }), root)
-  const c = new Coordinator({ ...r.config, workdir: root, dispatchDelayMs: 0, ...overrides }, { mode: 'fake', root })
+  // Keys from the machine running the tests would make the login check step aside.
+  const keys = { ANTHROPIC_API_KEY: '', ANTHROPIC_AUTH_TOKEN: '', CLAUDE_CODE_OAUTH_TOKEN: '', OPENAI_API_KEY: '', CODEX_API_KEY: '', CLAUDE_CONFIG_DIR: tmp(), CODEX_HOME: tmp() }
+  const groups = r.config.groups.map((g) => (login[g.id] ? { ...g, env: { ...g.env, ...keys, NIUMA_FAKE_LOGIN: login[g.id] } } : g))
+  const c = new Coordinator({ ...r.config, groups, workdir: root, dispatchDelayMs: 0, ...overrides }, { mode: 'fake', root })
   t.after(() => {
     c.stopAll()
     r.close()
@@ -232,6 +236,52 @@ test('when a group fails, its tasks are handed to someone else', async (t) => {
   assert.notEqual(c.team.employee(t1.agent).group, 'claude')
   assert.equal(t1.status, 'done')
   assert.ok(c.messages.some((m) => /换.+接手/.test(m.text)))
+})
+
+test('isLoginError spots logged-out CLIs and rejected keys, not ordinary failures', () => {
+  for (const e of ['Not logged in · Please run /login', 'Invalid API key · Please run /login', 'unexpected status 401 Unauthorized', '接口报错 401：{"error":"invalid_api_key"}', 'OAuth token has expired'])
+    assert.ok(isLoginError(e), e)
+  for (const e of ['额度用完了（彩排）', 'Claude 结束状态：error_max_turns', 'quota', '超时了，被傻妞叫停', '接口报错 500：oops', '用完 40 步还没做完'])
+    assert.ok(!isLoginError(e), e)
+})
+
+test('installed but not logged in: those groups stay home and the others do the whole round', async (t) => {
+  const c = await rehearsal(t, {}, { claude: 'out', codex: 'out' })
+  for (const id of ['claude', 'codex']) {
+    assert.equal(c.team.groups.get(id).available, false)
+    assert.equal(c.team.groups.get(id).note, '装好了，还没登录')
+  }
+  assert.match(c.messages[0].text, /Claude 组、Codex 组装好了但还没登录/)
+  assert.equal(c.brain().type, 'openai-api')
+  assert.ok(['deepseek', 'qwen'].includes(c.team.employee('architect').group), 'staff are borrowed by groups on duty')
+  await say(c, '帮我做一个记账小网站')
+  assert.ok(c.tasks.length > 1)
+  assert.ok(c.tasks.every((x) => x.status === 'done'), JSON.stringify(c.tasks.map((x) => [x.id, x.status, x.error])))
+  assert.ok(!c.messages.some((m) => /出了点状况|Not logged in/.test(m.text)))
+})
+
+test('a login that fails mid-way sends the group home and 傻妞 thinks with another group', async (t) => {
+  const c = await rehearsal(t, {}, { claude: 'expired', codex: 'expired' })
+  assert.equal(c.brain().id, 'claude', 'auth status said logged in, so nobody knows yet')
+  await say(c, '帮我做一个记账小网站')
+  for (const id of ['claude', 'codex']) assert.equal(c.team.groups.get(id).note, '还没登录')
+  assert.ok(c.messages.some((m) => /Claude 组还没登录.+点「登录」/.test(m.text)))
+  assert.ok(!c.messages.some((m) => /出了点状况/.test(m.text)))
+  assert.ok(c.tasks.length > 1)
+  assert.ok(c.tasks.every((x) => x.status === 'done'), JSON.stringify(c.tasks.map((x) => [x.id, x.status, x.error])))
+})
+
+test('a task that hits a logged-out group is handed on without using up its retry', async (t) => {
+  const c = await rehearsal(t, { maxRetries: 0 }, { codex: 'expired' })
+  await say(c, '不开会，直接做一个记账小网站')
+  const moved = c.tasks.filter((x) => x.attempts.some((a) => a.login))
+  assert.ok(moved.length, 'some task started in the Codex group')
+  for (const x of moved) {
+    assert.equal(x.status, 'done', `${x.id}: ${x.error}`)
+    assert.notEqual(c.team.employee(x.agent).group, 'codex')
+    assert.ok(!x.prompt.includes(x.attempts[0].error), 'the new employee gets the plain brief, not a retry note')
+  }
+  assert.equal(c.team.groups.get('codex').available, false)
 })
 
 test('greetings need no tasks; /团队 lists staff; /招人 hires a new employee', async (t) => {

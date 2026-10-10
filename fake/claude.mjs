@@ -7,8 +7,22 @@ if (argv.includes('--version')) {
   console.log('0.0.0 (Rehearsal Claude)')
   process.exit(0)
 }
+// NIUMA_FAKE_LOGIN=out：装好了没登录；=expired：auth status 说登录了，一干活却报没登录（比如登录过期）。
+const login = process.env.NIUMA_FAKE_LOGIN || ''
+if (argv.includes('--help')) {
+  console.log('Usage: claude [options] [command] [prompt]\n\nCommands:\n  auth   Manage authentication')
+  process.exit(0)
+}
+if (argv[0] === 'auth' && argv[1] === 'status') {
+  console.log(JSON.stringify({ loggedIn: login !== 'out', authMethod: login === 'out' ? 'none' : 'claude.ai', apiProvider: 'firstParty' }, null, 2))
+  process.exit(login === 'out' ? 1 : 0)
+}
 
 const out = (o) => process.stdout.write(JSON.stringify(o) + '\n')
+if (login) {
+  out({ type: 'result', subtype: 'success', is_error: true, result: 'Not logged in · Please run /login' })
+  process.exit(1)
+}
 const format = argv[argv.indexOf('--output-format') + 1]
 const prompt = await readStdin()
 const job = classify(prompt)

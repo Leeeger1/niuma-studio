@@ -21,7 +21,7 @@ import {
 } from './prompts.js'
 import { skillId, writeSkill } from './skills.js'
 import { Team } from './team.js'
-import { extractJson, firstLine, projectContext, sleep, truncate } from './util.js'
+import { extractJson, firstLine, isLoginError, projectContext, sleep, truncate } from './util.js'
 
 const BAD = new Set(['failed', 'skipped', 'cancelled'])
 const DIFFS = new Set(['hard', 'medium', 'easy'])
@@ -223,7 +223,9 @@ export class Coordinator extends EventEmitter {
     const team = on.length
       ? `${on.map((g) => g.name).join('、')}共 ${staff} 位牛马已就位`
       : '可是一个项目组都没到岗（没找到 claude / codex 命令，也没配置 API）。点上面的「接入员工」，一键就能把员工请来'
-    this.addMessage('shaniu', `${hello}！牛马工作室开工啦～ ${team}。工作目录是 \`${this.workdir}\`。需求说得模糊也没关系，剩下的交给傻妞！`)
+    const out = [...this.team.groups.values()].filter((g) => !g.available && g.note === '装好了，还没登录').map((g) => g.name)
+    const login = out.length ? `${out.join('、')}装好了但还没登录，在「接入员工」里点「登录」就能来上班。` : ''
+    this.addMessage('shaniu', `${hello}！牛马工作室开工啦～ ${team}。${login}工作目录是 \`${this.workdir}\`。需求说得模糊也没关系，剩下的交给傻妞！`)
   }
 
   /** 配置改了（比如刚接入了新员工）：按新配置重新组队、点名，不用重启。 */
@@ -335,9 +337,34 @@ export class Coordinator extends EventEmitter {
   }
 
   async think(prompt, label) {
-    const g = this.brain()
-    if (!g) throw new Error('没有可用的项目组')
-    return g.ask(prompt, { model: this.config.brainModel || g.modelFor('medium'), label })
+    for (;;) {
+      const g = this.brain()
+      if (!g) throw new Error('一个在岗的项目组都没有了，点上面的「接入员工」请个员工来吧')
+      try {
+        return await g.ask(prompt, { model: this.config.brainModel || g.modelFor('medium'), label })
+      } catch (e) {
+        // 这个组没登录：请回家，换个在岗的组接着想。
+        if (this.stopFlag || !this.sendHome(g, e.message)) throw e
+      }
+    }
+  }
+
+  /**
+   * 干活时才发现这个组没登录（或者 Key 失效了）：整个组先回家，员工借调到别的组。
+   * 不是登录问题就返回 false，照常处理。登好以后在「接入员工」里点「重新检查」就回来。
+   */
+  sendHome(g, error) {
+    if (!g || !isLoginError(error)) return false
+    if (g.available) {
+      const api = g.type === 'openai-api'
+      g.available = false
+      g.note = api ? 'API Key 被拒绝' : '还没登录'
+      this.team.reassign()
+      this.syncAgents()
+      const how = api ? '在「接入员工」里重新填一下 Key' : '在「接入员工」里点「登录」，登好再点「重新检查」'
+      this.addMessage('shaniu', `${g.name}${g.note}（${truncate(error, 60)}），傻妞先让他们回家，活交给别的组。${how}，他们就能回来上班。`)
+    }
+    return true
   }
 
   // ---- inbox -------------------------------------------------------------------
@@ -618,7 +645,9 @@ export class Coordinator extends EventEmitter {
     })
     this.record(t)
 
-    if (t.status === 'failed' && t.kind !== 'verify' && t.attempts.length < (this.config.maxRetries ?? 1)) {
+    // 没登录不怪员工：换个组接手，不算一次重试。
+    if (t.status === 'failed' && this.sendHome(g, t.error) && this.handOff(t, { login: true })) return
+    if (t.status === 'failed' && t.kind !== 'verify' && t.attempts.filter((a) => !a.login).length < (this.config.maxRetries ?? 1)) {
       if (this.handOff(t)) return
     }
     if (t.kind === 'review' && t.status === 'done') {
@@ -632,8 +661,8 @@ export class Coordinator extends EventEmitter {
   }
 
   /** A worker failed: give the task to someone else (preferably another group) and try again. */
-  handOff(t) {
-    const prev = { agent: t.agent, who: t.who, error: t.error, result: t.result }
+  handOff(t, { login = false } = {}) {
+    const prev = { agent: t.agent, who: t.who, error: t.error, result: t.result, login }
     const load = {}
     for (const x of this.tasks) if (x.status === 'running') load[x.agent] = (load[x.agent] || 0) + 1
     const exclude = [t.agent, ...t.attempts.map((a) => a.agent)]
@@ -646,11 +675,17 @@ export class Coordinator extends EventEmitter {
       agent: next,
       who: emp.name,
       status: 'pending',
-      prompt: retryPrompt({ task: { prompt: t.basePrompt }, previous: prev }),
-      why: `${prev.who}没搞定，换人接手`,
+      // 没登录的那位根本没开工，原样交代就行。
+      prompt: login ? t.prompt : retryPrompt({ task: { prompt: t.basePrompt }, previous: prev }),
+      why: login ? `${prev.who}那个组没登录，换人接手` : `${prev.who}没搞定，换人接手`,
       result: '',
     })
     this.emitTask(t)
+    if (login) {
+      if (this.team.isAvailable(prev.agent)) this.setAgent(prev.agent, { status: 'idle', text: '', taskId: null })
+      this.addMessage('shaniu', `「${t.title}」换${emp.name}来做！`)
+      return true
+    }
     this.setAgent(prev.agent, { status: 'error', text: truncate(prev.error, 60), taskId: null })
     this.addMessage('shaniu', `${prev.who}这次没搞定（${truncate(prev.error, 60)}），傻妞换${emp.name}接手！`)
     return true
@@ -758,7 +793,8 @@ export class Coordinator extends EventEmitter {
           this.meeting.speeches.push(speech)
           this.addMessage('speech', speech.text, { id, who: emp.name })
           this.setAgent(id, { status: 'meeting', text: firstLine(said, 40) })
-        } catch {
+        } catch (e) {
+          this.sendHome(g, e.message)
           this.setAgent(id, { status: 'meeting', text: '（没想好）' })
         }
       }),
@@ -777,7 +813,9 @@ export class Coordinator extends EventEmitter {
         )
         const o = extractJson(raw)
         if (o && typeof o === 'object' && (o.minutes || o.tasks)) result = { minutes: String(o.minutes || ''), tasks: Array.isArray(o.tasks) ? o.tasks : [] }
-      } catch {}
+      } catch (e) {
+        this.sendHome(cg, e.message)
+      }
     }
     if (result?.minutes) {
       this.minutes = result.minutes
@@ -863,6 +901,11 @@ export class Coordinator extends EventEmitter {
     await this.dispatch(t)
     if (this.stopFlag) return { done: true, problems: [], tasks: [] }
     await this.runTask(t)
+    // 验收员那个组没登录，换了人：让新的验收员再验一次。
+    while (t.status === 'pending' && !this.stopFlag) {
+      await this.dispatch(t)
+      await this.runTask(t)
+    }
     if (t.status !== 'done') {
       this.addMessage('shaniu', `验收没跑成（${truncate(t.error, 60)}），这一轮就先到这里。`)
       return { done: true, problems: [], tasks: [] }
@@ -870,7 +913,7 @@ export class Coordinator extends EventEmitter {
     const v = extractVerdict(t.result)
     t.verdict = v.done ? 'approve' : 'changes'
     this.emitTask(t)
-    this.setAgent(who, { status: 'done', text: v.done ? '验收通过！' : '还差一点', taskId: null })
+    this.setAgent(t.agent, { status: 'done', text: v.done ? '验收通过！' : '还差一点', taskId: null })
     return v
   }
 
