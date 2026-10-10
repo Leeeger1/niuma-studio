@@ -146,7 +146,7 @@
    * 去背景 + 裁边 + 缩放。背景是从四条边往里「漫水」找出来的同色区域（AI 图一般是纯白底），
    * 被线稿围住的白衬衫不会被抠掉。图本来就是透明背景的话只裁边。
    */
-  async function clean(src, { removeBg = true, maxH = 1200, tolerance = 40 } = {}) {
+  async function clean(src, { removeBg = true, maxH = 1200, tolerance = 40, quality = 0.92 } = {}) {
     const img = await load(src)
     const k = Math.min(1, maxH / img.naturalHeight, 1600 / img.naturalWidth)
     const w = Math.max(1, Math.round(img.naturalWidth * k))
@@ -226,7 +226,7 @@
     out.width = x1 - x0 + 1
     out.height = y1 - y0 + 1
     out.getContext('2d').drawImage(cv, x0, y0, out.width, out.height, 0, 0, out.width, out.height)
-    let url = out.toDataURL('image/webp', 0.92)
+    let url = out.toDataURL('image/webp', quality)
     if (!url.startsWith('data:image/webp')) url = out.toDataURL('image/png')
     return url
   }
@@ -237,7 +237,7 @@
     const w = img.naturalWidth
     const h = img.naturalHeight
     const tall = h / w > 1.6
-    const face = (tall ? 0.2 : 0.42) * h
+    const face = (tall ? 0.16 : 0.42) * h
     // 头顶那一带的人物中心
     const probe = document.createElement('canvas')
     const pw = 120
@@ -248,11 +248,8 @@
     pctx.drawImage(img, 0, 0, pw, ph)
     const d = pctx.getImageData(0, 0, pw, ph).data
     const solid = (x, y) => d[(y * pw + x) * 4 + 3] > 40
-    let top = 0
-    find: for (let y = 0; y < ph; y++) for (let x = 0; x < pw; x++) if (solid(x, y)) {
-      top = y
-      break find
-    }
+    // 头顶：按身体中线找（举过头顶的手、飘起来的发带不算）
+    let top = Math.round(measure(img).top * ph)
     // 头顶往下一小段里人物的左右中心，就是脸的中心
     const band = Math.max(2, Math.round((face / h) * ph * 0.7))
     let sum = 0
@@ -284,19 +281,72 @@
     })
   }
 
+  /**
+   * 量一量立绘里的人：宽高比 ar（高/宽）、头顶 top 和脚底 bottom（占图高的比例）、身体中线 cx（占图宽的比例）。
+   * 头顶只在身体中线附近找，「开心」那张举过头顶的手不算，这样三种表情按身高对齐，不会忽大忽小。
+   */
+  function measure(img) {
+    const ar = img.naturalHeight / img.naturalWidth
+    const whole = { ar, top: 0, bottom: 1, cx: 0.5, half: ar < 1.6 }
+    const pw = Math.min(160, img.naturalWidth)
+    const ph = Math.max(1, Math.round(pw * ar))
+    const cv = document.createElement('canvas')
+    cv.width = pw
+    cv.height = ph
+    const ctx = cv.getContext('2d', { willReadFrequently: true })
+    ctx.drawImage(img, 0, 0, pw, ph)
+    let d
+    try {
+      d = ctx.getImageData(0, 0, pw, ph).data
+    } catch {
+      return whole // 别的网站的图读不了像素
+    }
+    const solid = (x, y) => d[(y * pw + x) * 4 + 3] > 60
+    let y0 = -1
+    let y1 = -1
+    for (let y = 0; y < ph; y++) {
+      for (let x = 0; x < pw; x++) {
+        if (solid(x, y)) {
+          if (y0 < 0) y0 = y
+          y1 = y
+          break
+        }
+      }
+    }
+    if (y0 < 0) return whole
+    const H = y1 - y0 + 1
+    // 身体中线：腿那一段的左右中心（手里拿的东西一般在胸口，不影响）
+    let sx = 0
+    let n = 0
+    for (let y = Math.round(y0 + H * 0.55); y <= Math.round(y0 + H * 0.92); y++) for (let x = 0; x < pw; x++) if (solid(x, y)) (sx += x), n++
+    const cx = n ? sx / n : pw / 2
+    // 头顶：中线左右一小段里最上面的地方
+    const band = Math.max(2, H * 0.06)
+    let top = y0
+    find: for (let y = y0; y <= y1; y++) {
+      for (let x = Math.max(0, Math.floor(cx - band)); x <= Math.min(pw - 1, Math.ceil(cx + band)); x++) {
+        if (solid(x, y)) {
+          top = y
+          break find
+        }
+      }
+    }
+    return { ar, top: top / ph, bottom: (y1 + 1) / ph, cx: (cx + 0.5) / pw, half: ar < 1.6 }
+  }
+
   const sizes = new Map()
-  /** 立绘的宽高比（异步量好以后缓存），量好前返回 null */
-  function aspect(src, onReady) {
+  /** 立绘量好的尺寸（异步量好以后缓存），量好前返回 null */
+  function metrics(src, onReady) {
     if (sizes.has(src)) return sizes.get(src)
     sizes.set(src, null)
     load(src)
       .then((img) => {
-        sizes.set(src, img.naturalHeight / img.naturalWidth)
+        sizes.set(src, measure(img))
         onReady?.()
       })
       .catch(() => {})
     return null
   }
 
-  window.NiumaCast = { ROLES, STATES, prompt, clean, avatar, toDataUrl, aspect, colorName }
+  window.NiumaCast = { ROLES, STATES, prompt, clean, avatar, toDataUrl, metrics, colorName }
 })()

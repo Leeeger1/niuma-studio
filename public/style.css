@@ -385,6 +385,8 @@ button { font: inherit; color: inherit; }
 .anime-svg .actor.armed .paper { display: none; }
 .anime-svg .baton .arc, .anime-svg .bolt { animation: an-bolt 0.12s steps(2) infinite; }
 .anime-svg .seat.shocked .zap { animation: an-jitter 0.07s steps(2) infinite, an-zapflash 0.16s steps(1) infinite; }
+/* 立绘挨电：整张发亮发黄，人还看得清（整片涂黄就成了一块剪影） */
+.anime-svg .seat.shocked .zap.zap-cast { animation: an-jitter 0.07s steps(2) infinite, an-zapflash-soft 0.16s steps(1) infinite; }
 .anime-svg .seat.shocked .eyes-open, .anime-svg .seat.shocked .mouth-smile, .anime-svg .seat.shocked .mouth-wave { display: none; }
 .anime-svg .seat.shocked .eyes-cross, .anime-svg .seat.shocked .mouth-open { display: inline; }
 .anime-svg .seat.sooty .soot { display: inline; }
@@ -410,6 +412,7 @@ button { font: inherit; color: inherit; }
 @keyframes an-twinkle { 0%, 100% { opacity: 0.2; } 50% { opacity: 1; } }
 @keyframes an-jitter { 0% { transform: translate(-1.6px, 0); } 100% { transform: translate(1.6px, -1px); } }
 @keyframes an-zapflash { 0% { filter: url(#an-zap); } 50% { filter: none; } }
+@keyframes an-zapflash-soft { 0% { filter: url(#an-zap-soft); } 50% { filter: none; } }
 @keyframes an-bolt { 0% { opacity: 1; } 50% { opacity: 0.1; } }
 @keyframes an-poke { from { transform: translateX(-3px); } to { transform: translateX(3px); } }
 @keyframes an-sway { from { transform: rotate(-5deg); } to { transform: rotate(5deg); } }
@@ -629,6 +632,7 @@ html[data-skin="pixel"] .setup { --r: 0; }
 .skins button.custom[aria-pressed="true"] { border-style: solid; }
 .skins .make-skin { color: var(--accent); border-color: color-mix(in srgb, var(--accent) 45%, var(--line)); background: transparent; }
 .skins .make-skin:hover { background: color-mix(in srgb, var(--accent) 10%, transparent); }
+.skins .arts { display: inline-flex; gap: 4px; align-items: center; margin-left: 8px; padding-left: 10px; border-left: 1px solid var(--line); }
 
 .skin-editor {
   --r: 10px;

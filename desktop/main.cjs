@@ -18,6 +18,12 @@ const SKINS = [
   ['space', '太空站'],
   ['pixel', '像素复古'],
 ]
+// 人物画风：立绘是内置的一整套插画，动漫风和 Q 版是代码画的
+const ARTS = [
+  ['cast', '立绘（默认）'],
+  ['anime', '动漫风（代码画的）'],
+  ['chibi', 'Q 版'],
+]
 const REPO = 'https://github.com/Leeeger1/niuma-studio'
 
 // 设置和缓存放在固定的英文目录里（各系统的「应用数据」下的 niuma-studio）。
@@ -30,6 +36,7 @@ let studio = null
 let quitting = false
 let settings = {}
 let skinStore = null // src/skins.js：菜单里列出自制皮肤
+let pageReady = false // 页面刚打开时先套用记住的皮肤和画风，套完才同步
 
 const icon = (name) => path.join(__dirname, 'build', name)
 const settingsFile = () => path.join(app.getPath('userData'), 'settings.json')
@@ -116,17 +123,25 @@ function createWindow() {
     e.preventDefault()
     if (/^https?:/.test(url)) shell.openExternal(url)
   })
+  win.webContents.on('did-start-loading', () => (pageReady = false))
   win.webContents.on('did-finish-load', async () => {
     if (!studio) return
+    // 先记下要换成什么：套用的时候窗口可能获得焦点，syncSkins 要等这里弄完才读页面
+    const want = { skin: settings.skin, art: settings.art }
     try {
       const skin = await win.webContents.executeJavaScript('document.documentElement.dataset.skinId || document.documentElement.dataset.skin || ""')
-      if (settings.skin && skin && skin !== settings.skin) await setSkin(settings.skin)
-      else if (skin && skin !== settings.skin) {
+      // 端口每次可能不一样，页面自己记不住人物画风，由这里记着
+      if (want.art) await win.webContents.executeJavaScript(`window.NiumaSkin?.setArt(${JSON.stringify(want.art)})`)
+      if (want.skin && skin && skin !== want.skin) await setSkin(want.skin)
+      else if (skin && skin !== want.skin) {
         settings.skin = skin
         saveSettings()
         buildMenu()
       }
-    } catch {}
+    } catch {
+    } finally {
+      pageReady = true
+    }
   })
   win.on('focus', () => syncSkins())
   win.on('close', (e) => {
@@ -202,12 +217,23 @@ async function setSkin(id) {
   } catch {}
 }
 
+async function setArt(art) {
+  settings.art = art
+  saveSettings()
+  buildMenu()
+  try {
+    await win.webContents.executeJavaScript(`window.NiumaSkin?.setArt(${JSON.stringify(art)})`)
+  } catch {}
+}
+
 /** 页面里点了别的皮肤、或者皮肤文件夹有变化：回到窗口时同步一下菜单 */
 async function syncSkins() {
-  if (!win || !studio) return
+  if (!win || !studio || !pageReady) return
   try {
     const skin = await win.webContents.executeJavaScript('document.documentElement.dataset.skinId || ""')
     if (skin && skin !== '__preview') settings.skin = skin
+    const art = await win.webContents.executeJavaScript('window.NiumaSkin?.art?.() || ""')
+    if (ARTS.some(([id]) => id === art)) settings.art = art
   } catch {}
   saveSettings()
   buildMenu()
@@ -271,6 +297,11 @@ function buildMenu() {
         ...SKINS.map(([id, name]) => ({ label: name, type: 'radio', checked: (settings.skin || 'sakura') === id, click: () => setSkin(id) })),
         // 自制皮肤和内置的放在同一组单选里（中间隔开会变成两组，各选中一个）
         ...mine.map(([id, name]) => ({ label: `${name}（自制）`, type: 'radio', checked: settings.skin === id, click: () => setSkin(id) })),
+        { type: 'separator' },
+        {
+          label: '人物画风',
+          submenu: ARTS.map(([id, name]) => ({ label: name, type: 'radio', checked: (settings.art || 'cast') === id, click: () => setArt(id) })),
+        },
         { type: 'separator' },
         { label: '做皮肤 / 改皮肤…', click: openSkinEditor },
         { label: '打开皮肤文件夹', click: openSkinsFolder },

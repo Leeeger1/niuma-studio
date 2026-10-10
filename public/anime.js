@@ -81,9 +81,22 @@
     return e
   }
 
+  // 内置立绘（Codex 画的一整套）：public/cast/<套>/<角色>-<表情>.webp。现在所有主题共用 sakura 这套，
+  // 以后有了主题专属的（园区、修仙、太空站……）在 THEME_CAST 里对上就行。
+  const CAST_ROLES = ['shaniu', 'architect', 'frontend', 'reviewer', 'backend', 'tester', 'debugger', 'writer', 'default']
+  const CAST_SETS = ['sakura']
+  const THEME_CAST = {}
+  function builtinCast(skinId) {
+    const set = CAST_SETS.includes(THEME_CAST[skinId]) ? THEME_CAST[skinId] : 'sakura'
+    return Object.fromEntries(CAST_ROLES.map((r) => [r, Object.fromEntries(['idle', 'happy', 'error'].map((st) => [st, `cast/${set}/${r}-${st}.webp`]))]))
+  }
+
   class AnimeOffice {
-    /** skin：内置皮肤的名字，或者一份自制皮肤（NiumaSkinFormat.normalize 整理过的） */
-    constructor(scene, overlay, skin = 'sakura') {
+    /**
+     * skin：内置皮肤的名字，或者一份自制皮肤（NiumaSkinFormat.normalize 整理过的）
+     * art：人物画风，cast（内置立绘）/ anime（代码画的动漫风）/ chibi（Q 版）；不给就看皮肤里写的，再不行用立绘
+     */
+    constructor(scene, overlay, skin = 'sakura', { art } = {}) {
       this.scene = scene
       this.overlay = overlay
       if (skin && typeof skin === 'object') {
@@ -101,11 +114,13 @@
         this.skinId = SKINS[skin] ? skin : 'sakura'
         this.S = SKINS[this.skinId]
       }
-      this.cast ||= {}
+      const style = art || this.S.art || 'cast'
+      // 皮肤自带立绘就用自带的；不然选了「立绘」就用内置那套
+      if (!Object.keys(this.cast || {}).length) this.cast = style === 'cast' ? builtinCast(this.skinId) : {}
       this.avatars = new Map()
       this.onFaces = null // 立绘头像截好了：页面重画头像
-      // 角色画风：anime（默认，动漫风）或 chibi（Q 版）
-      this.art = this.S.art === 'chibi' || !C.arts?.().includes('anime') ? 'chibi' : 'anime'
+      // 没有立绘的人用代码画：anime（动漫风）或 chibi（Q 版）
+      this.art = style === 'chibi' || !C.arts?.().includes('anime') ? 'chibi' : 'anime'
       this.FEET = C.feet({ art: this.art }) * K
       this.canvas = scene.querySelector('canvas')
       if (this.canvas) this.canvas.style.display = 'none'
@@ -168,7 +183,7 @@
       return C.portrait(this.look(emp), bg)
     }
 
-    // ---- 角色立绘（自制皮肤里的 cast）------------------------------------------------------
+    // ---- 角色立绘（自制皮肤里的 cast，没有就用内置那套）-------------------------------------------
 
     /** 这个人用哪套立绘：先按员工 id，再按岗位，最后用 default */
     castFor(emp) {
@@ -178,37 +193,45 @@
       return c[emp.id] || c[emp.skill] || c.default || null
     }
 
-    /** 立绘多高（设计坐标）：全身图（瘦长）和半身图按比例放，量好宽高比以前先当全身图 */
-    castHeight(url, full, half) {
-      const a = window.NiumaCast?.aspect(url, () => this.rebuildSoon())
-      return a && a < 1.6 ? half : full
-    }
-
     rebuildSoon() {
       clearTimeout(this.rebuildTimer)
       this.rebuildTimer = setTimeout(() => this.alive && this.build(), 60)
     }
 
-    castImages(cast, y, full, half, extra = '') {
+    /**
+     * 立绘放哪（设计坐标）：按量出来的头顶到脚底缩放，身体中线对准 0，三种表情一样大。
+     * place(m) 返回 {x, y, w, h}；m 是 NiumaCast.metrics 量的，还没量好时是 null。
+     */
+    castImages(cast, place, extra = '') {
       const img = (st) => {
         const url = cast[st]
-        const h = this.castHeight(url, full, half)
-        return `<image class="pose pose-${st}" href="${String(url).replace(/&/g, '&amp;')}" x="-220" y="${typeof y === 'function' ? y(h) : y}" width="440" height="${h}" preserveAspectRatio="xMidYMin meet"/>`
+        const g = place(window.NiumaCast?.metrics?.(url, () => this.rebuildSoon()) || null)
+        const n = (v) => Math.round(v * 10) / 10
+        return `<image class="pose pose-${st}" href="${String(url).replace(/&/g, '&amp;')}" x="${n(g.x)}" y="${n(g.y)}" width="${n(g.w)}" height="${n(g.h)}" preserveAspectRatio="xMidYMin meet"/>`
       }
       return `<g class="cast${cast.happy ? ' has-happy' : ''}${cast.error ? ' has-error' : ''}">${img('idle')}${cast.happy ? img('happy') : ''}${cast.error ? img('error') : ''}${extra}</g>`
     }
 
-    /** 坐着：头顶对齐 -362，桌子挡住下半身；没有单独的手 */
+    /** 把量好的人放进去：身高 body，头顶（by='top'）或脚底（by='bottom'）对到 at */
+    castFit(m, body, at, by) {
+      const h = body / Math.max(0.2, m.bottom - m.top)
+      const w = h / m.ar
+      return { x: -m.cx * w, y: by === 'top' ? at - m.top * h : at - m.bottom * h, w, h }
+    }
+
+    /** 坐着：头顶对齐 -352，桌子挡住下半身；没有单独的手 */
     castSeated(cast) {
       const soot = '<g class="soot" fill="#3a3436" opacity=".5"><ellipse cx="-22" cy="-292" rx="16" ry="9"/><ellipse cx="20" cy="-270" rx="12" ry="7"/></g>'
-      return { main: this.castImages(cast, -362, 640, 420, soot), hands: '' }
+      const place = (m) => (!m ? { x: -220, y: -362, w: 440, h: 640 } : this.castFit(m, m.half ? 410 : 620, -352, 'top'))
+      return { main: this.castImages(cast, place, soot), hands: '' }
     }
 
     /** 站着 / 走路：全身图脚踩地上，半身图像视觉小说那样浮着 */
     castStanding(cast) {
       const feet = this.FEET / K
       const paper = '<g class="paper"><rect x="74" y="-58" width="34" height="44" rx="3" fill="#fff" stroke="#b9b3c6" stroke-width="1.6"/><path d="M80,-48 h22 M80,-40 h22 M80,-32 h14" stroke="#c9c3d6" stroke-width="2.4"/></g>'
-      return this.castImages(cast, (h) => (h >= 500 ? feet - h : feet - h - 60), 560, 380, `${paper}${C.baton(84, -40, 0.9)}`)
+      const place = (m) => (!m ? { x: -220, y: feet - 560, w: 440, h: 560 } : m.half ? this.castFit(m, 370, feet - 60, 'bottom') : this.castFit(m, 545, feet, 'bottom'))
+      return this.castImages(cast, place, `${paper}${C.baton(84, -40, 0.9)}`)
     }
 
     // ---- 布局 --------------------------------------------------------------------------------------
@@ -286,6 +309,7 @@
           <filter id="an-glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="2.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
           <filter id="an-gray"><feColorMatrix type="saturate" values="0.15"/></filter>
           <filter id="an-zap"><feColorMatrix type="matrix" values="0 0 0 0 1  0 0 0 0 0.94  0 0 0 0 0.3  0 0 0 1 0"/></filter>
+          <filter id="an-zap-soft"><feColorMatrix type="matrix" values="0.45 0 0 0 0.56  0 0.45 0 0 0.52  0 0 0.3 0 0.12  0 0 0 1 0"/></filter>
           <clipPath id="an-clip"><rect width="${W}" height="${H}"/></clipPath>
         </defs>
         <g clip-path="url(#an-clip)">
@@ -596,7 +620,7 @@
       g.innerHTML = `
         <ellipse cx="0" cy="40" rx="46" ry="5" fill="#000" opacity=".08"/>
         <g class="chair">${this.chairSvg(color)}</g>
-        <g class="char" transform="translate(0,6) scale(${K})"><g class="zap">${body.main}</g></g>
+        <g class="char" transform="translate(0,6) scale(${K})"><g class="zap${cast ? ' zap-cast' : ''}">${body.main}</g></g>
         <g class="desk">${this.deskSvg(color, s.boss)}</g>
         ${this.lampSvg(s.side)}
         ${this.monitorSvg(s.side, color)}

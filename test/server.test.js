@@ -50,6 +50,20 @@ test('serves the page with a document shell and blocks path traversal', async (t
   assert.notEqual((await req('/%2e%2e/package.json')).status, 200)
 })
 
+test('the built-in portraits are all there and served as cached WebP', async (t) => {
+  const { req } = await start(t, { host: '127.0.0.1' })
+  const src = await import('node:fs').then((fs) => fs.readFileSync(path.join(publicDir, 'anime.js'), 'utf8'))
+  const roles = JSON.parse(src.match(/const CAST_ROLES = (\[[^\]]+\])/)[1].replace(/'/g, '"'))
+  assert.equal(roles.length, 9)
+  for (const role of roles) {
+    for (const st of ['idle', 'happy', 'error']) {
+      const r = await req(`/cast/sakura/${role}-${st}.webp`)
+      assert.equal(r.status, 200, `${role}-${st}`)
+      assert.equal(r.type, 'image/webp')
+    }
+  }
+})
+
 test('loopback mode rejects foreign Host headers and cross-site posts', async (t) => {
   const { coord, server, port, req } = await start(t, { host: '127.0.0.1' })
   assert.equal((await req('/api/state', { headers: { Host: 'evil.example:80' } })).status, 403)
