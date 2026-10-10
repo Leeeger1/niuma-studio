@@ -77,45 +77,83 @@ async function start(workdir, { fake = false } = {}) {
   }
   const { startStudio } = await import(pathToFileURL(path.join(CORE, 'src', 'studio.js')).href)
   skinStore ||= await import(pathToFileURL(path.join(CORE, 'src', 'skins.js')).href)
-  studio = await startStudio({ root: CORE, workdir, fake, overrides: { host: '127.0.0.1', port: 17777 } })
+  studio = await startStudio({ root: CORE, workdir, fake, updater: updater(), overrides: { host: '127.0.0.1', port: 17777 } })
   studio.fake = fake
   studio.workdir = workdir
   studio.coord.on('event', (ev) => ev.type === 'update' && notifyUpdate(ev.update))
 }
 
-// 傻妞发现新版本：窗口缩在托盘里也弹个系统通知，每个版本只弹一次。
+// 自动更新：Windows 和 Linux（AppImage）在后台下载，重启就换成新版，不重启的话下次退出时自动装上。
+// macOS 的安装包没有苹果签名，系统不让程序自己换自己，还是点按钮下载安装包。
+let autoUpdater = null
+let updateReady = false
+let downloading = null // 换项目文件夹时傻妞会重新开工，别下两遍
+function updater() {
+  if (!app.isPackaged || !(process.platform === 'win32' || (process.platform === 'linux' && process.env.APPIMAGE))) return null
+  if (!autoUpdater) {
+    try {
+      autoUpdater = require('electron-updater').autoUpdater
+    } catch {
+      return null
+    }
+    // 什么时候下载由傻妞决定（她发现新版本才下），装是在主人点「重启更新」或者退出的时候。
+    autoUpdater.autoDownload = false
+    autoUpdater.autoInstallOnAppQuit = true
+    autoUpdater.logger = null
+    const tell = (patch) => studio?.coord.updateProgress(patch)
+    let shown = -1
+    autoUpdater.on('download-progress', (p) => {
+      const percent = Math.floor(p.percent || 0)
+      if (percent === shown) return
+      shown = percent
+      tell({ state: 'downloading', percent })
+    })
+    autoUpdater.on('update-downloaded', () => {
+      updateReady = true
+      tell({ state: 'ready', percent: 100 })
+    })
+    autoUpdater.on('error', (e) => tell({ state: 'failed', error: String(e?.message || e).split('\n')[0] }))
+  }
+  return {
+    auto: true,
+    download() {
+      if (updateReady) return studio?.coord.updateProgress({ state: 'ready', percent: 100 })
+      downloading ||= (async () => {
+        const r = await autoUpdater.checkForUpdates()
+        if (!r?.isUpdateAvailable) throw new Error('发布页上还没有自动更新用的文件')
+        await autoUpdater.downloadUpdate()
+      })().finally(() => (downloading = null))
+      return downloading
+    },
+    install() {
+      quitting = true
+      // 静默安装，装好自动重新打开
+      setImmediate(() => autoUpdater.quitAndInstall(true, true))
+    },
+  }
+}
+
+// 傻妞发现新版本、或者新版本下载好了：窗口缩在托盘里也弹个系统通知，每个版本各弹一次。
 function notifyUpdate(u) {
-  if (!Notification.isSupported() || settings.notifiedUpdate === u.latest) return
-  settings.notifiedUpdate = u.latest
+  const ready = u.state === 'ready'
+  const key = `${u.latest}${ready ? '-ready' : ''}`
+  if (!Notification.isSupported() || (u.state === 'downloading' && u.percent) || settings.notifiedUpdate === key) return
+  settings.notifiedUpdate = key
   saveSettings()
-  const n = new Notification({ title: `牛马工作室有新版本 v${u.latest}`, body: '点这里下载安装包，装好重新打开就是新版，项目和设置都还在。' })
-  n.on('click', () => shell.openExternal(u.download || u.url))
+  const body = ready
+    ? '已经下载好了，点右上角「重启更新」就换成新版；不点的话下次退出时自动装上。'
+    : u.state === 'downloading'
+      ? '傻妞在后台下载，下好了再提醒你。'
+      : '点这里下载安装包，装好重新打开就是新版，项目和设置都还在。'
+  const n = new Notification({ title: `牛马工作室${ready ? '新版本下载好了' : '有新版本'} v${u.latest}`, body })
+  n.on('click', () => (ready || u.state === 'downloading' ? show() : shell.openExternal(u.download || u.url)))
   n.show()
 }
 
-async function checkUpdates() {
-  const { checkUpdate } = await import(pathToFileURL(path.join(CORE, 'src', 'update.js')).href)
-  const r = await checkUpdate({ root: CORE }).catch(() => ({ ok: false }))
-  const parent = win && win.isVisible() ? win : undefined
-  if (!r.ok) {
-    const { response } = await dialog.showMessageBox(parent, { type: 'info', buttons: ['去发布页看看', '好的'], defaultId: 1, cancelId: 1, message: '连不上 GitHub', detail: '没查到新版本，过一会儿再试试，或者直接去 GitHub 的发布页看看。' })
-    if (response === 0) shell.openExternal(`${REPO}/releases`)
-    return
-  }
-  if (!r.newer) {
-    await dialog.showMessageBox(parent, { type: 'info', buttons: ['好的'], message: `已经是最新版 v${r.current}` })
-    return
-  }
-  const { response } = await dialog.showMessageBox(parent, {
-    type: 'info',
-    buttons: ['下载安装包', '看看更新了什么', '以后再说'],
-    defaultId: 0,
-    cancelId: 2,
-    message: `有新版本 v${r.latest}`,
-    detail: `现在用的是 v${r.current}。下载安装包，装好重新打开就是新版，项目、员工和设置都还在。`,
-  })
-  if (response === 0) shell.openExternal(r.download || r.url)
-  if (response === 1) shell.openExternal(r.url)
+/** 菜单「检查更新」：跟对傻妞说 /更新 一样，结果在聊天里。 */
+function checkUpdates() {
+  show()
+  studio?.coord.checkForUpdate({ manual: true })
 }
 
 function loadingPage(text) {

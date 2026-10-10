@@ -132,3 +132,49 @@ test('傻妞 announces a new version once, and /更新 always answers', async ()
   await c.checkForUpdate()
   assert.equal(said().length, before, 'automatic checks never complain about the network')
 })
+
+test('desktop auto-update: download in the background, say when it is ready, restart on request', async () => {
+  const reply = { ok: true, newer: true, current: '0.6.0', latest: '0.9.0', tag: 'v0.9.0', url: 'https://github.com/x/releases/tag/v0.9.0', download: 'https://dl.example/x.exe', command: '' }
+  let fail = true
+  const calls = { download: 0, install: 0 }
+  const updater = {
+    auto: true,
+    download: async () => {
+      calls.download++
+      if (fail) throw new Error('404 latest.yml')
+    },
+    install: () => calls.install++,
+  }
+  const c = new Coordinator(loadConfig({ workdir: tmp() }), { mode: 'fake', root, checkUpdate: async () => reply, updater })
+  const said = () => c.messages.filter((m) => m.role === 'shaniu').map((m) => m.text)
+  const tick = () => new Promise((r) => setImmediate(r))
+
+  // The release has no update files yet: fall back to the download button.
+  await c.checkForUpdate()
+  await tick()
+  assert.equal(c.update.state, 'failed')
+  assert.match(said().at(-1), /没能自动下载（404 latest\.yml）.+手动下载/)
+  await c.checkForUpdate()
+  assert.equal(calls.download, 1, 'automatic checks do not retry')
+
+  // /更新 tries again.
+  fail = false
+  await c.handle('/更新')
+  await tick()
+  assert.equal(calls.download, 2)
+  assert.equal(c.update.state, 'downloading')
+  assert.match(said().at(-1), /傻妞先在后台下载/)
+  assert.throws(() => c.installUpdate(), /还没下载好/)
+
+  c.updateProgress({ state: 'downloading', percent: 40 })
+  assert.equal(c.snapshot().update.percent, 40)
+  c.updateProgress({ state: 'ready', percent: 100 })
+  c.updateProgress({ state: 'ready', percent: 100 })
+  assert.equal(said().filter((x) => /下载好啦/.test(x)).length, 1, 'ready is announced once')
+
+  await c.handle('/更新')
+  assert.equal(calls.download, 2, 'a downloaded update is not fetched again')
+  assert.match(said().at(-1), /「重启更新」/)
+  c.installUpdate()
+  assert.equal(calls.install, 1)
+})

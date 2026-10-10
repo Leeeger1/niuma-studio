@@ -529,16 +529,36 @@
     } else el.hidden = true
   }
 
-  // 有新版本：桌面版点一下下载安装包；命令行版点一下复制更新命令。
+  // 有新版本：桌面版能自动更新的在后台下载，下好了点一下重启；不能的点一下下载安装包；命令行版点一下复制更新命令。
   function renderUpdate() {
     const el = $('#update')
     const u = state.update
     if (!el) return
     el.hidden = !u
     if (!u) return
-    el.textContent = `新版本 v${u.latest}`
+    el.dataset.state = u.state || ''
     el.href = u.download || u.url
-    el.title = u.download ? `现在用的是 v${u.current}，点一下下载安装包` : `现在用的是 v${u.current}，点一下复制更新命令`
+    if (u.state === 'downloading') {
+      el.textContent = `正在下载 v${u.latest}${u.percent ? ` · ${u.percent}%` : ''}`
+      el.title = '下载好了傻妞会提醒，不用等着'
+    } else if (u.state === 'ready') {
+      el.textContent = `重启更新到 v${u.latest}`
+      el.title = '点一下重启，换成新版（项目、员工和设置都还在）'
+    } else {
+      el.textContent = `新版本 v${u.latest}`
+      el.title = u.download ? `现在用的是 v${u.current}，点一下下载安装包` : `现在用的是 v${u.current}，点一下复制更新命令`
+    }
+  }
+
+  async function installUpdate() {
+    const post = (force) => transport.request('POST', '/api/update/install', { force })
+    try {
+      let r = await post(false)
+      if (r.busy && confirm(`${r.error}。确定现在重启更新吗？`)) r = await post(true)
+      if (!r.ok && !r.busy) throw new Error(r.error)
+    } catch (e) {
+      handle({ type: 'message', message: { role: 'system', text: `没能重启更新：${e.message}`, ts: Date.now() } })
+    }
   }
 
   // ---- events ----------------------------------------------------------------
@@ -721,7 +741,13 @@
   const openSetup = () => window.NiumaSetup?.open({ request: transport?.request || null, fake: state.mode === 'fake' })
   $('#open-setup')?.addEventListener('click', openSetup)
   $('#update')?.addEventListener('click', async (e) => {
-    const cmd = state.update?.command
+    const u = state.update
+    if (u?.state === 'downloading') return e.preventDefault()
+    if (u?.state === 'ready') {
+      e.preventDefault()
+      return installUpdate()
+    }
+    const cmd = u?.command
     if (!cmd) return
     e.preventDefault()
     let copied = false

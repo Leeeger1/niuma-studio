@@ -164,6 +164,17 @@ export function createServer(coord, { publicDir, host, token, setup, skins = ski
           coord.stop()
           return json(res, 200, { ok: true })
         }
+        // 重启换成新版：会关掉整个程序，只给本机用。
+        if (url.pathname === '/api/update/install') {
+          if (!fromThisComputer(req)) return json(res, 403, { ok: false, error: '只能在运行牛马工作室的那台电脑上更新' })
+          if (coord.busy && !body.force) return json(res, 200, { ok: false, busy: true, error: '傻妞手上还有活，重启会叫停所有员工' })
+          try {
+            coord.installUpdate()
+            return json(res, 200, { ok: true })
+          } catch (e) {
+            return json(res, 200, { ok: false, error: e.message })
+          }
+        }
         if (url.pathname === '/api/cast/models' || url.pathname === '/api/cast/generate') {
           // 用已经接入的 API 组的地址和 Key 画立绘
           const g = coord.team?.groups.get(String(body.group || ''))

@@ -114,3 +114,22 @@ test('skin routes: anyone with the page can list, saving goes through the skin s
   const big = await post('/api/skins/save', { skin: { name: 'x'.repeat(10), pad: 'a'.repeat(1_000_000) } })
   assert.equal(JSON.parse(big.body).ok, true)
 })
+
+test('restart-to-update only for this computer, and asks first while 傻妞 is busy', async (t) => {
+  const { coord, req } = await start(t, { host: '127.0.0.1' })
+  let installs = 0
+  coord.installUpdate = () => {
+    if (!coord.ready) throw new Error('新版本还没下载好')
+    installs++
+  }
+  const post = (body) => req('/api/update/install', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) }).then((r) => JSON.parse(r.body))
+  assert.match((await post({})).error, /还没下载好/)
+  coord.ready = true
+  coord.busy = true
+  assert.equal((await post({})).busy, true)
+  assert.equal(installs, 0)
+  assert.equal((await post({ force: true })).ok, true)
+  coord.busy = false
+  assert.equal((await post({})).ok, true)
+  assert.equal(installs, 2)
+})

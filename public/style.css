@@ -526,6 +526,8 @@ html[data-skin="pixel"] .skins button { border-radius: 0; }
 .btn-update::before { content: "✨ "; }
 .btn-update:hover { background: color-mix(in srgb, var(--accent) 10%, var(--panel)); }
 .btn-update[hidden] { display: none; }
+.btn-update[data-state="downloading"] { cursor: default; opacity: 0.75; border-style: dashed; }
+.btn-update[data-state="ready"] { color: var(--on-accent); background: var(--accent); }
 .add-staff {
   display: grid; place-content: center; gap: 4px; min-height: 120px; padding: 16px; text-align: center; cursor: pointer;
   background: transparent; border: 2px dashed var(--line); color: var(--muted);

@@ -190,9 +190,11 @@ function unsortable(tasks) {
 }
 
 export class Coordinator extends EventEmitter {
-  constructor(config, { mode = 'live', root, checkUpdate: check = checkUpdate } = {}) {
+  constructor(config, { mode = 'live', root, checkUpdate: check = checkUpdate, updater = null } = {}) {
     super()
     this.checkUpdate = check
+    // 桌面版能自动更新时（Windows、Linux AppImage）由它在后台下载、重启安装：{ auto, download(), install() }
+    this.updater = updater
     this.update = null
     this.config = config
     this.mode = mode
@@ -973,20 +975,51 @@ export class Coordinator extends EventEmitter {
   /** 看看有没有新版本。自动检查只在发现新版本时说一次；主人说 /更新 就一定回话。 */
   async checkForUpdate({ manual = false } = {}) {
     const r = await this.checkUpdate({ root: this.root }).catch(() => ({ ok: false }))
-    if (r.newer) {
-      const fresh = this.update?.latest !== r.latest
-      this.update = r
-      if (fresh || manual) {
-        this.emitEvent({ type: 'update', update: r })
-        const how = r.download
-          ? '点右上角的「新版本」按钮下载安装包，装好重新打开就是新版'
-          : `在终端里运行 \`${r.command}\`，再重新启动 niuma 就是新版（点右上角的「新版本」按钮能复制这条命令）`
-        this.addMessage('shaniu', `主人，牛马工作室出新版本啦：**v${r.latest}**（现在用的是 v${r.current}）。${how}，项目、员工和设置都还在。更新了什么可以看发布页：${r.url}`)
-      }
-    } else if (manual) {
-      this.addMessage('shaniu', r.ok ? `已经是最新版 v${r.current} 啦～` : `连不上 GitHub，没查到新版本。过一会儿再说一次 /更新，或者到 https://github.com/${REPO}/releases 看看。`)
+    if (!r.newer) {
+      if (manual) this.addMessage('shaniu', r.ok ? `已经是最新版 v${r.current} 啦～` : `连不上 GitHub，没查到新版本。过一会儿再说一次 /更新，或者到 https://github.com/${REPO}/releases 看看。`)
+      return r
     }
+    const prev = this.update?.latest === r.latest ? this.update : null
+    if (prev && !manual) return r
+    // 能自动更新就在后台下载；同一个版本已经在下、下好了就接着用，上次没下成就再试一次。
+    const start = !!this.updater?.auto && (!prev || prev.state === 'failed')
+    this.update = { ...r, state: start ? 'downloading' : prev?.state || '', percent: start ? 0 : prev?.percent || 0, error: '' }
+    this.emitEvent({ type: 'update', update: this.update })
+    this.addMessage('shaniu', this.updateText())
+    if (start) Promise.resolve(this.updater.download()).catch((e) => this.updateProgress({ state: 'failed', error: e.message }))
     return r
+  }
+
+  updateText() {
+    const u = this.update
+    const keep = '项目、员工和设置都还在'
+    if (u.state === 'ready') return `新版本 v${u.latest} 下载好啦～ 点右上角的「重启更新」就换成新版；现在不方便也没关系，下次退出牛马工作室时会自动装上，${keep}。`
+    const head = `主人，牛马工作室出新版本啦：**v${u.latest}**（现在用的是 v${u.current}）。`
+    const tail = `更新了什么可以看发布页：${u.url}`
+    if (u.state === 'downloading') return `${head}傻妞先在后台下载，下好了提醒主人重启，${keep}。${tail}`
+    const how = u.download
+      ? '点右上角的「新版本」按钮下载安装包，装好重新打开就是新版'
+      : `在终端里运行 \`${u.command}\`，再重新启动 niuma 就是新版（点右上角的「新版本」按钮能复制这条命令）`
+    return `${head}${how}，${keep}。${tail}`
+  }
+
+  /** 桌面版报告后台下载的进度：downloading（percent）→ ready，或者 failed（退回到手动下载）。 */
+  updateProgress(patch) {
+    if (!this.update) return
+    const was = this.update.state
+    Object.assign(this.update, patch)
+    this.emitEvent({ type: 'update', update: this.update })
+    if (patch.state === 'ready' && was !== 'ready') this.addMessage('shaniu', this.updateText())
+    if (patch.state === 'failed' && was !== 'failed') {
+      this.addMessage('shaniu', `新版本没能自动下载（${truncate(patch.error || '不知道为什么', 80)}），点右上角的「新版本」按钮手动下载安装包吧，装好重新打开就是新版。`)
+    }
+  }
+
+  /** 重启换成新版：叫停所有员工，交给桌面版去装。 */
+  installUpdate() {
+    if (this.update?.state !== 'ready' || !this.updater) throw new Error('新版本还没下载好')
+    this.stopAll()
+    this.updater.install()
   }
 
   // ---- hiring --------------------------------------------------------------------------
