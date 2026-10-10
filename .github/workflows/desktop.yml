@@ -71,6 +71,8 @@ jobs:
           target_commitish: ${{ github.sha }}
           name: 牛马工作室 ${{ inputs.version || github.ref_name }}
           files: dist/*
+          # 在下载说明后面附上这一版改了什么（傻妞提醒更新时会指到这个页面）
+          generate_release_notes: true
           body: |
             ## 下载
 

@@ -80,6 +80,42 @@ async function start(workdir, { fake = false } = {}) {
   studio = await startStudio({ root: CORE, workdir, fake, overrides: { host: '127.0.0.1', port: 17777 } })
   studio.fake = fake
   studio.workdir = workdir
+  studio.coord.on('event', (ev) => ev.type === 'update' && notifyUpdate(ev.update))
+}
+
+// 傻妞发现新版本：窗口缩在托盘里也弹个系统通知，每个版本只弹一次。
+function notifyUpdate(u) {
+  if (!Notification.isSupported() || settings.notifiedUpdate === u.latest) return
+  settings.notifiedUpdate = u.latest
+  saveSettings()
+  const n = new Notification({ title: `牛马工作室有新版本 v${u.latest}`, body: '点这里下载安装包，装好重新打开就是新版，项目和设置都还在。' })
+  n.on('click', () => shell.openExternal(u.download || u.url))
+  n.show()
+}
+
+async function checkUpdates() {
+  const { checkUpdate } = await import(pathToFileURL(path.join(CORE, 'src', 'update.js')).href)
+  const r = await checkUpdate({ root: CORE }).catch(() => ({ ok: false }))
+  const parent = win && win.isVisible() ? win : undefined
+  if (!r.ok) {
+    const { response } = await dialog.showMessageBox(parent, { type: 'info', buttons: ['去发布页看看', '好的'], defaultId: 1, cancelId: 1, message: '连不上 GitHub', detail: '没查到新版本，过一会儿再试试，或者直接去 GitHub 的发布页看看。' })
+    if (response === 0) shell.openExternal(`${REPO}/releases`)
+    return
+  }
+  if (!r.newer) {
+    await dialog.showMessageBox(parent, { type: 'info', buttons: ['好的'], message: `已经是最新版 v${r.current}` })
+    return
+  }
+  const { response } = await dialog.showMessageBox(parent, {
+    type: 'info',
+    buttons: ['下载安装包', '看看更新了什么', '以后再说'],
+    defaultId: 0,
+    cancelId: 2,
+    message: `有新版本 v${r.latest}`,
+    detail: `现在用的是 v${r.current}。下载安装包，装好重新打开就是新版，项目、员工和设置都还在。`,
+  })
+  if (response === 0) shell.openExternal(r.download || r.url)
+  if (response === 1) shell.openExternal(r.url)
 }
 
 function loadingPage(text) {
@@ -297,6 +333,7 @@ function buildMenu() {
         { label: '接入 API 的说明', click: () => shell.openExternal(`${REPO}/blob/main/docs/api-guide.md`) },
         { label: '打开运行日志', click: () => studio && shell.openPath(studio.config.logDir) },
         { type: 'separator' },
+        { label: '检查更新…', click: checkUpdates },
         { label: `版本 ${app.getVersion()}`, enabled: false },
       ],
     },

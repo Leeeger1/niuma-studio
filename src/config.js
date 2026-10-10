@@ -23,6 +23,8 @@ export const DEFAULTS = {
   dispatchDelayMs: 1500,
   taskTimeoutMin: 30,
   historyRounds: 6,
+  // 启动后和之后每 6 小时去 GitHub 看一眼有没有新版本，有就让傻妞提醒。false 关掉。
+  updateCheck: true,
   // Project kick-off meetings for new projects and big features: a few employees discuss the
   // framework, structure and database, the chair writes minutes, and everyone follows them.
   meeting: {

@@ -21,6 +21,7 @@ import {
 } from './prompts.js'
 import { skillId, writeSkill } from './skills.js'
 import { Team } from './team.js'
+import { REPO, checkUpdate } from './update.js'
 import { extractJson, firstLine, isLoginError, projectContext, sleep, truncate } from './util.js'
 
 const BAD = new Set(['failed', 'skipped', 'cancelled'])
@@ -39,6 +40,7 @@ export function parseCommand(text, team) {
     if (['undo', '撤销'].includes(c)) return { type: 'undo' }
     if (['team', '团队'].includes(c)) return { type: 'team' }
     if (['tools', '工具', '插件', '工具柜'].includes(c)) return { type: 'tools' }
+    if (['update', '更新', '检查更新', '升级'].includes(c)) return { type: 'update' }
     if (['hire', '招人', '招聘'].includes(c)) return rest ? { type: 'hire', text: rest } : { type: 'help' }
     const e = team?.resolve(c)
     if (e) return rest ? { type: 'direct', agent: e.id, text: rest } : { type: 'help' }
@@ -188,8 +190,10 @@ function unsortable(tasks) {
 }
 
 export class Coordinator extends EventEmitter {
-  constructor(config, { mode = 'live', root } = {}) {
+  constructor(config, { mode = 'live', root, checkUpdate: check = checkUpdate } = {}) {
     super()
+    this.checkUpdate = check
+    this.update = null
     this.config = config
     this.mode = mode
     this.workdir = config.workdir
@@ -270,6 +274,7 @@ export class Coordinator extends EventEmitter {
       messages: this.messages.slice(-100),
       lastCommit: this.lastCommit,
       meeting: this.meeting,
+      update: this.update,
     }
   }
 
@@ -427,6 +432,7 @@ export class Coordinator extends EventEmitter {
     if (cmd?.type === 'team') return this.addMessage('shaniu', this.teamMessage())
     if (cmd?.type === 'tools') return this.addMessage('shaniu', this.toolsMessage())
     if (cmd?.type === 'undo') return this.undo()
+    if (cmd?.type === 'update') return this.checkForUpdate({ manual: true })
     if (cmd?.type === 'hire') return this.hire(cmd.text)
 
     let plan
@@ -960,6 +966,27 @@ export class Coordinator extends EventEmitter {
       this.lastCommit = null
       this.emitEvent({ type: 'commit', commit: null })
     } else this.addMessage('shaniu', `撤销没成功：${r.error}。可能之后又有人改了同样的地方，需要主人手动处理。`)
+  }
+
+  // ---- updates -------------------------------------------------------------------------
+
+  /** 看看有没有新版本。自动检查只在发现新版本时说一次；主人说 /更新 就一定回话。 */
+  async checkForUpdate({ manual = false } = {}) {
+    const r = await this.checkUpdate({ root: this.root }).catch(() => ({ ok: false }))
+    if (r.newer) {
+      const fresh = this.update?.latest !== r.latest
+      this.update = r
+      if (fresh || manual) {
+        this.emitEvent({ type: 'update', update: r })
+        const how = r.download
+          ? '点右上角的「新版本」按钮下载安装包，装好重新打开就是新版'
+          : `在终端里运行 \`${r.command}\`，再重新启动 niuma 就是新版（点右上角的「新版本」按钮能复制这条命令）`
+        this.addMessage('shaniu', `主人，牛马工作室出新版本啦：**v${r.latest}**（现在用的是 v${r.current}）。${how}，项目、员工和设置都还在。更新了什么可以看发布页：${r.url}`)
+      }
+    } else if (manual) {
+      this.addMessage('shaniu', r.ok ? `已经是最新版 v${r.current} 啦～` : `连不上 GitHub，没查到新版本。过一会儿再说一次 /更新，或者到 https://github.com/${REPO}/releases 看看。`)
+    }
+    return r
   }
 
   // ---- hiring --------------------------------------------------------------------------

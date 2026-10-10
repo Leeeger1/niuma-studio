@@ -52,11 +52,19 @@ export async function startStudio({ root, workdir, configFile, overrides = {}, f
   await coord.init()
   const port = await listen(server, config.port || 7777, config.host)
   const local = `http://127.0.0.1:${port}/${token ? `?token=${token}` : ''}`
+  // 自动检查更新：开工几秒后看一眼，之后每 6 小时看一眼。
+  const timers = []
+  if (config.updateCheck !== false) {
+    const check = () => coord.checkForUpdate().catch(() => {})
+    timers.push(setTimeout(check, 5000), setInterval(check, 6 * 60 * 60 * 1000))
+    for (const t of timers) t.unref?.()
+  }
   let closed = false
   const close = () =>
     new Promise((resolve) => {
       if (closed) return resolve()
       closed = true
+      for (const t of timers) clearTimeout(t)
       coord.stopAll()
       closeFake()
       server.closeAllConnections?.()

@@ -519,6 +519,13 @@ html[data-skin="pixel"] .skins button { border-radius: 0; }
 }
 .btn-setup::before { content: "＋ "; }
 .btn-setup:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--drop); }
+.btn-update {
+  padding: 4px 10px; font: 700 12px/1.4 var(--font-body); text-decoration: none; white-space: nowrap;
+  color: var(--accent); background: var(--panel); border: 2px solid var(--accent);
+}
+.btn-update::before { content: "✨ "; }
+.btn-update:hover { background: color-mix(in srgb, var(--accent) 10%, var(--panel)); }
+.btn-update[hidden] { display: none; }
 .add-staff {
   display: grid; place-content: center; gap: 4px; min-height: 120px; padding: 16px; text-align: center; cursor: pointer;
   background: transparent; border: 2px dashed var(--line); color: var(--muted);
@@ -621,6 +628,7 @@ html[data-skin="pixel"] .skins button { border-radius: 0; }
 }
 html[data-skin]:not([data-skin="pixel"]) .setup { border: 1px solid var(--edge); border-radius: 18px; box-shadow: 0 20px 60px var(--drop); }
 html[data-skin]:not([data-skin="pixel"]) .btn-setup { border: 0; border-radius: 999px; box-shadow: 0 4px 12px color-mix(in srgb, var(--accent) 35%, transparent); }
+html[data-skin]:not([data-skin="pixel"]) .btn-update { border-radius: 999px; }
 html[data-skin]:not([data-skin="pixel"]) .add-staff { border-radius: 16px; }
 html[data-skin="pixel"] .setup { --r: 0; }
 

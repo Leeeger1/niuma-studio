@@ -13,7 +13,7 @@
     demo: ['帮我做一个待办清单 App', '/招人 数据库专家', '/工具', '/团队'],
   }
 
-  const state = { mode: 'live', roster: { groups: [], employees: [] }, agents: {}, tasks: [], messages: [], busy: false, round: 0, iteration: 0, workdir: '', meeting: null, lastCommit: null }
+  const state = { mode: 'live', roster: { groups: [], employees: [] }, agents: {}, tasks: [], messages: [], busy: false, round: 0, iteration: 0, workdir: '', meeting: null, lastCommit: null, update: null }
   const openTasks = new Set()
   const faces = new Map()
   let transport = null
@@ -529,6 +529,18 @@
     } else el.hidden = true
   }
 
+  // 有新版本：桌面版点一下下载安装包；命令行版点一下复制更新命令。
+  function renderUpdate() {
+    const el = $('#update')
+    const u = state.update
+    if (!el) return
+    el.hidden = !u
+    if (!u) return
+    el.textContent = `新版本 v${u.latest}`
+    el.href = u.download || u.url
+    el.title = u.download ? `现在用的是 v${u.current}，点一下下载安装包` : `现在用的是 v${u.current}，点一下复制更新命令`
+  }
+
   // ---- events ----------------------------------------------------------------
 
   function upsertTask(task) {
@@ -555,6 +567,7 @@
         renderBusy()
         renderSuggest()
         renderBanner()
+        renderUpdate()
         // 一个员工都没到岗：直接把「接入员工」面板打开，点一下就能接。
         if (state.mode === 'live' && !setupPrompted && !state.roster?.groups?.some((g) => g.available)) {
           setupPrompted = true
@@ -631,6 +644,10 @@
       case 'setup':
         window.NiumaSetup?.event(ev)
         break
+      case 'update':
+        state.update = ev.update
+        renderUpdate()
+        break
     }
   }
 
@@ -703,6 +720,18 @@
   $('#stop').addEventListener('click', () => transport && transport.stop().catch(() => {}))
   const openSetup = () => window.NiumaSetup?.open({ request: transport?.request || null, fake: state.mode === 'fake' })
   $('#open-setup')?.addEventListener('click', openSetup)
+  $('#update')?.addEventListener('click', async (e) => {
+    const cmd = state.update?.command
+    if (!cmd) return
+    e.preventDefault()
+    let copied = false
+    try {
+      await navigator.clipboard.writeText(cmd)
+      copied = true
+    } catch {}
+    const text = `${copied ? '已复制更新命令' : '更新命令'}：${cmd}　在终端里运行，然后重新启动 niuma 就是新版。更新了什么：${state.update.url}`
+    handle({ type: 'message', message: { role: 'system', text, ts: Date.now() } })
+  })
   $('#team').addEventListener('click', (e) => {
     if (e.target.closest('.add-staff')) openSetup()
   })
