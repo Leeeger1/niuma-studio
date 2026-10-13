@@ -234,8 +234,8 @@ export function createServer(coord, { publicDir, host, token, setup, skins = ski
       if (err) return send(res, 404, 'Not found')
       const type = TYPES[path.extname(file)] || 'application/octet-stream'
       if (rel === 'index.html') data = SHELL + data.toString('utf8')
-      // 内置立绘不会变，让浏览器缓存着，换画面时不用重新下载
-      if (rel.startsWith('cast/')) {
+      // 内置立绘和窗外插画不会变，让浏览器缓存着，换画面时不用重新下载
+      if (rel.startsWith('cast/') || rel.startsWith('scenes/')) {
         res.writeHead(200, { 'Content-Type': type, 'Cache-Control': 'max-age=86400' })
         return res.end(data)
       }

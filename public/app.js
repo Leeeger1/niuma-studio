@@ -75,8 +75,8 @@
   // 想要的是 ~/.niuma/skins 里的皮肤：等连上服务器读到了再换过去
   let pendingSkin = current.id === wantedSkin ? null : wantedSkin || null
   let setVars = []
-  // 人物画风：立绘（内置的一整套插画，默认）、动漫风或 Q 版（代码画的）。没选过就看皮肤里写的。
-  const ARTS = [['cast', '立绘'], ['anime', '动漫'], ['chibi', 'Q 版']]
+  // 人物画风：立绘（内置的插画，跟着主题换衣服，默认）、Q版立绘（大头插画），或者代码画的动漫风、Q 版。没选过就看皮肤里写的。
+  const ARTS = [['cast', '立绘', '动漫插画，跟着皮肤换衣服'], ['qcast', 'Q版立绘', '大头小身子的插画'], ['anime', '动漫', '代码画的动漫风'], ['chibi', 'Q 版', '代码画的 Q 版']]
   const okArt = (a) => ARTS.some(([id]) => id === a)
   let artPref = okArt(store.get('niuma.art')) ? store.get('niuma.art') : ''
   const artOf = (def) => artPref || (!def.builtin && okArt(def.room?.art) ? def.room.art : 'cast')
@@ -162,7 +162,7 @@
       `<button type="button" class="make-skin" data-act="make-skin">${current.builtin ? '＋ 做皮肤' : '✎ 改皮肤'}</button>` +
       (current.base === 'pixel'
         ? ''
-        : `<span class="arts" role="group" aria-label="人物画风"><span class="skins-label">人物</span>${ARTS.map(([id, name]) => `<button type="button" data-art="${id}" aria-pressed="${id === art}">${name}</button>`).join('')}</span>`)
+        : `<span class="arts" role="group" aria-label="人物画风"><span class="skins-label">人物</span>${ARTS.map(([id, name, hint]) => `<button type="button" data-art="${id}" aria-pressed="${id === art}" title="${hint}">${name}</button>`).join('')}</span>`)
   }
 
   /** 读一遍自制皮肤（~/.niuma/skins + 这个浏览器里的）。手改了皮肤文件，回到窗口就会重新读。 */

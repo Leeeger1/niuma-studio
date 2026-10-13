@@ -31,7 +31,7 @@ async function start(t, opts) {
       const r = http.request({ host: '127.0.0.1', port, path: p, method, headers: { Host: `localhost:${port}`, ...headers } }, (res) => {
         let data = ''
         res.on('data', (c) => (data += c))
-        res.on('end', () => resolve({ status: res.statusCode, body: data, type: res.headers['content-type'] }))
+        res.on('end', () => resolve({ status: res.statusCode, body: data, type: res.headers['content-type'], cache: res.headers['cache-control'] }))
       })
       r.on('error', reject)
       r.end(body)
@@ -50,17 +50,36 @@ test('serves the page with a document shell and blocks path traversal', async (t
   assert.notEqual((await req('/%2e%2e/package.json')).status, 200)
 })
 
-test('the built-in portraits are all there and served as cached WebP', async (t) => {
+test('the built-in portraits and window pictures are all there and served as cached WebP', async (t) => {
   const { req } = await start(t, { host: '127.0.0.1' })
   const src = await import('node:fs').then((fs) => fs.readFileSync(path.join(publicDir, 'anime.js'), 'utf8'))
-  const roles = JSON.parse(src.match(/const CAST_ROLES = (\[[^\]]+\])/)[1].replace(/'/g, '"'))
+  const list = (name) => JSON.parse(src.match(new RegExp(`const ${name} = (\\[[^\\]]+\\])`))[1].replace(/'/g, '"'))
+  const roles = list('CAST_ROLES')
+  const sets = list('CAST_SETS')
   assert.equal(roles.length, 9)
-  for (const role of roles) {
-    for (const st of ['idle', 'happy', 'error']) {
-      const r = await req(`/cast/sakura/${role}-${st}.webp`)
-      assert.equal(r.status, 200, `${role}-${st}`)
-      assert.equal(r.type, 'image/webp')
+  assert.deepEqual(sets, ['sakura', 'park', 'xianxia', 'space', 'neon', 'neko', 'q'])
+  // 每个主题的立绘套都在 CAST_SETS 里
+  const themeCast = JSON.parse(src.match(/const THEME_CAST = (\{[^}]+\})/)[1].replace(/(\w+):/g, '"$1":').replace(/'/g, '"'))
+  assert.deepEqual(Object.keys(themeCast), ['park', 'xianxia', 'space', 'neon', 'neko'])
+  for (const set of Object.values(themeCast)) assert.ok(sets.includes(set), set)
+  for (const set of sets) {
+    for (const role of roles) {
+      for (const st of ['idle', 'happy', 'error']) {
+        const r = await req(`/cast/${set}/${role}-${st}.webp`)
+        assert.equal(r.status, 200, `${set}/${role}-${st}`)
+        assert.equal(r.type, 'image/webp')
+      }
     }
+  }
+  assert.match((await req('/cast/park/shaniu-idle.webp')).cache, /max-age/)
+  // 每个内置皮肤配插画人物时的窗外
+  const skins = [...src.slice(src.indexOf('const SKINS'), src.indexOf('const STATUS')).matchAll(/^    (\w+): \{/gm)].map((m) => m[1])
+  assert.deepEqual(skins, ['sakura', 'night', 'neon', 'neko', 'park', 'xianxia', 'space'])
+  for (const id of skins) {
+    const r = await req(`/scenes/${id}-window.webp`)
+    assert.equal(r.status, 200, id)
+    assert.equal(r.type, 'image/webp')
+    assert.match(r.cache, /max-age/)
   }
 })
 
