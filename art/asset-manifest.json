@@ -57,7 +57,7 @@
     "base_commit": "e65899afb16459eb36832f13037395997bf3466e",
     "preserves_existing_assets": true,
     "previous_asset_count": 27,
-    "included_asset_count": 36
+    "included_asset_count": 45
   },
   "global_qa": [
     "日系动漫、干净线稿、赛璐璐、明亮色彩，角色/场景/道具画风一致",
@@ -1934,8 +1934,483 @@
         254
       ],
       "retries": 0
+    },
+    {
+      "path": "art/cast/xianxia/shaniu-idle.webp",
+      "batch": 2,
+      "kind": "cast",
+      "theme": "xianxia",
+      "character": "shaniu",
+      "expression": "idle",
+      "target_size": [
+        1024,
+        1536
+      ],
+      "actual_size": [
+        1024,
+        1536
+      ],
+      "format": "webp",
+      "webp_quality": 90,
+      "generation_tool": "image_gen.imagegen",
+      "model": "imagegen built-in (underlying model not disclosed)",
+      "model_disclosed": false,
+      "transparent": true,
+      "background_status": "transparent",
+      "status": "complete",
+      "reference_paths": [
+        "/Users/a1234/.codex/generated_images/01a11b5e-2302-7e21-8d42-d409361c7d7b/exec-c051f052-ab85-4106-9d8f-42f0baa9a04c.png"
+      ],
+      "source_image_path": "/Users/a1234/.codex/generated_images/01a11b60-caa4-7fe2-9158-f8344375bc93/exec-6416f401-dd31-44b0-8037-164beea305eb.png",
+      "generation_run": null,
+      "attempts": 1,
+      "qa_notes": [
+        "白底检查通过：黑长直发、粉瞳、两侧天线发簪保留，粉白仙裙和长飘带、拂尘、玉佩、布靴完整；双手和头脚无明显错误；无字，无地面阴影。"
+      ],
+      "qa_approved": true,
+      "background_requirement": "transparent preferred; pure white acceptable; no ground shadow",
+      "composition_requirement": "single character; frontal standing; full body; no cropped head/hands/feet; space above head",
+      "planned_reference_paths": [
+        "art/cast/sakura/shaniu-idle.webp"
+      ],
+      "prompt": "Use case: identity-preserve. Create one original character full-body idle illustration, 1024x1536 portrait, genuine transparent background. Image 1 is the SAME CHARACTER IDENTITY reference: preserve Shaniu's youthful girl face, long straight black hair, pink eyes, cheerful energetic expression, recognizable two small robotic antennae on both sides of her head. Change outfit and prop into an ancient Chinese xianxia sect head senior sister: flowing pink-and-white immortal dress with crossed collar, graceful wide sleeves, long pink ribbons, waist belt with a small jade ornament, pink-and-white cloth boots, delicate ancient hair accessories. Turn the two robotic antennae into recognizable hairpin forms retaining small pink glowing ball tips. She holds one traditional horsetail whisk, white silky brush with a simple dark handle; remove tablet, school uniform and shoes. Standing naturally centered, front-facing, both boots visible, entire head including hairpins to feet and all ribbons fully inside frame, blank margin above head and below feet. Refined Japanese anime xianxia illustration, crisp clean linework, bright cel shading, sophisticated detailed eyes, match image1 rendering style. Anatomically correct two hands, five fingers per hand, legs and feet. Only one person. No other objects, no scenery, no floor, no ground shadow, no halo, no lighting gradient behind subject. Absolutely no text, letters, numbers, logo or watermark.",
+      "unsatisfactory": false,
+      "native_size": [
+        1024,
+        1536
+      ],
+      "file_bytes": 375384,
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "retries": 0
+    },
+    {
+      "path": "art/cast/xianxia/architect-idle.webp",
+      "batch": 2,
+      "kind": "cast",
+      "theme": "xianxia",
+      "character": "architect",
+      "expression": "idle",
+      "target_size": [
+        1024,
+        1536
+      ],
+      "actual_size": [
+        1024,
+        1536
+      ],
+      "format": "webp",
+      "webp_quality": 90,
+      "generation_tool": "image_gen.imagegen",
+      "model": "imagegen built-in (underlying model not disclosed)",
+      "model_disclosed": false,
+      "transparent": true,
+      "background_status": "transparent",
+      "status": "complete",
+      "reference_paths": [
+        "/Users/a1234/.codex/generated_images/01a11b60-caa4-7fe2-9158-f8344375bc93/exec-6416f401-dd31-44b0-8037-164beea305eb.png",
+        "/Users/a1234/Desktop/牛马工作室设计/art/cast/sakura/architect-idle.webp"
+      ],
+      "source_image_path": "/Users/a1234/.codex/generated_images/01a11b60-caa4-7fe2-9158-f8344375bc93/exec-635d5ea9-3bdc-46ef-af26-da912b40601c.png",
+      "generation_run": null,
+      "attempts": 1,
+      "qa_notes": [
+        "白底检查：棕色短发棕瞳少年身份保持，橙色交领广袖弟子服、白内衫、腰带、玉佩、古风发饰、布靴及金罗盘阵盘正确；手脚完整，无明确畸形，无文字或地面阴影。"
+      ],
+      "qa_approved": true,
+      "background_requirement": "transparent preferred; pure white acceptable; no ground shadow",
+      "composition_requirement": "single character; frontal standing; full body; no cropped head/hands/feet; space above head",
+      "planned_reference_paths": [
+        "art/cast/sakura/architect-idle.webp",
+        "art/cast/xianxia/shaniu-idle.webp"
+      ],
+      "prompt": "Use case: identity-preserve. Create ONE full-body architect boy idle character illustration, 1024x1536 portrait, genuine transparent background. Image 1 is STYLE reference for this xianxia set: match clean polished Japanese anime linework, bright cel shading, detailed eyes, ancient immortal clothing materials. Image 2 is the architect boy's IDENTITY reference ONLY: preserve the same face, neat SHORT BROWN hair, BROWN eyes, confident personality, male teen proportions. Do not copy image1 girl's identity. Replace modern office outfit with orange cross-collar wide-sleeved sect disciple outer robe, WHITE inner shirt, waist belt, jade pendant, simple ancient hair ornament that preserves short hairstyle, dark cloth boots. His orange theme color must dominate robe. No safety helmet, no office badge, no blueprint roll. Prop: he holds a single golden circular compass formation disk resting horizontally on one open palm, with abstract non-writing concentric geometry and absolutely NO inscriptions, letters, digits, Chinese text or runes. Other hand relaxed. Centered standing naturally facing forward, entire body from hair ornament to boots visible with generous small blank margins above head/below feet/sides. Anatomically correct hands/five fingers and feet. Only one character, no other objects, no background scenery, no floor or ground shadow, no halo or background light gradient. No text, logos, watermarks anywhere.",
+      "unsatisfactory": false,
+      "native_size": [
+        1024,
+        1536
+      ],
+      "file_bytes": 301492,
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "retries": 0
+    },
+    {
+      "path": "art/cast/xianxia/frontend-idle.webp",
+      "batch": 2,
+      "kind": "cast",
+      "theme": "xianxia",
+      "character": "frontend",
+      "expression": "idle",
+      "target_size": [
+        1024,
+        1536
+      ],
+      "actual_size": [
+        1024,
+        1536
+      ],
+      "format": "webp",
+      "webp_quality": 90,
+      "generation_tool": "image_gen.imagegen",
+      "model": "imagegen built-in (underlying model not disclosed)",
+      "model_disclosed": false,
+      "transparent": true,
+      "background_status": "transparent",
+      "status": "complete",
+      "reference_paths": [
+        "/Users/a1234/.codex/generated_images/01a11b60-caa4-7fe2-9158-f8344375bc93/exec-6416f401-dd31-44b0-8037-164beea305eb.png",
+        "/Users/a1234/Desktop/牛马工作室设计/art/cast/sakura/frontend-idle.webp"
+      ],
+      "source_image_path": "/Users/a1234/.codex/generated_images/01a11b60-caa4-7fe2-9158-f8344375bc93/exec-b014d737-ecd1-4fcf-aaa5-8861d4c3203b.png",
+      "generation_run": null,
+      "attempts": 1,
+      "qa_notes": [
+        "白底检查：棕色双马尾、蓝瞳和活泼身份保持，橙色交领广袖弟子服、白内衫、腰带、玉佩、布靴及古风发饰、毛笔和空白画卷齐全；双手和头脚完整，无明显畸形，无文字/地面阴影。"
+      ],
+      "qa_approved": true,
+      "background_requirement": "transparent preferred; pure white acceptable; no ground shadow",
+      "composition_requirement": "single character; frontal standing; full body; no cropped head/hands/feet; space above head",
+      "planned_reference_paths": [
+        "art/cast/sakura/frontend-idle.webp",
+        "art/cast/xianxia/shaniu-idle.webp"
+      ],
+      "prompt": "Use case: identity-preserve. One full-body frontend girl idle character, 1024x1536 portrait, genuine transparent background. Image 1 is STYLE reference for xianxia set: same clean Japanese anime linework, bright elegant cel shading, fine eyes, detailed ancient fabric. Image 2 is this girl's IDENTITY reference: preserve youthful face, BROWN TWIN PONYTAILS and BLUE eyes, lively cheerful personality. Keep this exact recognizable hairstyle and face; not the black-haired girl from image1. Outfit: ORANGE cross-collar wide-sleeved sect disciple outer robe, white inner shirt, waist belt, jade pendant, cloth boots, tasteful ancient hair ornaments tied onto her twin ponytails. Orange is main theme color. Replace modern beret/office clothing/tablet/stylus with a traditional calligraphy paintbrush held in one hand and a small blank partially opened painting scroll in the other, no ink strokes or writing on the scroll. Natural front-facing centered standing pose, head to toes and all props/ribbons fully visible with blank margin above head/below boots/sides. Correct two hands, five fingers per hand and feet. Exactly one person. No scenery, background, floor, ground shadow, halo or background light gradient. Absolutely no characters, letters, numbers, text, logo, watermark anywhere.",
+      "unsatisfactory": false,
+      "native_size": [
+        1024,
+        1536
+      ],
+      "file_bytes": 410130,
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "retries": 0
+    },
+    {
+      "path": "art/cast/xianxia/reviewer-idle.webp",
+      "batch": 2,
+      "kind": "cast",
+      "theme": "xianxia",
+      "character": "reviewer",
+      "expression": "idle",
+      "target_size": [
+        1024,
+        1536
+      ],
+      "actual_size": [
+        1024,
+        1536
+      ],
+      "format": "webp",
+      "webp_quality": 90,
+      "generation_tool": "image_gen.imagegen",
+      "model": "imagegen built-in (underlying model not disclosed)",
+      "model_disclosed": false,
+      "transparent": true,
+      "background_status": "transparent",
+      "status": "complete",
+      "reference_paths": [
+        "/Users/a1234/.codex/generated_images/01a11b60-caa4-7fe2-9158-f8344375bc93/exec-6416f401-dd31-44b0-8037-164beea305eb.png",
+        "/Users/a1234/Desktop/牛马工作室设计/art/cast/sakura/reviewer-idle.webp"
+      ],
+      "source_image_path": "/Users/a1234/.codex/generated_images/01a11b60-caa4-7fe2-9158-f8344375bc93/exec-41e630c7-ad12-4b9d-8fa6-5b2db25202ec.png",
+      "generation_run": null,
+      "attempts": 1,
+      "qa_notes": [
+        "白底检查：黑斜刘海短发、蓝瞳、细框眼镜和冷静身份保留，橙色交领广袖弟子服、白内衫、腰带、玉佩、古风发饰、布靴及空白竹简正确；双手和头脚完整，无明显畸形，无字/地面阴影。"
+      ],
+      "qa_approved": true,
+      "background_requirement": "transparent preferred; pure white acceptable; no ground shadow",
+      "composition_requirement": "single character; frontal standing; full body; no cropped head/hands/feet; space above head",
+      "planned_reference_paths": [
+        "art/cast/sakura/reviewer-idle.webp",
+        "art/cast/xianxia/shaniu-idle.webp"
+      ],
+      "prompt": "Use case: identity-preserve. Create one full-body reviewer boy idle xianxia character, 1024x1536 portrait, genuine transparent background. Image1 is STYLE reference: match this set's clean detailed Japanese anime linework, bright cel shading, flowing ancient robes. Image2 is reviewer IDENTITY reference ONLY: same teenage male face, BLACK short hair with slanted fringe, BLUE eyes, THIN-FRAMED GLASSES retained exactly, calm serious personality. Do not copy girl identity. Orange cross-collar wide-sleeved sect disciple outer robe, white inner shirt, belt, jade ornament, simple ancient hair accessory preserving short hair, cloth boots. ORANGE theme color. Holds a traditional bamboo slip document made of natural pale bamboo strips tied by cords, partially rolled or gently opened, both hands holding it naturally. Bamboo slips are totally BLANK with no writing or decorative runes. Remove office clipboard, pen, office badges and suit. Stand centered front-facing, full hair to both boots in frame, including sleeves, small blank margins above head/below feet and sides. Anatomically correct hands and feet, two hands five fingers each. Only one person, no extra props, no scene, floor, ground shadow, halo or background gradient. Absolutely no text, symbols resembling writing, letters, numbers, logo or watermark.",
+      "unsatisfactory": false,
+      "native_size": [
+        1024,
+        1536
+      ],
+      "file_bytes": 282608,
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "retries": 0
+    },
+    {
+      "path": "art/cast/xianxia/backend-idle.webp",
+      "batch": 2,
+      "kind": "cast",
+      "theme": "xianxia",
+      "character": "backend",
+      "expression": "idle",
+      "target_size": [
+        1024,
+        1536
+      ],
+      "actual_size": [
+        1024,
+        1536
+      ],
+      "format": "webp",
+      "webp_quality": 90,
+      "generation_tool": "image_gen.imagegen",
+      "model": "imagegen built-in (underlying model not disclosed)",
+      "model_disclosed": false,
+      "transparent": true,
+      "background_status": "transparent",
+      "status": "complete",
+      "reference_paths": [
+        "/Users/a1234/.codex/generated_images/01a11b60-caa4-7fe2-9158-f8344375bc93/exec-6416f401-dd31-44b0-8037-164beea305eb.png",
+        "/Users/a1234/Desktop/牛马工作室设计/art/cast/sakura/backend-idle.webp"
+      ],
+      "source_image_path": "/Users/a1234/.codex/generated_images/01a11b60-caa4-7fe2-9158-f8344375bc93/exec-169fcf7d-450a-4d69-b777-9b77b37c21ca.png",
+      "generation_run": null,
+      "attempts": 1,
+      "qa_notes": [
+        "白底检查：浅粉齐耳波波头、紫瞳、头戴式耳机及专注身份保留；深青绿交领广袖弟子服、白内衫、腰带、玉佩、古风发饰、布靴与双手捧小炼丹炉正确；双手/头脚完整，无明显畸形，无文字/地面阴影。"
+      ],
+      "qa_approved": true,
+      "background_requirement": "transparent preferred; pure white acceptable; no ground shadow",
+      "composition_requirement": "single character; frontal standing; full body; no cropped head/hands/feet; space above head",
+      "planned_reference_paths": [
+        "art/cast/sakura/backend-idle.webp",
+        "art/cast/xianxia/shaniu-idle.webp"
+      ],
+      "prompt": "Use case: identity-preserve. Create exactly one full-body backend girl idle character in xianxia set, 1024x1536 portrait, real transparent background. Image1 STYLE reference: polished Japanese anime, crisp clean linework, bright cel shading, refined detailed eyes, elegant ancient sect fabric and ornaments. Image2 IDENTITY reference: preserve this youthful girl's same face, LIGHT PINK EAR-LENGTH BOB hair, PURPLE eyes, and her OVER-EAR HEADPHONES must remain worn on her head, concentrated personality. Do not copy girl1 black hair. DEEP TEAL-GREEN cross-collar wide-sleeved sect disciple outer robe, white inner shirt, waist belt, jade pendant, small ancient hair ornament alongside headphones without lengthening bob, cloth boots. Keep deep teal green as dominant clothing theme. She holds one SMALL ancient alchemy furnace with both hands gently cupped under or beside it: compact bronze ritual vessel with lid, two small handles and three short feet, no writing, no flames, no extra floating elements. Remove laptop, office clothes and badge. Standing naturally centered and facing directly forward, full head/headphones, all sleeves and both boots fully inside frame with blank margins above head/below feet/sides. Correct hand anatomy, two hands five fingers each, normal feet. Only one character, no additional props, no scenery, floor, ground shadow, background glow or halo. No text, letters, numbers, Chinese characters, inscriptions, logos or watermark.",
+      "unsatisfactory": false,
+      "native_size": [
+        1024,
+        1536
+      ],
+      "file_bytes": 269392,
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "retries": 0
+    },
+    {
+      "path": "art/cast/xianxia/tester-idle.webp",
+      "batch": 2,
+      "kind": "cast",
+      "theme": "xianxia",
+      "character": "tester",
+      "expression": "idle",
+      "target_size": [
+        1024,
+        1536
+      ],
+      "actual_size": [
+        1024,
+        1536
+      ],
+      "format": "webp",
+      "webp_quality": 90,
+      "generation_tool": "image_gen.imagegen",
+      "model": "imagegen built-in (underlying model not disclosed)",
+      "model_disclosed": false,
+      "transparent": true,
+      "background_status": "transparent",
+      "status": "complete",
+      "reference_paths": [
+        "/Users/a1234/.codex/generated_images/01a11b60-caa4-7fe2-9158-f8344375bc93/exec-6416f401-dd31-44b0-8037-164beea305eb.png",
+        "/Users/a1234/Desktop/牛马工作室设计/art/cast/sakura/tester-idle.webp"
+      ],
+      "source_image_path": "/Users/a1234/.codex/generated_images/01a11b60-caa4-7fe2-9158-f8344375bc93/exec-ad692039-24f3-4356-ab42-73809109fbea.png",
+      "generation_run": null,
+      "attempts": 1,
+      "qa_notes": [
+        "白底检查：金色高马尾、青绿瞳和元气身份保留；深青绿交领广袖弟子服、白内衫、腰带、玉佩、古风发饰、布靴与铜镜正确；双手/头脚完整，无明显畸形，无文字/地面阴影。"
+      ],
+      "qa_approved": true,
+      "background_requirement": "transparent preferred; pure white acceptable; no ground shadow",
+      "composition_requirement": "single character; frontal standing; full body; no cropped head/hands/feet; space above head",
+      "planned_reference_paths": [
+        "art/cast/sakura/tester-idle.webp",
+        "art/cast/xianxia/shaniu-idle.webp"
+      ],
+      "prompt": "Use case: identity-preserve. Exactly one full-body tester girl idle illustration, 1024x1536 portrait, genuine transparent background. Image1 STYLE reference: same polished Japanese anime xianxia set, crisp clean outlines, bright cel shading, detailed elegant ancient robes and eyes. Image2 IDENTITY reference ONLY: same youthful cheerful girl's face, GOLDEN BLONDE HIGH PONYTAIL and TEAL-GREEN eyes, energetic personality. Preserve high ponytail and hair color, not girl1 identity. Outfit: DEEP TEAL-GREEN cross-collar wide-sleeved sect disciple outer robe, white inner shirt, belt, jade pendant, ancient hair ornament at ponytail base, cloth boots. Deep teal green theme color. Remove baseball cap, office badge, suit, magnifier. Prop: holds a small ROUND BRONZE MIRROR with a short ornate handle, front shown as an unmarked mirror face, no reflected person, no letters/runes/inscriptions; one hand holds mirror upright and other hand relaxed. Centered full-body standing naturally front-facing, all sleeves/hair/props and both boots in frame, small blank margins above head/below feet/sides. Correct two hands five fingers each and feet. Only one character. No extra props or objects, scenery, floor, ground shadow, halo or background light gradient. Absolutely no text, Chinese characters, letters, digits, logo or watermark.",
+      "unsatisfactory": false,
+      "native_size": [
+        1024,
+        1536
+      ],
+      "file_bytes": 345564,
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "retries": 0
+    },
+    {
+      "path": "art/cast/xianxia/debugger-idle.webp",
+      "batch": 2,
+      "kind": "cast",
+      "theme": "xianxia",
+      "character": "debugger",
+      "expression": "idle",
+      "target_size": [
+        1024,
+        1536
+      ],
+      "actual_size": [
+        1024,
+        1536
+      ],
+      "format": "webp",
+      "webp_quality": 90,
+      "generation_tool": "image_gen.imagegen",
+      "model": "imagegen built-in (underlying model not disclosed)",
+      "model_disclosed": false,
+      "transparent": true,
+      "background_status": "transparent",
+      "status": "complete",
+      "reference_paths": [
+        "/Users/a1234/.codex/generated_images/01a11b60-caa4-7fe2-9158-f8344375bc93/exec-6416f401-dd31-44b0-8037-164beea305eb.png",
+        "/Users/a1234/Desktop/牛马工作室设计/art/cast/sakura/debugger-idle.webp"
+      ],
+      "source_image_path": "/Users/a1234/.codex/generated_images/01a11b60-caa4-7fe2-9158-f8344375bc93/exec-a532079a-01b1-47de-a262-9e739818e5ca.png",
+      "generation_run": null,
+      "attempts": 1,
+      "qa_notes": [
+        "白底检查：青绿炸毛短发、橙瞳、红头带和坚定少年身份保留；深青绿交领广袖弟子服、白内衫、腰带、玉佩、布靴正确，长剑在背后且手握剑柄；双手/头脚完整，无明显畸形，无文字/地面阴影。"
+      ],
+      "qa_approved": true,
+      "background_requirement": "transparent preferred; pure white acceptable; no ground shadow",
+      "composition_requirement": "single character; frontal standing; full body; no cropped head/hands/feet; space above head",
+      "planned_reference_paths": [
+        "art/cast/sakura/debugger-idle.webp",
+        "art/cast/xianxia/shaniu-idle.webp"
+      ],
+      "prompt": "Use case: identity-preserve. One full-body debugger boy idle illustration, 1024x1536 portrait, genuine transparent background. Image1 STYLE reference: polished Japanese anime xianxia art, clean linework, bright cel shading, detailed ancient robes. Image2 debugger IDENTITY reference ONLY: preserve teenage male face, TEAL-GREEN SHORT SPIKY HEDGEHOG HAIR, ORANGE eyes, RED CLOTH HEADBAND across forehead with red ends, determined expression. Preserve spiky hair and headband, do not lengthen hair or add topknot; simple small ancient bronze hair clip may be tucked by side. DEEP TEAL-GREEN cross-collar wide-sleeved sect disciple outer robe, WHITE inner shirt, belt, jade pendant, cloth boots. Prop exactly one sheathed LONG SWORD carried diagonally on his BACK, hilt visible just above one shoulder, one hand reaches naturally to grip that sword HILT while the other relaxed beside body. The sword remains behind him, not held drawn in front. Remove wrench and office outfit/badge. Centered standing directly front-facing, full head to both boots, entire sheathed sword and flowing sleeves/ribbons in frame with small clear margins above head/below feet/sides. Anatomically correct two arms and hands, five fingers per hand, normal legs and feet. One character only, no extra props or background, no scenery, floor, ground shadow, halo or background gradient. No text, writing, letters, numbers, inscriptions, runes, logo or watermark.",
+      "unsatisfactory": false,
+      "native_size": [
+        1024,
+        1536
+      ],
+      "file_bytes": 315686,
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "retries": 0
+    },
+    {
+      "path": "art/cast/xianxia/writer-idle.webp",
+      "batch": 2,
+      "kind": "cast",
+      "theme": "xianxia",
+      "character": "writer",
+      "expression": "idle",
+      "target_size": [
+        1024,
+        1536
+      ],
+      "actual_size": [
+        1024,
+        1536
+      ],
+      "format": "webp",
+      "webp_quality": 90,
+      "generation_tool": "image_gen.imagegen",
+      "model": "imagegen built-in (underlying model not disclosed)",
+      "model_disclosed": false,
+      "transparent": true,
+      "background_status": "transparent",
+      "status": "complete",
+      "reference_paths": [
+        "/Users/a1234/.codex/generated_images/01a11b60-caa4-7fe2-9158-f8344375bc93/exec-6416f401-dd31-44b0-8037-164beea305eb.png",
+        "/Users/a1234/Desktop/牛马工作室设计/art/cast/sakura/writer-idle.webp"
+      ],
+      "source_image_path": "/Users/a1234/.codex/generated_images/01a11b60-caa4-7fe2-9158-f8344375bc93/exec-9169c265-c61f-4d89-8e45-ffe100739531.png",
+      "generation_run": null,
+      "attempts": 1,
+      "qa_notes": [
+        "白底检查：蓝色齐耳波波头+顶丸子、粉瞳与温柔身份保留；蓝色交领广袖弟子服、白内衫、腰带、玉佩、古风发饰、布靴及毛笔/书卷正确；双手和头脚完整，无明显畸形，无文字/地面阴影。"
+      ],
+      "qa_approved": true,
+      "background_requirement": "transparent preferred; pure white acceptable; no ground shadow",
+      "composition_requirement": "single character; frontal standing; full body; no cropped head/hands/feet; space above head",
+      "planned_reference_paths": [
+        "art/cast/sakura/writer-idle.webp",
+        "art/cast/xianxia/shaniu-idle.webp"
+      ],
+      "prompt": "Use case: identity-preserve. Exactly one full-body writer girl idle illustration in xianxia set, 1024x1536 portrait, real transparent background. Image1 STYLE reference: polished clean Japanese anime xianxia illustration, crisp linework, bright elegant cel shading, refined eyes and ancient clothing. Image2 writer IDENTITY reference ONLY: same gentle youthful girl face, BLUE EAR-LENGTH BOB hair with one ROUND TOP BUN at crown, PINK eyes, tender calm smile. Preserve bob length and top bun, don't copy image1 long black hair. Outfit: BLUE cross-collar wide-sleeved sect disciple outer robe, WHITE inner shirt, belt, jade pendant, ancient hairpin adorning existing top bun, cloth boots. Blue theme color dominant. Props: traditional calligraphy brush in one hand and a small bound rolled paper BOOK SCROLL held in other, blank pale paper with no writing, no ink strokes, no runes. Remove office badges, suit, pen and notebook. Centered standing directly front-facing, entire head/bun, sleeves, props and both boots visible, clear small blank margins above head/below feet/sides. Anatomically correct two hands with five fingers each and normal feet. One person only, no extra objects, no background scenery, floor, ground shadow, halo or background gradient. Absolutely no text, letters, digits, characters, inscriptions, logo or watermark anywhere.",
+      "unsatisfactory": false,
+      "native_size": [
+        1024,
+        1536
+      ],
+      "file_bytes": 320254,
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "retries": 0
+    },
+    {
+      "path": "art/cast/xianxia/default-idle.webp",
+      "batch": 2,
+      "kind": "cast",
+      "theme": "xianxia",
+      "character": "default",
+      "expression": "idle",
+      "target_size": [
+        1024,
+        1536
+      ],
+      "actual_size": [
+        1024,
+        1536
+      ],
+      "format": "webp",
+      "webp_quality": 90,
+      "generation_tool": "image_gen.imagegen",
+      "model": "imagegen built-in (underlying model not disclosed)",
+      "model_disclosed": false,
+      "transparent": true,
+      "background_status": "transparent",
+      "status": "complete",
+      "reference_paths": [
+        "/Users/a1234/.codex/generated_images/01a11b60-caa4-7fe2-9158-f8344375bc93/exec-6416f401-dd31-44b0-8037-164beea305eb.png",
+        "/Users/a1234/Desktop/牛马工作室设计/art/cast/sakura/default-idle.webp"
+      ],
+      "source_image_path": "/Users/a1234/.codex/generated_images/01a11b60-caa4-7fe2-9158-f8344375bc93/exec-b0380fea-eead-4597-9425-8e8587baf826.png",
+      "generation_run": null,
+      "attempts": 1,
+      "qa_notes": [
+        "白底检查：金色长直发、蓝瞳与友善身份保留；蓝色交领广袖弟子服、白内衫、腰带、玉佩、古风发饰、布靴正确；双手作揖且无道具，双手/头脚完整，无明显畸形，无文字/地面阴影。"
+      ],
+      "qa_approved": true,
+      "background_requirement": "transparent preferred; pure white acceptable; no ground shadow",
+      "composition_requirement": "single character; frontal standing; full body; no cropped head/hands/feet; space above head",
+      "planned_reference_paths": [
+        "art/cast/sakura/default-idle.webp",
+        "art/cast/xianxia/shaniu-idle.webp"
+      ],
+      "prompt": "Use case: identity-preserve. Exactly one full-body default friendly girl idle xianxia character illustration, 1024x1536 portrait, genuine transparent background. Image1 is STYLE reference: same polished Japanese anime xianxia set, clean detailed lines, bright cel shading, elegant robes and eyes. Image2 is this girl's IDENTITY reference ONLY: same friendly youthful face, GOLDEN BLONDE LONG STRAIGHT HAIR, BLUE eyes, warm kind gentle smile. Preserve hair color/length/straight hairstyle, do not change to girl1 black hair or add bun/ponytail. Outfit: BLUE cross-collar wide-sleeved sect disciple outer robe, WHITE inner shirt, waist belt, jade pendant, small tasteful ancient hairpins placed in her loose straight hair, cloth boots. Blue theme color dominant. No hand-held prop. Pose: performs a respectful traditional Chinese gongshou greeting with BOTH HANDS TOGETHER in front of chest: one loosely closed fist covered by the opposite palm, natural correct fingers, elbows relaxed within wide sleeves. Centered directly front-facing standing, entire head/hair/sleeves and both boots fully visible, blank small margins above head/below feet/sides. Two arms and two hands, anatomically correct legs/feet. No office clothes, badge, extra items or extra people. No background, scenery, floor, ground shadow, halo or background light gradient. No text, lettering, digits, Chinese characters, logos or watermark anywhere.",
+      "unsatisfactory": false,
+      "native_size": [
+        1024,
+        1536
+      ],
+      "file_bytes": 356554,
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "retries": 0
     }
   ],
-  "completed_asset_count": 36,
+  "completed_asset_count": 45,
   "updated_date": "2026-10-11"
 }

@@ -1,6 +1,6 @@
 # 牛马工作室美术素材
 
-本批已收录 36 / 263 张：最终包含角色 189 张、场景 21 张、道具 53 张。
+本批已收录 45 / 263 张：最终包含角色 189 张、场景 21 张、道具 53 张。
 
 使用内置 `image_gen.imagegen` 生成与编辑。工具未公开底层模型名称，因此逐文件如实标注“imagegen 内置（模型未公开）”，不推测具体型号。
 最终素材为 WebP，质量 90；保留生成文件的透明通道。只进行格式转换和必要的等比尺寸/画布规范化，不修改任何软件代码。
@@ -52,3 +52,12 @@
 | `cast/park/debugger-idle.webp` | imagegen 内置（模型未公开） | 1024×1536 | 是 | 已保存 | 0 |
 | `cast/park/writer-idle.webp` | imagegen 内置（模型未公开） | 1024×1536 | 是 | 已保存 | 0 |
 | `cast/park/default-idle.webp` | imagegen 内置（模型未公开） | 1024×1536 | 是 | 已保存 | 0 |
+| `cast/xianxia/shaniu-idle.webp` | imagegen 内置（模型未公开） | 1024×1536 | 是 | 已保存 | 0 |
+| `cast/xianxia/architect-idle.webp` | imagegen 内置（模型未公开） | 1024×1536 | 是 | 已保存 | 0 |
+| `cast/xianxia/frontend-idle.webp` | imagegen 内置（模型未公开） | 1024×1536 | 是 | 已保存 | 0 |
+| `cast/xianxia/reviewer-idle.webp` | imagegen 内置（模型未公开） | 1024×1536 | 是 | 已保存 | 0 |
+| `cast/xianxia/backend-idle.webp` | imagegen 内置（模型未公开） | 1024×1536 | 是 | 已保存 | 0 |
+| `cast/xianxia/tester-idle.webp` | imagegen 内置（模型未公开） | 1024×1536 | 是 | 已保存 | 0 |
+| `cast/xianxia/debugger-idle.webp` | imagegen 内置（模型未公开） | 1024×1536 | 是 | 已保存 | 0 |
+| `cast/xianxia/writer-idle.webp` | imagegen 内置（模型未公开） | 1024×1536 | 是 | 已保存 | 0 |
+| `cast/xianxia/default-idle.webp` | imagegen 内置（模型未公开） | 1024×1536 | 是 | 已保存 | 0 |
