@@ -57,7 +57,7 @@
     "base_commit": "e65899afb16459eb36832f13037395997bf3466e",
     "preserves_existing_assets": true,
     "previous_asset_count": 27,
-    "included_asset_count": 45
+    "included_asset_count": 54
   },
   "global_qa": [
     "日系动漫、干净线稿、赛璐璐、明亮色彩，角色/场景/道具画风一致",
@@ -2409,8 +2409,493 @@
         254
       ],
       "retries": 0
+    },
+    {
+      "path": "art/cast/space/shaniu-idle.webp",
+      "batch": 2,
+      "kind": "cast",
+      "theme": "space",
+      "character": "shaniu",
+      "expression": "idle",
+      "target_size": [
+        1024,
+        1536
+      ],
+      "actual_size": [
+        1024,
+        1536
+      ],
+      "format": "webp",
+      "webp_quality": 90,
+      "generation_tool": "image_gen.imagegen",
+      "model": "imagegen built-in (underlying model not disclosed)",
+      "model_disclosed": false,
+      "transparent": true,
+      "background_status": "transparent",
+      "status": "complete",
+      "reference_paths": [
+        "/Users/a1234/Desktop/牛马工作室设计/art/cast/sakura/shaniu-idle.webp"
+      ],
+      "source_image_path": "/Users/a1234/.codex/generated_images/01a11b61-02dd-7d92-acbc-373049ddb4c0/exec-19cb3ca7-46a5-479d-8755-b1a5ecc394ef.png",
+      "generation_run": null,
+      "attempts": 1,
+      "qa_notes": [
+        "Identity, full-body front composition, captain epaulettes/short cape, glowing abstract data tablet and hands/feet visually approved.",
+        "Generated alpha preserved; slight generated edge glow follows accepted master style."
+      ],
+      "qa_approved": true,
+      "background_requirement": "transparent preferred; pure white acceptable; no ground shadow",
+      "composition_requirement": "single character; frontal standing; full body; no cropped head/hands/feet; space above head",
+      "planned_reference_paths": [
+        "art/cast/sakura/shaniu-idle.webp"
+      ],
+      "prompt": "Use case: stylized-concept / identity-preserve. Asset: space-theme Shaniu idle, a single full-body front-facing Japanese sci-fi anime character illustration, vertical1024x1536. Reference image1 is Shaniu IDENTITY and drawing style: keep identical youthful face, long straight BLACK hair, bright PINK eyes, slim proportions, pink headband, and TWO small robot antennae at sides of head. Original character only. Change outfit to a pink-and-white SPACE CAPTAIN uniform, structured pink fitted jacket with white shoulder EPAULETTES, white trim, short pink-and-white CAPE, matching skirt, opaque white stockings and pink-white space boots. Any chest insignia or patches are completely blank, no symbols, text or digits. Holding one softly glowing data TABLET with naturally correct hands; tablet surface displays only abstract colored shapes, no text. Cheerful energetic warm smile, relaxed standing idle pose. STYLE: match reference's clean Japanese anime outlines, crisp cel shading, bright colors, high-quality mobile-game visual-novel sprite. Entire person visible from antenna tips to both boot soles, centered facing forward, generous margin above antennae and below boots, no cropping. Background: genuine transparent alpha, clean isolated cutout; absolutely no ambient colored backdrop, no dark background, no halo, no haze, no ground or floor, no ground shadow. No text, numbers, letters, watermark, logo, extra people. Hands fingers feet must be anatomically correct.",
+      "unsatisfactory": false,
+      "native_size": [
+        1024,
+        1536
+      ],
+      "normalization": "aspect-preserving fit and transparent padding, WebP quality90",
+      "file_bytes": 164054,
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "retries": 0
+    },
+    {
+      "path": "art/cast/space/architect-idle.webp",
+      "batch": 2,
+      "kind": "cast",
+      "theme": "space",
+      "character": "architect",
+      "expression": "idle",
+      "target_size": [
+        1024,
+        1536
+      ],
+      "actual_size": [
+        1024,
+        1536
+      ],
+      "format": "webp",
+      "webp_quality": 90,
+      "generation_tool": "image_gen.imagegen",
+      "model": "imagegen built-in (underlying model not disclosed)",
+      "model_disclosed": false,
+      "transparent": true,
+      "background_status": "transparent",
+      "status": "complete",
+      "reference_paths": [
+        "/Users/a1234/.codex/generated_images/01a11b61-02dd-7d92-acbc-373049ddb4c0/exec-19cb3ca7-46a5-479d-8755-b1a5ecc394ef.png",
+        "/Users/a1234/Desktop/牛马工作室设计/art/cast/sakura/architect-idle.webp"
+      ],
+      "source_image_path": "/Users/a1234/.codex/generated_images/01a11b61-02dd-7d92-acbc-373049ddb4c0/exec-cbe46cc6-4250-4707-9a59-ed8acef8b964.png",
+      "generation_run": null,
+      "attempts": 1,
+      "qa_notes": [
+        "Brown short hair/eyes identity, orange one-piece worksuit with blank patches/toolbelt/spaceboots, hovering abstract star map, anatomically coherent hands and fullbody composition approved."
+      ],
+      "qa_approved": true,
+      "background_requirement": "transparent preferred; pure white acceptable; no ground shadow",
+      "composition_requirement": "single character; frontal standing; full body; no cropped head/hands/feet; space above head",
+      "planned_reference_paths": [
+        "art/cast/sakura/architect-idle.webp",
+        "art/cast/space/shaniu-idle.webp"
+      ],
+      "prompt": "Use case: stylized-concept / identity-preserve. Asset: ONE fullbody standing Japanese sci-fi anime space-station crew member idle sprite, portrait1024x1536. Input image1 is STYLE reference (space Shaniu): match her clean precise anime linework, crisp cel shading, bright colors and high-quality visual-novel illustration. Input image2 is SAME CHARACTER IDENTITY: preserve face, hair shape/color and eye color exactly; change outfit/prop only. Costume: colored astronaut ONE-PIECE WORK JUMPSUIT, long sleeves, full-length pants, ivory reinforced sections, completely BLANK arm patch and BLANK chest nameplate, waist TOOL BELT, SPACE BOOTS. No helmet worn, no hats. Subject: confident teenage BOY, neat short BROWN hair and BROWN eyes, identical to image2 with hardhat REMOVED. ORANGE jumpsuit. One palm naturally facing up; directly above his palm floats a softly luminous holographic STAR MAP made only of dots, orbit arcs and geometric star chart, without labels. Other hand relaxed near tool belt. Confident friendly smile. Entire single person from head through both boot soles completely in frame, facing forward, centered, relaxed standing idle, ample margin above head and below feet. Original character, anatomically correct hands, fingers and feet. Genuine transparent-alpha isolated cutout. No floor, ground shadow, cast shadow, haze, ambient backdrop or halo. No letters, words, digits, text, watermark or logo anywhere, including clothing, devices and holograms. Never crop head, hands or boots. Only ONE character.",
+      "unsatisfactory": false,
+      "native_size": [
+        1024,
+        1536
+      ],
+      "normalization": "aspect-preserving fit and transparent padding, WebP quality90",
+      "file_bytes": 212476,
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "retries": 0
+    },
+    {
+      "path": "art/cast/space/frontend-idle.webp",
+      "batch": 2,
+      "kind": "cast",
+      "theme": "space",
+      "character": "frontend",
+      "expression": "idle",
+      "target_size": [
+        1024,
+        1536
+      ],
+      "actual_size": [
+        1024,
+        1536
+      ],
+      "format": "webp",
+      "webp_quality": 90,
+      "generation_tool": "image_gen.imagegen",
+      "model": "imagegen built-in (underlying model not disclosed)",
+      "model_disclosed": false,
+      "transparent": true,
+      "background_status": "transparent",
+      "status": "complete",
+      "reference_paths": [
+        "/Users/a1234/.codex/generated_images/01a11b61-02dd-7d92-acbc-373049ddb4c0/exec-19cb3ca7-46a5-479d-8755-b1a5ecc394ef.png",
+        "/Users/a1234/Desktop/牛马工作室设计/art/cast/sakura/frontend-idle.webp"
+      ],
+      "source_image_path": "/Users/a1234/.codex/generated_images/01a11b61-02dd-7d92-acbc-373049ddb4c0/exec-26cce255-597c-4a24-ada7-128c31d4f262.png",
+      "generation_run": null,
+      "attempts": 1,
+      "qa_notes": [
+        "Brown twin ponytails/blue eyes identity, orange one-piece worksuit with blank patches/toolbelt/spaceboots, glowing touchscreen, hands/feet and fullbody composition approved."
+      ],
+      "qa_approved": true,
+      "background_requirement": "transparent preferred; pure white acceptable; no ground shadow",
+      "composition_requirement": "single character; frontal standing; full body; no cropped head/hands/feet; space above head",
+      "planned_reference_paths": [
+        "art/cast/sakura/frontend-idle.webp",
+        "art/cast/space/shaniu-idle.webp"
+      ],
+      "prompt": "Use case: stylized-concept / identity-preserve. Asset: ONE fullbody standing Japanese sci-fi anime space-station crew member idle sprite, portrait1024x1536. Input image1 is STYLE reference (space Shaniu): match her clean precise anime linework, crisp cel shading, bright colors and high-quality visual-novel illustration. Input image2 is SAME CHARACTER IDENTITY: preserve face, hair shape/color and eye color exactly; change outfit/prop only. Costume: colored astronaut ONE-PIECE WORK JUMPSUIT, long sleeves, full-length pants, ivory reinforced sections, completely BLANK arm patch and BLANK chest nameplate, waist TOOL BELT, SPACE BOOTS. No helmet worn, no hats. Subject: lively teenage GIRL, BROWN TWIN PONYTAILS, BLUE eyes, identical to image2 with beret REMOVED. ORANGE jumpsuit. Holding one glowing TOUCHSCREEN in both naturally correct hands, screen shows abstract color shapes without writing. Bright playful smile. Entire single person from head through both boot soles completely in frame, facing forward, centered, relaxed standing idle, ample margin above head and below feet. Original character, anatomically correct hands, fingers and feet. Genuine transparent-alpha isolated cutout. No floor, ground shadow, cast shadow, haze, ambient backdrop or halo. No letters, words, digits, text, watermark or logo anywhere, including clothing, devices and holograms. Never crop head, hands or boots. Only ONE character.",
+      "unsatisfactory": false,
+      "native_size": [
+        1024,
+        1536
+      ],
+      "normalization": "aspect-preserving fit and transparent padding, WebP quality90",
+      "file_bytes": 198920,
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "retries": 0
+    },
+    {
+      "path": "art/cast/space/reviewer-idle.webp",
+      "batch": 2,
+      "kind": "cast",
+      "theme": "space",
+      "character": "reviewer",
+      "expression": "idle",
+      "target_size": [
+        1024,
+        1536
+      ],
+      "actual_size": [
+        1024,
+        1536
+      ],
+      "format": "webp",
+      "webp_quality": 90,
+      "generation_tool": "image_gen.imagegen",
+      "model": "imagegen built-in (underlying model not disclosed)",
+      "model_disclosed": false,
+      "transparent": true,
+      "background_status": "transparent",
+      "status": "complete",
+      "reference_paths": [
+        "/Users/a1234/.codex/generated_images/01a11b61-02dd-7d92-acbc-373049ddb4c0/exec-19cb3ca7-46a5-479d-8755-b1a5ecc394ef.png",
+        "/Users/a1234/Desktop/牛马工作室设计/art/cast/sakura/reviewer-idle.webp"
+      ],
+      "source_image_path": "/Users/a1234/.codex/generated_images/01a11b61-02dd-7d92-acbc-373049ddb4c0/exec-7c237945-d99c-4c78-91d4-9c0e61723d81.png",
+      "generation_run": null,
+      "attempts": 1,
+      "qa_notes": [
+        "Black side-banged short hair, blue eyes and thin-framed glasses identity retained; orange worksuit, blank patches, toolbelt, boots and data board correct; fullbody and hand anatomy approved."
+      ],
+      "qa_approved": true,
+      "background_requirement": "transparent preferred; pure white acceptable; no ground shadow",
+      "composition_requirement": "single character; frontal standing; full body; no cropped head/hands/feet; space above head",
+      "planned_reference_paths": [
+        "art/cast/sakura/reviewer-idle.webp",
+        "art/cast/space/shaniu-idle.webp"
+      ],
+      "prompt": "Use case: stylized-concept / identity-preserve. Asset: ONE fullbody standing Japanese sci-fi anime space-station crew member idle sprite, portrait1024x1536. Input image1 is STYLE reference (space Shaniu): match her clean precise anime linework, crisp cel shading, bright colors and high-quality visual-novel illustration. Input image2 is SAME CHARACTER IDENTITY: preserve face, hair shape/color and eye color exactly; change outfit/prop only. Costume: colored astronaut ONE-PIECE WORK JUMPSUIT, long sleeves, full-length pants, ivory reinforced sections, completely BLANK arm patch and BLANK chest nameplate, waist TOOL BELT, SPACE BOOTS. No helmet worn, no hats. Subject: calm serious teenage BOY, short BLACK hair with swept SIDE BANGS, BLUE eyes, identical to image2. KEEP his thin-framed glasses; both lenses transparent. ORANGE jumpsuit. Holding a plain futuristic DATA BOARD with correct hands, display contains only unlabeled abstract geometry. Composed thoughtful neutral expression. Entire single person from head through both boot soles completely in frame, facing forward, centered, relaxed standing idle, ample margin above head and below feet. Original character, anatomically correct hands, fingers and feet. Genuine transparent-alpha isolated cutout. No floor, ground shadow, cast shadow, haze, ambient backdrop or halo. No letters, words, digits, text, watermark or logo anywhere, including clothing, devices and holograms. Never crop head, hands or boots. Only ONE character.",
+      "unsatisfactory": false,
+      "native_size": [
+        1024,
+        1536
+      ],
+      "normalization": "aspect-preserving fit and transparent padding, WebP quality90",
+      "file_bytes": 146192,
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "retries": 0
+    },
+    {
+      "path": "art/cast/space/backend-idle.webp",
+      "batch": 2,
+      "kind": "cast",
+      "theme": "space",
+      "character": "backend",
+      "expression": "idle",
+      "target_size": [
+        1024,
+        1536
+      ],
+      "actual_size": [
+        1024,
+        1536
+      ],
+      "format": "webp",
+      "webp_quality": 90,
+      "generation_tool": "image_gen.imagegen",
+      "model": "imagegen built-in (underlying model not disclosed)",
+      "model_disclosed": false,
+      "transparent": true,
+      "background_status": "transparent",
+      "status": "complete",
+      "reference_paths": [
+        "/Users/a1234/.codex/generated_images/01a11b61-02dd-7d92-acbc-373049ddb4c0/exec-19cb3ca7-46a5-479d-8755-b1a5ecc394ef.png",
+        "/Users/a1234/Desktop/牛马工作室设计/art/cast/sakura/backend-idle.webp"
+      ],
+      "source_image_path": "/Users/a1234/.codex/generated_images/01a11b61-02dd-7d92-acbc-373049ddb4c0/exec-f8f128b6-d927-4168-9406-2842ac06f010.png",
+      "generation_run": null,
+      "attempts": 1,
+      "qa_notes": [
+        "Light-pink ear-length bob, purple eyes and over-ear headphones identity retained; dark-teal worksuit, blank patches, toolbelt, boots and held server module correct; fullbody and hand anatomy approved."
+      ],
+      "qa_approved": true,
+      "background_requirement": "transparent preferred; pure white acceptable; no ground shadow",
+      "composition_requirement": "single character; frontal standing; full body; no cropped head/hands/feet; space above head",
+      "planned_reference_paths": [
+        "art/cast/sakura/backend-idle.webp",
+        "art/cast/space/shaniu-idle.webp"
+      ],
+      "prompt": "Use case: stylized-concept / identity-preserve. Asset: ONE fullbody standing Japanese sci-fi anime space-station crew member idle sprite, portrait1024x1536. Input image1 is STYLE reference (space Shaniu): match her clean precise anime linework, crisp cel shading, bright colors and high-quality visual-novel illustration. Input image2 is SAME CHARACTER IDENTITY: preserve face, hair shape/color and eye color exactly; change outfit/prop only. Costume: colored astronaut ONE-PIECE WORK JUMPSUIT, long sleeves, full-length pants, ivory reinforced sections, completely BLANK arm patch and BLANK chest nameplate, waist TOOL BELT, SPACE BOOTS. No helmet worn, no hats. Subject: focused teenage GIRL, LIGHT PINK EAR-LENGTH BOB hair, PURPLE eyes, identical to image2. KEEP over-ear HEADPHONES as identity accessory. DARK TEAL GREEN jumpsuit. Cradling exactly one SERVER MODULE, a substantial rectangular silver-and-dark-teal futuristic electronic block with blank panels, orderly ventilation slots and small indicator lights; hold securely with both natural hands. Focused gentle neutral smile. Entire single person from head through both boot soles completely in frame, facing forward, centered, relaxed standing idle, ample margin above head and below feet. Original character, anatomically correct hands, fingers and feet. Genuine transparent-alpha isolated cutout. No floor, ground shadow, cast shadow, haze, ambient backdrop or halo. No letters, words, digits, text, watermark or logo anywhere, including clothing, devices and holograms. Never crop head, hands or boots. Only ONE character.",
+      "unsatisfactory": false,
+      "native_size": [
+        1024,
+        1536
+      ],
+      "normalization": "aspect-preserving fit and transparent padding, WebP quality90",
+      "file_bytes": 133640,
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "retries": 0
+    },
+    {
+      "path": "art/cast/space/tester-idle.webp",
+      "batch": 2,
+      "kind": "cast",
+      "theme": "space",
+      "character": "tester",
+      "expression": "idle",
+      "target_size": [
+        1024,
+        1536
+      ],
+      "actual_size": [
+        1024,
+        1536
+      ],
+      "format": "webp",
+      "webp_quality": 90,
+      "generation_tool": "image_gen.imagegen",
+      "model": "imagegen built-in (underlying model not disclosed)",
+      "model_disclosed": false,
+      "transparent": true,
+      "background_status": "transparent",
+      "status": "complete",
+      "reference_paths": [
+        "/Users/a1234/.codex/generated_images/01a11b61-02dd-7d92-acbc-373049ddb4c0/exec-19cb3ca7-46a5-479d-8755-b1a5ecc394ef.png",
+        "/Users/a1234/Desktop/牛马工作室设计/art/cast/sakura/tester-idle.webp"
+      ],
+      "source_image_path": "/Users/a1234/.codex/generated_images/01a11b61-02dd-7d92-acbc-373049ddb4c0/exec-193dfb36-2a54-4bc3-90cb-974fea6a73b9.png",
+      "generation_run": null,
+      "attempts": 1,
+      "qa_notes": [
+        "Golden high ponytail and teal-green eyes identity retained; dark-teal worksuit, blank patches/toolbelt/boots and handheld scanner correct; fullbody, natural fingers and boots approved."
+      ],
+      "qa_approved": true,
+      "background_requirement": "transparent preferred; pure white acceptable; no ground shadow",
+      "composition_requirement": "single character; frontal standing; full body; no cropped head/hands/feet; space above head",
+      "planned_reference_paths": [
+        "art/cast/sakura/tester-idle.webp",
+        "art/cast/space/shaniu-idle.webp"
+      ],
+      "prompt": "Use case: stylized-concept / identity-preserve. Asset: ONE fullbody standing Japanese sci-fi anime space-station crew member idle sprite, portrait1024x1536. Input image1 is STYLE reference (space Shaniu): match her clean precise anime linework, crisp cel shading, bright colors and high-quality visual-novel illustration. Input image2 is SAME CHARACTER IDENTITY: preserve face, hair shape/color and eye color exactly; change outfit/prop only. Costume: colored astronaut ONE-PIECE WORK JUMPSUIT, long sleeves, full-length pants, ivory reinforced sections, completely BLANK arm patch and BLANK chest nameplate, waist TOOL BELT, SPACE BOOTS. No helmet worn, no hats. Subject: energetic teenage GIRL, GOLDEN BLONDE HIGH PONYTAIL, TEAL GREEN eyes, identical to image2 with baseball cap REMOVED. DARK TEAL GREEN jumpsuit. Holding exactly one HANDHELD SCANNER device, a compact silver/teal futuristic scanning instrument with one small blank illuminated screen and a scanning sensor tip, anatomically natural grip. Other hand relaxed. Lively confident smile. Entire single person from head through both boot soles completely in frame, facing forward, centered, relaxed standing idle, ample margin above head and below feet. Original character, anatomically correct hands, fingers and feet. Genuine transparent-alpha isolated cutout. No floor, ground shadow, cast shadow, haze, ambient backdrop or halo. No letters, words, digits, text, watermark or logo anywhere, including clothing, devices and holograms. Never crop head, hands or boots. Only ONE character.",
+      "unsatisfactory": false,
+      "native_size": [
+        1024,
+        1536
+      ],
+      "normalization": "aspect-preserving fit and transparent padding, WebP quality90",
+      "file_bytes": 165234,
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "retries": 0
+    },
+    {
+      "path": "art/cast/space/debugger-idle.webp",
+      "batch": 2,
+      "kind": "cast",
+      "theme": "space",
+      "character": "debugger",
+      "expression": "idle",
+      "target_size": [
+        1024,
+        1536
+      ],
+      "actual_size": [
+        1024,
+        1536
+      ],
+      "format": "webp",
+      "webp_quality": 90,
+      "generation_tool": "image_gen.imagegen",
+      "model": "imagegen built-in (underlying model not disclosed)",
+      "model_disclosed": false,
+      "transparent": true,
+      "background_status": "transparent",
+      "status": "complete",
+      "reference_paths": [
+        "/Users/a1234/.codex/generated_images/01a11b61-02dd-7d92-acbc-373049ddb4c0/exec-19cb3ca7-46a5-479d-8755-b1a5ecc394ef.png",
+        "/Users/a1234/Desktop/牛马工作室设计/art/cast/sakura/debugger-idle.webp"
+      ],
+      "source_image_path": "/Users/a1234/.codex/generated_images/01a11b61-02dd-7d92-acbc-373049ddb4c0/exec-0bdcac47-35ea-40db-b969-ce33af029d71.png",
+      "generation_run": null,
+      "attempts": 1,
+      "qa_notes": [
+        "Teal spiky hair, orange eyes and red forehead headband identity retained; dark-teal worksuit, blank patches/toolbelt/boots and glowing energy wrench correct; fullbody and hands/feet approved."
+      ],
+      "qa_approved": true,
+      "background_requirement": "transparent preferred; pure white acceptable; no ground shadow",
+      "composition_requirement": "single character; frontal standing; full body; no cropped head/hands/feet; space above head",
+      "planned_reference_paths": [
+        "art/cast/sakura/debugger-idle.webp",
+        "art/cast/space/shaniu-idle.webp"
+      ],
+      "prompt": "Use case: stylized-concept / identity-preserve. Asset: ONE fullbody standing Japanese sci-fi anime space-station crew member idle sprite, portrait1024x1536. Input image1 is STYLE reference (space Shaniu): match her clean precise anime linework, crisp cel shading, bright colors and high-quality visual-novel illustration. Input image2 is SAME CHARACTER IDENTITY: preserve face, hair shape/color and eye color exactly; change outfit/prop only. Costume: colored astronaut ONE-PIECE WORK JUMPSUIT, long sleeves, full-length pants, ivory reinforced sections, completely BLANK arm patch and BLANK chest nameplate, waist TOOL BELT, SPACE BOOTS. No helmet worn, no hats. Subject: determined teenage BOY, TEAL GREEN spiky hedgehog hair, ORANGE eyes, identical to image2. KEEP RED HEADBAND tied around forehead, tail ends visible. DARK TEAL GREEN jumpsuit. Holding one ENERGY WRENCH, an unmistakable silver/teal open-ended mechanical wrench with a restrained cyan glowing energy accent on its head, anatomically correct grasp. Other hand relaxed. Steadfast friendly confident expression. Entire single person from head through both boot soles completely in frame, facing forward, centered, relaxed standing idle, ample margin above head and below feet. Original character, anatomically correct hands, fingers and feet. Genuine transparent-alpha isolated cutout. No floor, ground shadow, cast shadow, haze, ambient backdrop or halo. No letters, words, digits, text, watermark or logo anywhere, including clothing, devices and holograms. Never crop head, hands or boots. Only ONE character.",
+      "unsatisfactory": false,
+      "native_size": [
+        1024,
+        1536
+      ],
+      "normalization": "aspect-preserving fit and transparent padding, WebP quality90",
+      "file_bytes": 157978,
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "retries": 0
+    },
+    {
+      "path": "art/cast/space/writer-idle.webp",
+      "batch": 2,
+      "kind": "cast",
+      "theme": "space",
+      "character": "writer",
+      "expression": "idle",
+      "target_size": [
+        1024,
+        1536
+      ],
+      "actual_size": [
+        1024,
+        1536
+      ],
+      "format": "webp",
+      "webp_quality": 90,
+      "generation_tool": "image_gen.imagegen",
+      "model": "imagegen built-in (underlying model not disclosed)",
+      "model_disclosed": false,
+      "transparent": true,
+      "background_status": "transparent",
+      "status": "complete",
+      "reference_paths": [
+        "/Users/a1234/.codex/generated_images/01a11b61-02dd-7d92-acbc-373049ddb4c0/exec-19cb3ca7-46a5-479d-8755-b1a5ecc394ef.png",
+        "/Users/a1234/Desktop/牛马工作室设计/art/cast/sakura/writer-idle.webp"
+      ],
+      "source_image_path": "/Users/a1234/.codex/generated_images/01a11b61-02dd-7d92-acbc-373049ddb4c0/exec-3e747603-3a2c-4368-84b0-9fc5d866b854.png",
+      "generation_run": null,
+      "attempts": 1,
+      "qa_notes": [
+        "Blue ear-length bob with top bun and pink eyes identity retained; blue worksuit, blank patches/toolbelt/boots and digital log tablet correct; gentle expression, fullbody, hands/feet approved."
+      ],
+      "qa_approved": true,
+      "background_requirement": "transparent preferred; pure white acceptable; no ground shadow",
+      "composition_requirement": "single character; frontal standing; full body; no cropped head/hands/feet; space above head",
+      "planned_reference_paths": [
+        "art/cast/sakura/writer-idle.webp",
+        "art/cast/space/shaniu-idle.webp"
+      ],
+      "prompt": "Use case: stylized-concept / identity-preserve. Asset: ONE fullbody standing Japanese sci-fi anime space-station crew member idle sprite, portrait1024x1536. Input image1 is STYLE reference (space Shaniu): match her clean precise anime linework, crisp cel shading, bright colors and high-quality visual-novel illustration. Input image2 is SAME CHARACTER IDENTITY: preserve face, hair shape/color and eye color exactly; change outfit/prop only. Costume: colored astronaut ONE-PIECE WORK JUMPSUIT, long sleeves, full-length pants, ivory reinforced sections, completely BLANK arm patch and BLANK chest nameplate, waist TOOL BELT, SPACE BOOTS. No helmet worn, no hats. Subject: gentle teenage GIRL, BLUE EAR-LENGTH BOB hair with a SMALL TOP BUN on crown, PINK eyes, identical to image2. BLUE jumpsuit. Holding one digital LOG TABLET in natural correct hands, tablet screen contains only minimal abstract shapes and lines with no writing. Gentle warm smile. Entire single person from head through both boot soles completely in frame, facing forward, centered, relaxed standing idle, ample margin above head and below feet. Original character, anatomically correct hands, fingers and feet. Genuine transparent-alpha isolated cutout. No floor, ground shadow, cast shadow, haze, ambient backdrop or halo. No letters, words, digits, text, watermark or logo anywhere, including clothing, devices and holograms. Never crop head, hands or boots. Only ONE character.",
+      "unsatisfactory": false,
+      "native_size": [
+        1024,
+        1536
+      ],
+      "normalization": "aspect-preserving fit and transparent padding, WebP quality90",
+      "file_bytes": 137964,
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "retries": 0
+    },
+    {
+      "path": "art/cast/space/default-idle.webp",
+      "batch": 2,
+      "kind": "cast",
+      "theme": "space",
+      "character": "default",
+      "expression": "idle",
+      "target_size": [
+        1024,
+        1536
+      ],
+      "actual_size": [
+        1024,
+        1536
+      ],
+      "format": "webp",
+      "webp_quality": 90,
+      "generation_tool": "image_gen.imagegen",
+      "model": "imagegen built-in (underlying model not disclosed)",
+      "model_disclosed": false,
+      "transparent": true,
+      "background_status": "transparent",
+      "status": "complete",
+      "reference_paths": [
+        "/Users/a1234/.codex/generated_images/01a11b61-02dd-7d92-acbc-373049ddb4c0/exec-19cb3ca7-46a5-479d-8755-b1a5ecc394ef.png",
+        "/Users/a1234/Desktop/牛马工作室设计/art/cast/sakura/default-idle.webp"
+      ],
+      "source_image_path": "/Users/a1234/.codex/generated_images/01a11b61-02dd-7d92-acbc-373049ddb4c0/exec-e4800f2d-2908-467e-9bfe-4ee86784731e.png",
+      "generation_run": null,
+      "attempts": 1,
+      "qa_notes": [
+        "Long straight golden hair and blue eyes identity retained; blue worksuit, blank patches/toolbelt/boots and astronaut helmet held rather than worn correct; friendly expression, fullbody, hands/feet approved."
+      ],
+      "qa_approved": true,
+      "background_requirement": "transparent preferred; pure white acceptable; no ground shadow",
+      "composition_requirement": "single character; frontal standing; full body; no cropped head/hands/feet; space above head",
+      "planned_reference_paths": [
+        "art/cast/sakura/default-idle.webp",
+        "art/cast/space/shaniu-idle.webp"
+      ],
+      "prompt": "Use case: stylized-concept / identity-preserve. Asset: ONE fullbody standing Japanese sci-fi anime space-station crew member idle sprite, portrait1024x1536. Input image1 is STYLE reference (space Shaniu): match her clean precise anime linework, crisp cel shading, bright colors and high-quality visual-novel illustration. Input image2 is SAME CHARACTER IDENTITY: preserve face, hair shape/color and eye color exactly; change outfit/prop only. Costume: colored astronaut ONE-PIECE WORK JUMPSUIT, long sleeves, full-length pants, ivory reinforced sections, completely BLANK arm patch and BLANK chest nameplate, waist TOOL BELT, SPACE BOOTS. No helmet worn, no hats. Subject: friendly teenage GIRL, GOLDEN BLONDE LONG STRAIGHT hair and BLUE eyes, identical to image2. BLUE jumpsuit. Cradling exactly one ASTRONAUT HELMET in both natural correct hands, a white-and-blue rounded space helmet with a clear dark-tinted visor and blank surfaces; helmet is held at waist/chest and NOT worn. Bare head with long hair fully visible. Friendly welcoming smile. Entire single person from head through both boot soles completely in frame, facing forward, centered, relaxed standing idle, ample margin above head and below feet. Original character, anatomically correct hands, fingers and feet. Genuine transparent-alpha isolated cutout. No floor, ground shadow, cast shadow, haze, ambient backdrop or halo. No letters, words, digits, text, watermark or logo anywhere, including clothing, devices and holograms. Never crop head, hands or boots. Only ONE character.",
+      "unsatisfactory": false,
+      "native_size": [
+        1024,
+        1536
+      ],
+      "normalization": "aspect-preserving fit and transparent padding, WebP quality90",
+      "file_bytes": 186774,
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "retries": 0
     }
   ],
-  "completed_asset_count": 45,
+  "completed_asset_count": 54,
   "updated_date": "2026-10-11"
 }
