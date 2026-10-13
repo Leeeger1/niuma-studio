@@ -57,7 +57,7 @@
     "base_commit": "e65899afb16459eb36832f13037395997bf3466e",
     "preserves_existing_assets": true,
     "previous_asset_count": 27,
-    "included_asset_count": 18
+    "included_asset_count": 27
   },
   "global_qa": [
     "日系动漫、干净线稿、赛璐璐、明亮色彩，角色/场景/道具画风一致",
@@ -1029,8 +1029,438 @@
         255
       ],
       "retries": 0
+    },
+    {
+      "path": "art/cast/q/shaniu-idle.webp",
+      "batch": 2,
+      "kind": "cast",
+      "theme": "q",
+      "character": "shaniu",
+      "expression": "idle",
+      "target_size": [
+        1024,
+        1536
+      ],
+      "actual_size": [
+        1024,
+        1536
+      ],
+      "format": "webp",
+      "webp_quality": 90,
+      "generation_tool": "image_gen.imagegen",
+      "model": "imagegen built-in (underlying model not disclosed)",
+      "model_disclosed": false,
+      "transparent": true,
+      "background_status": "transparent",
+      "status": "complete",
+      "reference_paths": [
+        "/Users/a1234/.codex/generated_images/01a11b5e-2302-7e21-8d42-d409361c7d7b/exec-c051f052-ab85-4106-9d8f-42f0baa9a04c.png"
+      ],
+      "source_image_path": "/Users/a1234/.codex/generated_images/01a11b5e-2302-7e21-8d42-d409361c7d7b/exec-22ab23af-9baa-4acb-bcaa-baf7378ea0f0.png",
+      "generation_run": null,
+      "attempts": 1,
+      "qa_notes": [
+        "Q版2.5头身、固定外貌与服装道具一致，头脚完整。"
+      ],
+      "qa_approved": true,
+      "background_requirement": "transparent preferred; pure white acceptable; no ground shadow",
+      "composition_requirement": "single character; frontal standing; full body; no cropped head/hands/feet; space above head",
+      "planned_reference_paths": [
+        "art/cast/sakura/shaniu-idle.webp"
+      ],
+      "prompt": "Use case: identity-preserve stylized-concept character sprite. Reference image1 is the SAME character shaniu in sakura form. Transform her into super cute original Japanese anime CHIBI office style with exactly 2.5-head-tall proportions: huge round head, very small rounded body, short arms/legs. Keep recognizable same face, black long straight hair, pink eyes, pink headband, two small robot antennae. Outfit exactly pink sailor top, red collar bow, pink pleated skirt, socks and pink shoes. She hugs the same blank tablet and smiles energetically. Clean anime crisp linework, bright polished cel shading, refined expressive eyes, matches reference rendering quality in cute chibi proportions. ONE character, full body upright front-facing centered with full head and shoes in view and margins. Portrait canvas 1024x1536. Anatomically clear cute five-finger hands and normal feet, no deformation. Transparent background, no floor/ground shadow. Absolutely no text, digits, letters, logos or watermark anywhere. No existing fictional character.",
+      "file_bytes": 236212,
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "retries": 0
+    },
+    {
+      "path": "art/cast/q/architect-idle.webp",
+      "batch": 2,
+      "kind": "cast",
+      "theme": "q",
+      "character": "architect",
+      "expression": "idle",
+      "target_size": [
+        1024,
+        1536
+      ],
+      "actual_size": [
+        1024,
+        1536
+      ],
+      "format": "webp",
+      "webp_quality": 90,
+      "generation_tool": "image_gen.imagegen",
+      "model": "imagegen built-in (underlying model not disclosed)",
+      "model_disclosed": false,
+      "transparent": true,
+      "background_status": "transparent",
+      "status": "complete",
+      "reference_paths": [
+        "/Users/a1234/.codex/generated_images/01a11b5e-2302-7e21-8d42-d409361c7d7b/exec-9571c761-78a4-4939-b281-8ed311f5afe6.png",
+        "/Users/a1234/.codex/generated_images/01a11b5e-2302-7e21-8d42-d409361c7d7b/exec-22ab23af-9baa-4acb-bcaa-baf7378ea0f0.png"
+      ],
+      "source_image_path": "/Users/a1234/.codex/generated_images/01a11b5e-2302-7e21-8d42-d409361c7d7b/exec-60b07cdb-a153-492e-a379-9d61be938513.png",
+      "generation_run": null,
+      "attempts": 2,
+      "qa_notes": [
+        "重画1次缩短躯干与腿，Q版头身比及完整身体通过。"
+      ],
+      "qa_approved": true,
+      "background_requirement": "transparent preferred; pure white acceptable; no ground shadow",
+      "composition_requirement": "single character; frontal standing; full body; no cropped head/hands/feet; space above head",
+      "planned_reference_paths": [
+        "art/cast/sakura/architect-idle.webp",
+        "art/cast/q/shaniu-idle.webp"
+      ],
+      "prompt": "Use case: identity-preserve. Image1 EDIT TARGET is chibi architect. Image2 chibi shaniu is PROPORTION/style reference. Edit architect to true 2.5HEAD SUPERDEFORMED proportions: greatly shorten torso and legs, make head much rounder/larger, the hair-to-chin HEAD alone (excluding hardhat) must be about40% of whole character height. Tiny torso and short stubby rounded legs. Same face, short brown hair brown eyes, yellowhardhat, orange blazer white shirt darktie darktrousers shoes blankbadge rolledblankblueprint, same confident smile, same pose and props and clean bright celanime rendering. Ignore any adult proportions. Fullbodyincludinghat andtoes centered with generous margin above andbelow, portrait1024x1536. Correcthands/feet, ONLYoneperson. Genuinetransparent background nofloor/shadow/text/letters/numbers/logo.",
+      "file_bytes": 171330,
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "retries": 1
+    },
+    {
+      "path": "art/cast/q/frontend-idle.webp",
+      "batch": 2,
+      "kind": "cast",
+      "theme": "q",
+      "character": "frontend",
+      "expression": "idle",
+      "target_size": [
+        1024,
+        1536
+      ],
+      "actual_size": [
+        1024,
+        1536
+      ],
+      "format": "webp",
+      "webp_quality": 90,
+      "generation_tool": "image_gen.imagegen",
+      "model": "imagegen built-in (underlying model not disclosed)",
+      "model_disclosed": false,
+      "transparent": true,
+      "background_status": "transparent",
+      "status": "complete",
+      "reference_paths": [
+        "/Users/a1234/.codex/generated_images/01a11b5e-2302-7e21-8d42-d409361c7d7b/exec-22ab23af-9baa-4acb-bcaa-baf7378ea0f0.png",
+        "/Users/a1234/Desktop/牛马工作室设计/art/cast/sakura/frontend-idle.webp"
+      ],
+      "source_image_path": "/Users/a1234/.codex/generated_images/01a11b5e-2302-7e21-8d42-d409361c7d7b/exec-6263f7cb-4cd0-4696-8c9f-92d6244835e9.png",
+      "generation_run": null,
+      "attempts": 1,
+      "qa_notes": [
+        "Q版外貌、头身比、双马尾贝雷帽和笔板正确，完整手脚。"
+      ],
+      "qa_approved": true,
+      "background_requirement": "transparent preferred; pure white acceptable; no ground shadow",
+      "composition_requirement": "single character; frontal standing; full body; no cropped head/hands/feet; space above head",
+      "planned_reference_paths": [
+        "art/cast/sakura/frontend-idle.webp",
+        "art/cast/q/shaniu-idle.webp"
+      ],
+      "prompt": "Use case: identity-preserve style-transfer. Image1 ONLY STYLE/PROPORTION ref is chibi shaniu, Image2 ONLY FACE/HAIR/CLOTHES/PROPS identity ref is frontend, ignore image2 adult body proportions. Make one original Japanese anime SUPERDEFORMED chibi young woman, brown twin ponytails, blue eyes, lively. TRUE2.5HEADS: huge round head hair-to-chin ~40% of total figure height, tiny torso, very short rounded legs andarms. Match image1 cuteproportions brightcrisp celanime. orange officeblazer whiteshirt collarbow darkpleatedskirt blankbadge socks/shoes. red beret on her head, holds a digital stylus and tablet. Fullbody frontal centered, fullheadandfeetvisible amplemargins, 1024x1536 portrait, correct cute fivefingerhands/feet. Transparenteverywhereoutsidecharacter; nofloor/groundshadow/scenery, absolutelynotext/letters/numerals/logos/watermark. Onlyoneperson.",
+      "file_bytes": 272544,
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "retries": 0
+    },
+    {
+      "path": "art/cast/q/reviewer-idle.webp",
+      "batch": 2,
+      "kind": "cast",
+      "theme": "q",
+      "character": "reviewer",
+      "expression": "idle",
+      "target_size": [
+        1024,
+        1536
+      ],
+      "actual_size": [
+        1024,
+        1536
+      ],
+      "format": "webp",
+      "webp_quality": 90,
+      "generation_tool": "image_gen.imagegen",
+      "model": "imagegen built-in (underlying model not disclosed)",
+      "model_disclosed": false,
+      "transparent": true,
+      "background_status": "transparent",
+      "status": "complete",
+      "reference_paths": [
+        "/Users/a1234/.codex/generated_images/01a11b5e-2302-7e21-8d42-d409361c7d7b/exec-22ab23af-9baa-4acb-bcaa-baf7378ea0f0.png",
+        "/Users/a1234/Desktop/牛马工作室设计/art/cast/sakura/reviewer-idle.webp"
+      ],
+      "source_image_path": "/Users/a1234/.codex/generated_images/01a11b5e-2302-7e21-8d42-d409361c7d7b/exec-b3f6b85e-2706-4a2f-8c05-3c73883c1245.png",
+      "generation_run": null,
+      "attempts": 1,
+      "qa_notes": [
+        "最终WebP白底整套复检：Q版头身、固定外貌、服装道具与完整手脚通过；无字、无地面阴影。"
+      ],
+      "qa_approved": true,
+      "background_requirement": "transparent preferred; pure white acceptable; no ground shadow",
+      "composition_requirement": "single character; frontal standing; full body; no cropped head/hands/feet; space above head",
+      "planned_reference_paths": [
+        "art/cast/sakura/reviewer-idle.webp",
+        "art/cast/q/shaniu-idle.webp"
+      ],
+      "prompt": "Use case: identity-preserve style-transfer. Image1 ONLY STYLE/PROPORTION ref is chibi shaniu; image2 ONLY FACE/HAIR/CLOTHES/PROPS IDENTITY ref is reviewer; IGNORE image2 adult body proportions. One original Japanese anime SUPERDEFORMED chibi young man, short black hair with side-swept bangs, blue eyes, thin-framed glasses, calm and serious. TRUE2.5HEADS: huge round head hair-to-chin ~40% of total figure height, tiny torso, very short rounded legs and arms. Match image1 cuteproportions brightcrisp celanime. orange officeblazer whiteshirt tie and dark suit trousers blankchestbadge socks/shoes. holds a blank clipboard. Fullbody frontal upright centered, fullhead/hands/feet visible with ample margins, 1024x1536 portrait. Correct cute fivefingerhands/feet. Transparentbackground, nofloor/groundshadow/scenery; absolutelynotext/letters/numerals/logos/watermark. Onlyoneperson.",
+      "file_bytes": 175954,
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "retries": 0
+    },
+    {
+      "path": "art/cast/q/backend-idle.webp",
+      "batch": 2,
+      "kind": "cast",
+      "theme": "q",
+      "character": "backend",
+      "expression": "idle",
+      "target_size": [
+        1024,
+        1536
+      ],
+      "actual_size": [
+        1024,
+        1536
+      ],
+      "format": "webp",
+      "webp_quality": 90,
+      "generation_tool": "image_gen.imagegen",
+      "model": "imagegen built-in (underlying model not disclosed)",
+      "model_disclosed": false,
+      "transparent": true,
+      "background_status": "transparent",
+      "status": "complete",
+      "reference_paths": [
+        "/Users/a1234/.codex/generated_images/01a11b5e-2302-7e21-8d42-d409361c7d7b/exec-22ab23af-9baa-4acb-bcaa-baf7378ea0f0.png",
+        "/Users/a1234/Desktop/牛马工作室设计/art/cast/sakura/backend-idle.webp"
+      ],
+      "source_image_path": "/Users/a1234/.codex/generated_images/01a11b5e-2302-7e21-8d42-d409361c7d7b/exec-003f6a07-b306-4a58-834b-b7497a613b61.png",
+      "generation_run": null,
+      "attempts": 1,
+      "qa_notes": [
+        "最终WebP白底整套复检：Q版头身、固定外貌、服装道具与完整手脚通过；无字、无地面阴影。"
+      ],
+      "qa_approved": true,
+      "background_requirement": "transparent preferred; pure white acceptable; no ground shadow",
+      "composition_requirement": "single character; frontal standing; full body; no cropped head/hands/feet; space above head",
+      "planned_reference_paths": [
+        "art/cast/sakura/backend-idle.webp",
+        "art/cast/q/shaniu-idle.webp"
+      ],
+      "prompt": "Use case: identity-preserve style-transfer. Image1 ONLY STYLE/PROPORTION ref is chibi shaniu; image2 ONLY FACE/HAIR/CLOTHES/PROPS IDENTITY ref is backend; IGNORE image2 adult body proportions. One original Japanese anime SUPERDEFORMED chibi young woman, ear-length light pink bob haircut, purple eyes, over-ear headphones, focused. TRUE2.5HEADS: huge round head hair-to-chin ~40% of total figure height, tiny torso, very short rounded legs and arms. Match image1 cuteproportions brightcrisp celanime. deep teal officeblazer whiteshirt collarbow and dark pleated skirt blankchestbadge socks/shoes. hugs a laptop. Fullbody frontal upright centered, fullhead/hands/feet visible with ample margins, 1024x1536 portrait. Correct cute fivefingerhands/feet. Transparentbackground, nofloor/groundshadow/scenery; absolutelynotext/letters/numerals/logos/watermark. Onlyoneperson.",
+      "file_bytes": 176474,
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "retries": 0
+    },
+    {
+      "path": "art/cast/q/tester-idle.webp",
+      "batch": 2,
+      "kind": "cast",
+      "theme": "q",
+      "character": "tester",
+      "expression": "idle",
+      "target_size": [
+        1024,
+        1536
+      ],
+      "actual_size": [
+        1024,
+        1536
+      ],
+      "format": "webp",
+      "webp_quality": 90,
+      "generation_tool": "image_gen.imagegen",
+      "model": "imagegen built-in (underlying model not disclosed)",
+      "model_disclosed": false,
+      "transparent": true,
+      "background_status": "transparent",
+      "status": "complete",
+      "reference_paths": [
+        "/Users/a1234/.codex/generated_images/01a11b5e-2302-7e21-8d42-d409361c7d7b/exec-22ab23af-9baa-4acb-bcaa-baf7378ea0f0.png",
+        "/Users/a1234/Desktop/牛马工作室设计/art/cast/sakura/tester-idle.webp"
+      ],
+      "source_image_path": "/Users/a1234/.codex/generated_images/01a11b5e-2302-7e21-8d42-d409361c7d7b/exec-b6f45560-d2af-45aa-96a4-a013c7e571ef.png",
+      "generation_run": null,
+      "attempts": 1,
+      "qa_notes": [
+        "最终WebP白底整套复检：Q版头身、固定外貌、服装道具与完整手脚通过；无字、无地面阴影。"
+      ],
+      "qa_approved": true,
+      "background_requirement": "transparent preferred; pure white acceptable; no ground shadow",
+      "composition_requirement": "single character; frontal standing; full body; no cropped head/hands/feet; space above head",
+      "planned_reference_paths": [
+        "art/cast/sakura/tester-idle.webp",
+        "art/cast/q/shaniu-idle.webp"
+      ],
+      "prompt": "Use case: identity-preserve style-transfer. Image1 ONLY STYLE/PROPORTION ref is chibi shaniu; image2 ONLY FACE/HAIR/CLOTHES/PROPS IDENTITY ref is tester; IGNORE image2 adult body proportions. One original Japanese anime SUPERDEFORMED chibi young woman, blonde high ponytail, teal-green eyes, energetic. TRUE2.5HEADS: huge round head hair-to-chin ~40% of total figure height, tiny torso, very short rounded legs and arms. Match image1 cuteproportions brightcrisp celanime. deep teal officeblazer whiteshirt collarbow and dark pleated skirt blankchestbadge socks/shoes. baseball cap on head, holds a magnifying glass. Fullbody frontal upright centered, fullhead/hands/feet visible with ample margins, 1024x1536 portrait. Correct cute fivefingerhands/feet. Transparentbackground, nofloor/groundshadow/scenery; absolutelynotext/letters/numerals/logos/watermark. Onlyoneperson.",
+      "file_bytes": 230224,
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "retries": 0
+    },
+    {
+      "path": "art/cast/q/debugger-idle.webp",
+      "batch": 2,
+      "kind": "cast",
+      "theme": "q",
+      "character": "debugger",
+      "expression": "idle",
+      "target_size": [
+        1024,
+        1536
+      ],
+      "actual_size": [
+        1024,
+        1536
+      ],
+      "format": "webp",
+      "webp_quality": 90,
+      "generation_tool": "image_gen.imagegen",
+      "model": "imagegen built-in (underlying model not disclosed)",
+      "model_disclosed": false,
+      "transparent": true,
+      "background_status": "transparent",
+      "status": "complete",
+      "reference_paths": [
+        "/Users/a1234/.codex/generated_images/01a11b5e-2302-7e21-8d42-d409361c7d7b/exec-22ab23af-9baa-4acb-bcaa-baf7378ea0f0.png",
+        "/Users/a1234/Desktop/牛马工作室设计/art/cast/sakura/debugger-idle.webp"
+      ],
+      "source_image_path": "/Users/a1234/.codex/generated_images/01a11b5e-2302-7e21-8d42-d409361c7d7b/exec-ed716f6c-25e9-4b41-8934-642ced51618c.png",
+      "generation_run": null,
+      "attempts": 1,
+      "qa_notes": [
+        "最终WebP白底整套复检：Q版头身、固定外貌、服装道具与完整手脚通过；无字、无地面阴影。"
+      ],
+      "qa_approved": true,
+      "background_requirement": "transparent preferred; pure white acceptable; no ground shadow",
+      "composition_requirement": "single character; frontal standing; full body; no cropped head/hands/feet; space above head",
+      "planned_reference_paths": [
+        "art/cast/sakura/debugger-idle.webp",
+        "art/cast/q/shaniu-idle.webp"
+      ],
+      "prompt": "Use case: identity-preserve style-transfer. Image1 ONLY STYLE/PROPORTION ref is chibi shaniu; image2 ONLY FACE/HAIR/CLOTHES/PROPS IDENTITY ref is debugger; IGNORE image2 adult body proportions. One original Japanese anime SUPERDEFORMED chibi young man, teal spiky short hair, orange eyes, red headband tied across forehead, determined. TRUE2.5HEADS: huge round head hair-to-chin ~40% of total figure height, tiny torso, very short rounded legs and arms. Match image1 cuteproportions brightcrisp celanime. deep teal officeblazer whiteshirt tie and dark suit trousers blankchestbadge socks/shoes. holds a wrench. Fullbody frontal upright centered, fullhead/hands/feet visible with ample margins, 1024x1536 portrait. Correct cute fivefingerhands/feet. Transparentbackground, nofloor/groundshadow/scenery; absolutelynotext/letters/numerals/logos/watermark. Onlyoneperson.",
+      "file_bytes": 207280,
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "retries": 0
+    },
+    {
+      "path": "art/cast/q/writer-idle.webp",
+      "batch": 2,
+      "kind": "cast",
+      "theme": "q",
+      "character": "writer",
+      "expression": "idle",
+      "target_size": [
+        1024,
+        1536
+      ],
+      "actual_size": [
+        1024,
+        1536
+      ],
+      "format": "webp",
+      "webp_quality": 90,
+      "generation_tool": "image_gen.imagegen",
+      "model": "imagegen built-in (underlying model not disclosed)",
+      "model_disclosed": false,
+      "transparent": true,
+      "background_status": "transparent",
+      "status": "complete",
+      "reference_paths": [
+        "/Users/a1234/.codex/generated_images/01a11b5e-2302-7e21-8d42-d409361c7d7b/exec-22ab23af-9baa-4acb-bcaa-baf7378ea0f0.png",
+        "/Users/a1234/Desktop/牛马工作室设计/art/cast/sakura/writer-idle.webp"
+      ],
+      "source_image_path": "/Users/a1234/.codex/generated_images/01a11b5e-2302-7e21-8d42-d409361c7d7b/exec-9dfc9544-ade0-49f3-9306-6c08ef5b39cd.png",
+      "generation_run": null,
+      "attempts": 1,
+      "qa_notes": [
+        "最终WebP白底整套复检：Q版头身、固定外貌、服装道具与完整手脚通过；无字、无地面阴影。"
+      ],
+      "qa_approved": true,
+      "background_requirement": "transparent preferred; pure white acceptable; no ground shadow",
+      "composition_requirement": "single character; frontal standing; full body; no cropped head/hands/feet; space above head",
+      "planned_reference_paths": [
+        "art/cast/sakura/writer-idle.webp",
+        "art/cast/q/shaniu-idle.webp"
+      ],
+      "prompt": "Use case: identity-preserve style-transfer. Image1 ONLY STYLE/PROPORTION ref is chibi shaniu; image2 ONLY FACE/HAIR/CLOTHES/PROPS IDENTITY ref is writer; IGNORE image2 adult body proportions. One original Japanese anime SUPERDEFORMED chibi young woman, blue ear-length bob with a small top bun, pink eyes, gentle. TRUE2.5HEADS: huge round head hair-to-chin ~40% of total figure height, tiny torso, very short rounded legs and arms. Match image1 cuteproportions brightcrisp celanime. blue officeblazer whiteshirt collarbow and dark pleated skirt blankchestbadge socks/shoes. holds a blank notebook and fountain pen. Fullbody frontal upright centered, fullhead/hands/feet visible with ample margins, 1024x1536 portrait. Correct cute fivefingerhands/feet. Transparentbackground, nofloor/groundshadow/scenery; absolutelynotext/letters/numerals/logos/watermark. Onlyoneperson.",
+      "file_bytes": 188886,
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "retries": 0
+    },
+    {
+      "path": "art/cast/q/default-idle.webp",
+      "batch": 2,
+      "kind": "cast",
+      "theme": "q",
+      "character": "default",
+      "expression": "idle",
+      "target_size": [
+        1024,
+        1536
+      ],
+      "actual_size": [
+        1024,
+        1536
+      ],
+      "format": "webp",
+      "webp_quality": 90,
+      "generation_tool": "image_gen.imagegen",
+      "model": "imagegen built-in (underlying model not disclosed)",
+      "model_disclosed": false,
+      "transparent": true,
+      "background_status": "transparent",
+      "status": "complete",
+      "reference_paths": [
+        "/Users/a1234/.codex/generated_images/01a11b5e-2302-7e21-8d42-d409361c7d7b/exec-22ab23af-9baa-4acb-bcaa-baf7378ea0f0.png",
+        "/Users/a1234/Desktop/牛马工作室设计/art/cast/sakura/default-idle.webp"
+      ],
+      "source_image_path": "/Users/a1234/.codex/generated_images/01a11b5e-2302-7e21-8d42-d409361c7d7b/exec-7c85da5e-4fa3-4ed9-8137-ae4d347e1186.png",
+      "generation_run": null,
+      "attempts": 1,
+      "qa_notes": [
+        "最终WebP白底整套复检：Q版头身、固定外貌、服装道具与完整手脚通过；无字、无地面阴影。"
+      ],
+      "qa_approved": true,
+      "background_requirement": "transparent preferred; pure white acceptable; no ground shadow",
+      "composition_requirement": "single character; frontal standing; full body; no cropped head/hands/feet; space above head",
+      "planned_reference_paths": [
+        "art/cast/sakura/default-idle.webp",
+        "art/cast/q/shaniu-idle.webp"
+      ],
+      "prompt": "Use case: identity-preserve style-transfer. Image1 ONLY STYLE/PROPORTION ref is chibi shaniu; image2 ONLY FACE/HAIR/CLOTHES/PROPS IDENTITY ref is default; IGNORE image2 adult body proportions. One original Japanese anime SUPERDEFORMED chibi young woman, long straight blonde hair, blue eyes, friendly. TRUE2.5HEADS: huge round head hair-to-chin ~40% of total figure height, tiny torso, very short rounded legs and arms. Match image1 cuteproportions brightcrisp celanime. blue officeblazer whiteshirt collarbow and dark pleated skirt blankchestbadge socks/shoes. both arms relaxed naturally at sides. Fullbody frontal upright centered, fullhead/hands/feet visible with ample margins, 1024x1536 portrait. Correct cute fivefingerhands/feet. Transparentbackground, nofloor/groundshadow/scenery; absolutelynotext/letters/numerals/logos/watermark. Onlyoneperson.",
+      "file_bytes": 239996,
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "retries": 0
     }
   ],
-  "completed_asset_count": 18,
+  "completed_asset_count": 27,
   "updated_date": "2026-10-11"
 }
