@@ -13,7 +13,7 @@
     demo: ['帮我做一个待办清单 App', '/招人 数据库专家', '/工具', '/团队'],
   }
 
-  const state = { mode: 'live', roster: { groups: [], employees: [] }, agents: {}, tasks: [], messages: [], busy: false, round: 0, iteration: 0, workdir: '', meeting: null, lastCommit: null }
+  const state = { mode: 'live', roster: { groups: [], employees: [] }, agents: {}, tasks: [], messages: [], busy: false, round: 0, iteration: 0, workdir: '', meeting: null, lastCommit: null, update: null }
   const openTasks = new Set()
   const faces = new Map()
   let transport = null
@@ -551,6 +551,38 @@
     } else el.hidden = true
   }
 
+  // 有新版本：桌面版能自动更新的在后台下载，下好了点一下重启；不能的点一下下载安装包；命令行版点一下复制更新命令。
+  function renderUpdate() {
+    const el = $('#update')
+    const u = state.update
+    if (!el) return
+    el.hidden = !u
+    if (!u) return
+    el.dataset.state = u.state || ''
+    el.href = u.download || u.url
+    if (u.state === 'downloading') {
+      el.textContent = `正在下载 v${u.latest}${u.percent ? ` · ${u.percent}%` : ''}`
+      el.title = '下载好了傻妞会提醒，不用等着'
+    } else if (u.state === 'ready') {
+      el.textContent = `重启更新到 v${u.latest}`
+      el.title = '点一下重启，换成新版（项目、员工和设置都还在）'
+    } else {
+      el.textContent = `新版本 v${u.latest}`
+      el.title = u.download ? `现在用的是 v${u.current}，点一下下载安装包` : `现在用的是 v${u.current}，点一下复制更新命令`
+    }
+  }
+
+  async function installUpdate() {
+    const post = (force) => transport.request('POST', '/api/update/install', { force })
+    try {
+      let r = await post(false)
+      if (r.busy && confirm(`${r.error}。确定现在重启更新吗？`)) r = await post(true)
+      if (!r.ok && !r.busy) throw new Error(r.error)
+    } catch (e) {
+      handle({ type: 'message', message: { role: 'system', text: `没能重启更新：${e.message}`, ts: Date.now() } })
+    }
+  }
+
   // ---- events ----------------------------------------------------------------
 
   function upsertTask(task) {
@@ -577,6 +609,7 @@
         renderBusy()
         renderSuggest()
         renderBanner()
+        renderUpdate()
         // 一个员工都没到岗：直接把「接入员工」面板打开，点一下就能接。
         if (state.mode === 'live' && !setupPrompted && !state.roster?.groups?.some((g) => g.available)) {
           setupPrompted = true
@@ -653,6 +686,10 @@
       case 'setup':
         window.NiumaSetup?.event(ev)
         break
+      case 'update':
+        state.update = ev.update
+        renderUpdate()
+        break
     }
   }
 
@@ -725,6 +762,24 @@
   $('#stop').addEventListener('click', () => transport && transport.stop().catch(() => {}))
   const openSetup = () => window.NiumaSetup?.open({ request: transport?.request || null, fake: state.mode === 'fake' })
   $('#open-setup')?.addEventListener('click', openSetup)
+  $('#update')?.addEventListener('click', async (e) => {
+    const u = state.update
+    if (u?.state === 'downloading') return e.preventDefault()
+    if (u?.state === 'ready') {
+      e.preventDefault()
+      return installUpdate()
+    }
+    const cmd = u?.command
+    if (!cmd) return
+    e.preventDefault()
+    let copied = false
+    try {
+      await navigator.clipboard.writeText(cmd)
+      copied = true
+    } catch {}
+    const text = `${copied ? '已复制更新命令' : '更新命令'}：${cmd}　在终端里运行，然后重新启动 niuma 就是新版。更新了什么：${state.update.url}`
+    handle({ type: 'message', message: { role: 'system', text, ts: Date.now() } })
+  })
   $('#team').addEventListener('click', (e) => {
     if (e.target.closest('.add-staff')) openSetup()
   })

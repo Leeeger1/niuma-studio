@@ -17,6 +17,14 @@ export function firstLine(s, n = 80) {
   return truncate(line.replace(/\*\*|`/g, '').replace(/^[#>\s]+/, '').trim(), n)
 }
 
+/**
+ * 报错像不像「没登录 / 账号或 Key 不对」：这种错换谁来都一样，整个组得先回家。
+ * Claude Code：Not logged in · Please run /login；Codex：401 Unauthorized；API：接口报错 401。
+ */
+export function isLoginError(s) {
+  return /not logged in|please run \/login|codex login|invalid[ _-]?(x-)?api[ _-]?key|incorrect api key|authentication[_ ](error|failed)|oauth token (has )?(expired|been revoked)|\b401\b|unauthori[sz]ed/i.test(String(s ?? ''))
+}
+
 export function expandHome(p) {
   if (!p) return p
   return p === '~' || p.startsWith('~/') || p.startsWith('~\\') ? path.join(os.homedir(), p.slice(1)) : p

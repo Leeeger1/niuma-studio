@@ -1,7 +1,9 @@
 import fs from 'node:fs'
+import os from 'node:os'
+import path from 'node:path'
 import { CLAUDE_DENY, SAFE_COMMANDS } from '../config.js'
 import { describeMcpCall, splitMcpName } from '../tools.js'
-import { firstLine, spawnCmd, truncate } from '../util.js'
+import { extractJson, firstLine, spawnCmd, truncate } from '../util.js'
 import { BaseWorker, shortPath } from './base.js'
 
 function cleanCmd(cmd) {
@@ -182,11 +184,25 @@ class CliWorker extends BaseWorker {
   }
 
   async check() {
-    const r = await spawnCmd(this.command(), ['--version'], { cwd: this.workdir, env: this.env(), collect: true, timeoutMs: 20000 }).done
+    const r = await this.cli(['--version']).done
     this.available = r.code === 0
     this.version = this.available ? firstLine(r.stdout, 40) : ''
     this.note = this.available ? '' : `没找到 ${Array.isArray(this.command()) ? 'CLI' : this.command()} 命令`
+    // 装好了不等于能干活：没登录的话，一派活就是 "Not logged in"。
+    if (this.available && (await this.loggedIn().catch(() => null)) === false) {
+      this.available = false
+      this.note = '装好了，还没登录'
+    }
     return this.available
+  }
+
+  /** true / false；看不出来（老版本、走中转之类）就是 null，当作能用，真干活报错了再请回家。 */
+  async loggedIn() {
+    return null
+  }
+
+  cli(args, timeoutMs = 20000) {
+    return spawnCmd(this.command(), args, { cwd: this.workdir, env: this.env(), collect: true, timeoutMs })
   }
 
   async run({ prompt, model = '', readOnly = false, onActivity = () => {}, timeoutMs, label = 'task', tools = [] }) {
@@ -237,6 +253,22 @@ export class ClaudeCliWorker extends CliWorker {
     return args
   }
 
+  async loggedIn() {
+    // 自己配了 Key 或中转站（环境变量、settings.json），就不靠 auth status 判断了。
+    const env = { ...process.env, ...this.env() }
+    if (['ANTHROPIC_API_KEY', 'ANTHROPIC_AUTH_TOKEN', 'CLAUDE_CODE_OAUTH_TOKEN', 'CLAUDE_CODE_USE_BEDROCK', 'CLAUDE_CODE_USE_VERTEX'].some((k) => env[k])) return null
+    let settings = null
+    try {
+      settings = JSON.parse(fs.readFileSync(path.join(env.CLAUDE_CONFIG_DIR || path.join(os.homedir(), '.claude'), 'settings.json'), 'utf8'))
+    } catch {}
+    if (settings?.apiKeyHelper || settings?.env?.ANTHROPIC_API_KEY || settings?.env?.ANTHROPIC_AUTH_TOKEN) return null
+    // 老版本没有 auth 命令，会把 "auth" 当成一句话发给模型，所以先看帮助里有没有。
+    if (!/^\s+auth\b/m.test((await this.cli(['--help']).done).stdout)) return null
+    const r = await this.cli(['auth', 'status', '--json']).done
+    const o = extractJson(r.stdout) || extractJson(r.stderr)
+    return typeof o?.loggedIn === 'boolean' ? o.loggedIn : null
+  }
+
   modelArgs(model) {
     if (!model) return []
     // If the chosen model isn't available on this account (or is overloaded), Claude Code falls back.
@@ -282,6 +314,22 @@ export class ClaudeCliWorker extends CliWorker {
 }
 
 export class CodexCliWorker extends CliWorker {
+  async loggedIn() {
+    // 用 API Key 或者在 config.toml 里换了 model_provider（中转站）的，login status 不认，就不拦。
+    const env = { ...process.env, ...this.env() }
+    if (env.OPENAI_API_KEY || env.CODEX_API_KEY) return null
+    const home = env.CODEX_HOME || path.join(os.homedir(), '.codex')
+    let toml = ''
+    try {
+      toml = fs.readFileSync(path.join(home, 'config.toml'), 'utf8')
+    } catch {}
+    if (/^\s*model_provider\s*=/m.test(toml) || (this.cfg.extraArgs || []).some((a) => String(a).includes('model_provider'))) return null
+    const r = await this.cli(['login', 'status']).done
+    const out = `${r.stdout}\n${r.stderr}`
+    if (/logged in using/i.test(out)) return true
+    return /not logged in/i.test(out) ? false : null
+  }
+
   sandboxArgs(readOnly) {
     if (readOnly) return ['-s', 'read-only']
     const sandbox = this.cfg.sandbox || 'workspace-write'

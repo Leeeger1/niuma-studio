@@ -121,5 +121,8 @@
         "repo": "niuma-studio"
       }
     ]
+  },
+  "dependencies": {
+    "electron-updater": "6.8.10"
   }
 }

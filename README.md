@@ -51,6 +51,7 @@
 - 菜单「项目」：切换项目文件夹、最近的项目、**彩排模式**（替身员工演一遍，不花钱、不改文件）。
 - 菜单「皮肤」或页面右上角：换皮肤。
 - 关掉窗口会缩到托盘（macOS 在程序坞里），活不会停；要彻底退出用菜单「项目 → 退出」或托盘右键「退出」。
+- **自动更新**：每次打开和之后每隔 6 小时，傻妞会去 GitHub 看一眼有没有新版本。Windows 和 Linux 版会在后台把新版本下载好，页面右上角出现「重启更新」，点一下就换成新版；不点也行，下次退出时自动装上。macOS 版的安装包没有苹果签名，系统不让程序自己换自己，所以是右上角出现「新版本」按钮，点一下下载新的安装包。项目、员工和设置都会保留。也可以用菜单「帮助 → 检查更新」或者跟傻妞说 `/更新` 手动查。
 
 ### 接入员工：点一下就连上
 
@@ -105,7 +106,7 @@ node bin/niuma.js ~/code/my-project
 # Windows：node bin\niuma.js D:\code\my-project
 ```
 
-浏览器会自动打开 `http://localhost:7777`。克隆的方式想在任何目录直接敲 `niuma`，在仓库目录里运行一次 `npm link`。更新到最新版：再跑一遍 `npm install -g github:Leeeger1/niuma-studio`。
+浏览器会自动打开 `http://localhost:7777`。克隆的方式想在任何目录直接敲 `niuma`，在仓库目录里运行一次 `npm link`。更新到最新版：再跑一遍 `npm install -g github:Leeeger1/niuma-studio`（克隆的就 `git pull`）。有新版本时傻妞会在聊天里和终端里提醒，页面右上角的「新版本」按钮能复制更新命令；不想让她去查，在配置里写 `"updateCheck": false`。
 
 ## 公司架构
 
@@ -317,7 +318,7 @@ look: glasses
 
 **装了 Claude Code / Codex，可是不想让它们干活？** 在「接入员工」里给 Claude 组或 Codex 组点「放假」。比如用 CC Switch 之类的工具管着 Claude Code，命令一直能用，这两组就总是在岗，放假以后傻妞就不会再派活给它们，它们的岗位借调到别的组。想换模型就点「编辑」。也可以在 `~/.niuma/config.json` 里写 `"groups": [{ "id": "claude", "enabled": false }]`。
 
-**项目组显示「未到岗」**：命令行组要能在终端里直接运行 `claude --version` / `codex --version`；装在别处就在组配置里写 `"command": "完整路径"`。API 组看提示：没配 Key、Key 被拒绝、或者连不上地址。
+**项目组显示「未到岗」**：命令行组要能在终端里直接运行 `claude --version` / `codex --version`；装在别处就在组配置里写 `"command": "完整路径"`。显示「装好了，还没登录」或「还没登录」的，在「接入员工」里点「登录」，登好点「重新检查」就回来上班；没登录的组不会拖后腿，傻妞会用别的组动脑子、把活派给别的组。API 组看提示：没配 Key、Key 被拒绝、或者连不上地址。
 
 **Opus 用不了怎么办？** Claude 组调用时会带上 `--fallback-model sonnet`，Opus 不可用或过载时自动退回 Sonnet。也可以直接改 `models`。
 
