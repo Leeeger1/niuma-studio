@@ -57,7 +57,7 @@
     "base_commit": "e65899afb16459eb36832f13037395997bf3466e",
     "preserves_existing_assets": true,
     "previous_asset_count": 27,
-    "included_asset_count": 54
+    "included_asset_count": 63
   },
   "global_qa": [
     "日系动漫、干净线稿、赛璐璐、明亮色彩，角色/场景/道具画风一致",
@@ -2894,8 +2894,502 @@
         254
       ],
       "retries": 0
+    },
+    {
+      "path": "art/cast/neon/shaniu-idle.webp",
+      "batch": 2,
+      "kind": "cast",
+      "theme": "neon",
+      "character": "shaniu",
+      "expression": "idle",
+      "target_size": [
+        1024,
+        1536
+      ],
+      "actual_size": [
+        1024,
+        1536
+      ],
+      "format": "webp",
+      "webp_quality": 90,
+      "generation_tool": "image_gen.imagegen",
+      "model": "imagegen built-in (underlying model not disclosed)",
+      "model_disclosed": false,
+      "transparent": true,
+      "background_status": "transparent",
+      "status": "complete",
+      "reference_paths": [
+        "/Users/a1234/Desktop/牛马工作室设计/art/cast/sakura/shaniu-idle.webp"
+      ],
+      "source_image_path": "/Users/a1234/.codex/generated_images/01a11b61-02dd-7d92-acbc-373049ddb4c0/exec-114e2706-70ab-468b-a71d-8305c447cfc0.png",
+      "generation_run": null,
+      "attempts": 1,
+      "qa_notes": [
+        "Same black long straight hair/pink eyes/robot antennae identity retained; pink-black cyber girl outfit and short boots, blue glowing antenna tips, holographic tablet and neon rim lights approved.",
+        "Fullbody composition, hands/fingers/feet and no writing/logos approved.",
+        "Final WebP white-background composite QA passed: coherent style/identity/props, complete head-to-boot figure, no floor/shadow/text."
+      ],
+      "qa_approved": true,
+      "background_requirement": "transparent preferred; pure white acceptable; no ground shadow",
+      "composition_requirement": "single character; frontal standing; full body; no cropped head/hands/feet; space above head",
+      "planned_reference_paths": [
+        "art/cast/sakura/shaniu-idle.webp"
+      ],
+      "prompt": "Use case: stylized-concept / identity-preserve. Asset: NEON-theme Shaniu idle, ONE fullbody original Japanese cyberpunk anime girl, portrait1024x1536. Reference image1 is Shaniu's exact IDENTITY and polished anime style: keep identical youthful face, long straight BLACK hair, PINK eyes, facial proportions, pink headband and TWO small ROBOT ANTENNAE at the sides of her head. Change outfit to cute PINK-and-BLACK cyber girl clothing: black technical fashion jacket and fitted layers with bright pink luminous seam lines, pink-black skirt, opaque legwear, black SHORT ANKLE BOOTS with pink light details, luminous accessories. Her two robot antenna tips emit a restrained BLUE glow. Holding a HOLOGRAPHIC TABLET, naturally correct hands supporting a translucent light-blue and pink rectangular projected panel displaying only abstract shapes without writing. Energetic cheerful smile in relaxed standing idle pose. Style: polished clean sharp anime outlines, crisp CEL SHADING, bright colors, restrained pink and cyan NEON RIM LIGHT along silhouette edges, high-quality Japanese mobile-game / visual-novel illustration matching reference. Full person from antenna tips to both boot soles wholly visible, frontal pose facing viewer, centered, extra breathing room above antennae and beneath boots, no cropping. Genuine transparent-alpha isolated cutout, clean empty background without environmental haze, glow cloud, ambient backdrop, floor, ground shadow or cast shadow. No text, letters, digits, watermark, logo or extra people. Anatomically correct hands, fingers and feet.",
+      "unsatisfactory": false,
+      "native_size": [
+        1024,
+        1536
+      ],
+      "normalization": "aspect-preserving fit and transparent padding, WebP quality90",
+      "file_bytes": 218826,
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "retries": 0
+    },
+    {
+      "path": "art/cast/neon/architect-idle.webp",
+      "batch": 2,
+      "kind": "cast",
+      "theme": "neon",
+      "character": "architect",
+      "expression": "idle",
+      "target_size": [
+        1024,
+        1536
+      ],
+      "actual_size": [
+        1024,
+        1536
+      ],
+      "format": "webp",
+      "webp_quality": 90,
+      "generation_tool": "image_gen.imagegen",
+      "model": "imagegen built-in (underlying model not disclosed)",
+      "model_disclosed": false,
+      "transparent": true,
+      "background_status": "transparent",
+      "status": "complete",
+      "reference_paths": [
+        "/Users/a1234/.codex/generated_images/01a11b61-02dd-7d92-acbc-373049ddb4c0/exec-114e2706-70ab-468b-a71d-8305c447cfc0.png",
+        "/Users/a1234/Desktop/牛马工作室设计/art/cast/sakura/architect-idle.webp"
+      ],
+      "source_image_path": "/Users/a1234/.codex/generated_images/01a11b61-02dd-7d92-acbc-373049ddb4c0/exec-97a8d2be-7f84-44ac-ac63-af893db1388e.png",
+      "generation_run": null,
+      "attempts": 1,
+      "qa_notes": [
+        "Brown short hair/brown eyes identity, black technical jacket with orange glowing lines and short boots, geometric holographic blueprint above palm; fullbody and hands/feet approved.",
+        "Final WebP white-background composite QA passed: coherent style/identity/props, complete head-to-boot figure, no floor/shadow/text."
+      ],
+      "qa_approved": true,
+      "background_requirement": "transparent preferred; pure white acceptable; no ground shadow",
+      "composition_requirement": "single character; frontal standing; full body; no cropped head/hands/feet; space above head",
+      "planned_reference_paths": [
+        "art/cast/sakura/architect-idle.webp",
+        "art/cast/neon/shaniu-idle.webp"
+      ],
+      "prompt": "Use case: stylized-concept / identity-preserve. Asset: ONE fullbody standing original Japanese cyberpunk anime crew member idle sprite, portrait1024x1536. Reference image1 is STYLE reference (approved neon Shaniu): match her clean precise anime outlines, polished CEL SHADING, bright luminous accents, restrained neon RIM LIGHT along silhouette and high-quality visual-novel illustration. Reference image2 is SAME CHARACTER IDENTITY: preserve same youthful face, hair shape/color and eye color; change outfit and prop only. Outfit: BLACK TECHNICAL FASHION COAT/JACKET with character-theme colored GLOWING SEAM LINES, black technical lower clothing, SHORT ANKLE BOOTS, small luminous accessories. Keep black dominant with themed accents. No office uniform, no hats. Subject: confident teenage BOY, neat short BROWN hair and BROWN eyes, same as identity reference with hardhat removed. Theme color ORANGE luminous seam lines and accessories. Above his naturally open palm floats a translucent cyan/ORANGE HOLOGRAPHIC BLUEPRINT, a rectangular projection depicting clean abstract architectural plan lines and geometric structures, no labels. Other hand near coat pocket. Friendly confident smile. Single person entire head and both boot soles fully visible, frontal orientation facing viewer, centered, relaxed standing idle pose, breathing room above head and beneath feet; no cropping. Correct human hands/fingers/feet. Genuine transparent-alpha isolated cutout with clean empty negative space, no environmental backdrop or haze, no floor, ground shadow or cast shadow. No letters, words, digits, text, watermark or logo anywhere, including clothing, devices and holograms. Abstract geometric markings only where requested, never written symbols. One character only.",
+      "unsatisfactory": false,
+      "native_size": [
+        1024,
+        1536
+      ],
+      "normalization": "aspect-preserving fit and transparent padding, WebP quality90",
+      "file_bytes": 222054,
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "retries": 0
+    },
+    {
+      "path": "art/cast/neon/frontend-idle.webp",
+      "batch": 2,
+      "kind": "cast",
+      "theme": "neon",
+      "character": "frontend",
+      "expression": "idle",
+      "target_size": [
+        1024,
+        1536
+      ],
+      "actual_size": [
+        1024,
+        1536
+      ],
+      "format": "webp",
+      "webp_quality": 90,
+      "generation_tool": "image_gen.imagegen",
+      "model": "imagegen built-in (underlying model not disclosed)",
+      "model_disclosed": false,
+      "transparent": true,
+      "background_status": "transparent",
+      "status": "complete",
+      "reference_paths": [
+        "/Users/a1234/.codex/generated_images/01a11b61-02dd-7d92-acbc-373049ddb4c0/exec-114e2706-70ab-468b-a71d-8305c447cfc0.png",
+        "/Users/a1234/Desktop/牛马工作室设计/art/cast/sakura/frontend-idle.webp"
+      ],
+      "source_image_path": "/Users/a1234/.codex/generated_images/01a11b61-02dd-7d92-acbc-373049ddb4c0/exec-bbc0cdd6-0d89-4d5e-b59c-90e145b2f3e9.png",
+      "generation_run": null,
+      "attempts": 1,
+      "qa_notes": [
+        "Brown twin ponytail/blue eyes identity, black technical jacket with orange glowing lines and short boots, single glowing digital pen; fullbody and hands/feet approved.",
+        "Final WebP white-background composite QA passed: coherent style/identity/props, complete head-to-boot figure, no floor/shadow/text."
+      ],
+      "qa_approved": true,
+      "background_requirement": "transparent preferred; pure white acceptable; no ground shadow",
+      "composition_requirement": "single character; frontal standing; full body; no cropped head/hands/feet; space above head",
+      "planned_reference_paths": [
+        "art/cast/sakura/frontend-idle.webp",
+        "art/cast/neon/shaniu-idle.webp"
+      ],
+      "prompt": "Use case: stylized-concept / identity-preserve. Asset: ONE fullbody standing original Japanese cyberpunk anime crew member idle sprite, portrait1024x1536. Reference image1 is STYLE reference (approved neon Shaniu): match her clean precise anime outlines, polished CEL SHADING, bright luminous accents, restrained neon RIM LIGHT along silhouette and high-quality visual-novel illustration. Reference image2 is SAME CHARACTER IDENTITY: preserve same youthful face, hair shape/color and eye color; change outfit and prop only. Outfit: BLACK TECHNICAL FASHION COAT/JACKET with character-theme colored GLOWING SEAM LINES, black technical lower clothing, SHORT ANKLE BOOTS, small luminous accessories. Keep black dominant with themed accents. No office uniform, no hats. Subject: lively teenage GIRL, BROWN TWIN PONYTAILS and BLUE eyes, same as identity reference with beret removed. Theme color ORANGE luminous seam lines and accessories. Holding ONE GLOWING DIGITAL STYLUS PEN in a natural elegant grip, pen tip glows orange/cyan, no tablet or other device. Other hand relaxed by side. Bright playful smile. Single person entire head and both boot soles fully visible, frontal orientation facing viewer, centered, relaxed standing idle pose, breathing room above head and beneath feet; no cropping. Correct human hands/fingers/feet. Genuine transparent-alpha isolated cutout with clean empty negative space, no environmental backdrop or haze, no floor, ground shadow or cast shadow. No letters, words, digits, text, watermark or logo anywhere, including clothing, devices and holograms. Abstract geometric markings only where requested, never written symbols. One character only.",
+      "unsatisfactory": false,
+      "native_size": [
+        1024,
+        1536
+      ],
+      "normalization": "aspect-preserving fit and transparent padding, WebP quality90",
+      "file_bytes": 238512,
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "retries": 0
+    },
+    {
+      "path": "art/cast/neon/reviewer-idle.webp",
+      "batch": 2,
+      "kind": "cast",
+      "theme": "neon",
+      "character": "reviewer",
+      "expression": "idle",
+      "target_size": [
+        1024,
+        1536
+      ],
+      "actual_size": [
+        1024,
+        1536
+      ],
+      "format": "webp",
+      "webp_quality": 90,
+      "generation_tool": "image_gen.imagegen",
+      "model": "imagegen built-in (underlying model not disclosed)",
+      "model_disclosed": false,
+      "transparent": true,
+      "background_status": "transparent",
+      "status": "complete",
+      "reference_paths": [
+        "/Users/a1234/.codex/generated_images/01a11b61-02dd-7d92-acbc-373049ddb4c0/exec-114e2706-70ab-468b-a71d-8305c447cfc0.png",
+        "/Users/a1234/Desktop/牛马工作室设计/art/cast/sakura/reviewer-idle.webp"
+      ],
+      "source_image_path": "/Users/a1234/.codex/generated_images/01a11b61-02dd-7d92-acbc-373049ddb4c0/exec-8fd13dcb-3d44-4a82-a15e-1276dac035de.png",
+      "generation_run": null,
+      "attempts": 1,
+      "qa_notes": [
+        "Black side-banged short hair and blue eyes retained; glasses replaced by requested glowing data lenses; black coat/orange luminous seams/short boots and holographic panel correct; fullbody/hands/feet approved.",
+        "Final WebP white-background composite QA passed: coherent style/identity/props, complete head-to-boot figure, no floor/shadow/text."
+      ],
+      "qa_approved": true,
+      "background_requirement": "transparent preferred; pure white acceptable; no ground shadow",
+      "composition_requirement": "single character; frontal standing; full body; no cropped head/hands/feet; space above head",
+      "planned_reference_paths": [
+        "art/cast/sakura/reviewer-idle.webp",
+        "art/cast/neon/shaniu-idle.webp"
+      ],
+      "prompt": "Use case: stylized-concept / identity-preserve. Asset: ONE fullbody standing original Japanese cyberpunk anime crew member idle sprite, portrait1024x1536. Reference image1 is STYLE reference (approved neon Shaniu): match her clean precise anime outlines, polished CEL SHADING, bright luminous accents, restrained neon RIM LIGHT along silhouette and high-quality visual-novel illustration. Reference image2 is SAME CHARACTER IDENTITY: preserve same youthful face, hair shape/color and eye color; change outfit and prop only. Outfit: BLACK TECHNICAL FASHION COAT/JACKET with character-theme colored GLOWING SEAM LINES, black technical lower clothing, SHORT ANKLE BOOTS, small luminous accessories. Keep black dominant with themed accents. No office uniform, no hats. Subject: calm serious teenage BOY, short BLACK hair with swept SIDE BANGS, BLUE eyes, same as identity reference. His thin-framed glasses are replaced with glowing CYAN DATA LENSES in the same position: translucent luminous eyeglass lenses through which both blue eyes remain clearly visible, no writing on lenses. Theme color ORANGE luminous seam lines and accessories. Holding one floating HOLOGRAPHIC PANEL in natural hands, translucent rectangular projection with abstract geometric grid and shapes, no labels. Composed thoughtful neutral expression. Single person entire head and both boot soles fully visible, frontal orientation facing viewer, centered, relaxed standing idle pose, breathing room above head and beneath feet; no cropping. Correct human hands/fingers/feet. Genuine transparent-alpha isolated cutout with clean empty negative space, no environmental backdrop or haze, no floor, ground shadow or cast shadow. No letters, words, digits, text, watermark or logo anywhere, including clothing, devices and holograms. Abstract geometric markings only where requested, never written symbols. One character only.",
+      "unsatisfactory": false,
+      "native_size": [
+        1024,
+        1536
+      ],
+      "normalization": "aspect-preserving fit and transparent padding, WebP quality90",
+      "file_bytes": 200576,
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "retries": 0
+    },
+    {
+      "path": "art/cast/neon/backend-idle.webp",
+      "batch": 2,
+      "kind": "cast",
+      "theme": "neon",
+      "character": "backend",
+      "expression": "idle",
+      "target_size": [
+        1024,
+        1536
+      ],
+      "actual_size": [
+        1024,
+        1536
+      ],
+      "format": "webp",
+      "webp_quality": 90,
+      "generation_tool": "image_gen.imagegen",
+      "model": "imagegen built-in (underlying model not disclosed)",
+      "model_disclosed": false,
+      "transparent": true,
+      "background_status": "transparent",
+      "status": "complete",
+      "reference_paths": [
+        "/Users/a1234/.codex/generated_images/01a11b61-02dd-7d92-acbc-373049ddb4c0/exec-114e2706-70ab-468b-a71d-8305c447cfc0.png",
+        "/Users/a1234/Desktop/牛马工作室设计/art/cast/sakura/backend-idle.webp"
+      ],
+      "source_image_path": "/Users/a1234/.codex/generated_images/01a11b61-02dd-7d92-acbc-373049ddb4c0/exec-71645432-6bc1-471f-bb6e-31dd9cebf9e4.png",
+      "generation_run": null,
+      "attempts": 1,
+      "qa_notes": [
+        "Light-pink ear-length bob/purple eyes/headphones identity retained; black technicalwear with teal luminous seams and short boots, single glowing laptop correct; fullbody/hands/feet approved.",
+        "Final WebP white-background composite QA passed: coherent style/identity/props, complete head-to-boot figure, no floor/shadow/text."
+      ],
+      "qa_approved": true,
+      "background_requirement": "transparent preferred; pure white acceptable; no ground shadow",
+      "composition_requirement": "single character; frontal standing; full body; no cropped head/hands/feet; space above head",
+      "planned_reference_paths": [
+        "art/cast/sakura/backend-idle.webp",
+        "art/cast/neon/shaniu-idle.webp"
+      ],
+      "prompt": "Use case: stylized-concept / identity-preserve. Asset: ONE fullbody standing original Japanese cyberpunk anime crew member idle sprite, portrait1024x1536. Reference image1 is STYLE reference (approved neon Shaniu): match her clean precise anime outlines, polished CEL SHADING, bright luminous accents, restrained neon RIM LIGHT along silhouette and high-quality visual-novel illustration. Reference image2 is SAME CHARACTER IDENTITY: preserve same youthful face, hair shape/color and eye color; change outfit and prop only. Outfit: BLACK TECHNICAL FASHION COAT/JACKET with character-theme colored GLOWING SEAM LINES, black technical lower clothing, SHORT ANKLE BOOTS, small luminous accessories. Keep black dominant with themed accents. No office uniform, no hats. Subject: focused teenage GIRL, LIGHT PINK EAR-LENGTH BOB hair and PURPLE eyes, same as identity reference. KEEP her over-ear HEADPHONES, with restrained teal luminous details. Theme color DARK TEAL GREEN luminous seam lines and accessories. Holding exactly ONE softly GLOWING LAPTOP computer, open and supported naturally with both hands, black laptop casing with teal luminous trim, screen displaying only abstract geometric shapes without writing. Focused gentle neutral smile. Single person entire head and both boot soles fully visible, frontal orientation facing viewer, centered, relaxed standing idle pose, breathing room above head and beneath feet; no cropping. Correct human hands/fingers/feet. Genuine transparent-alpha isolated cutout with clean empty negative space, no environmental backdrop or haze, no floor, ground shadow or cast shadow. No letters, words, digits, text, watermark or logo anywhere, including clothing, devices and holograms. Abstract geometric markings only where requested, never written symbols. One character only.",
+      "unsatisfactory": false,
+      "native_size": [
+        1024,
+        1536
+      ],
+      "normalization": "aspect-preserving fit and transparent padding, WebP quality90",
+      "file_bytes": 157740,
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "retries": 0
+    },
+    {
+      "path": "art/cast/neon/tester-idle.webp",
+      "batch": 2,
+      "kind": "cast",
+      "theme": "neon",
+      "character": "tester",
+      "expression": "idle",
+      "target_size": [
+        1024,
+        1536
+      ],
+      "actual_size": [
+        1024,
+        1536
+      ],
+      "format": "webp",
+      "webp_quality": 90,
+      "generation_tool": "image_gen.imagegen",
+      "model": "imagegen built-in (underlying model not disclosed)",
+      "model_disclosed": false,
+      "transparent": true,
+      "background_status": "transparent",
+      "status": "complete",
+      "reference_paths": [
+        "/Users/a1234/.codex/generated_images/01a11b61-02dd-7d92-acbc-373049ddb4c0/exec-114e2706-70ab-468b-a71d-8305c447cfc0.png",
+        "/Users/a1234/Desktop/牛马工作室设计/art/cast/sakura/tester-idle.webp"
+      ],
+      "source_image_path": "/Users/a1234/.codex/generated_images/01a11b61-02dd-7d92-acbc-373049ddb4c0/exec-8e643c23-fc48-4569-81e9-d7802d602999.png",
+      "generation_run": null,
+      "attempts": 1,
+      "qa_notes": [
+        "Golden high ponytail/teal-green eyes identity; black technical jacket with teal glow and short boots, scanner gun correct; screen close-up has no discernible lettering/digits. Fullbody and hands/feet approved.",
+        "Final WebP white-background composite QA passed: coherent style/identity/props, complete head-to-boot figure, no floor/shadow/text."
+      ],
+      "qa_approved": true,
+      "background_requirement": "transparent preferred; pure white acceptable; no ground shadow",
+      "composition_requirement": "single character; frontal standing; full body; no cropped head/hands/feet; space above head",
+      "planned_reference_paths": [
+        "art/cast/sakura/tester-idle.webp",
+        "art/cast/neon/shaniu-idle.webp"
+      ],
+      "prompt": "Use case: stylized-concept / identity-preserve. Asset: ONE fullbody standing original Japanese cyberpunk anime crew member idle sprite, portrait1024x1536. Reference image1 is STYLE reference (approved neon Shaniu): match her clean precise anime outlines, polished CEL SHADING, bright luminous accents, restrained neon RIM LIGHT along silhouette and high-quality visual-novel illustration. Reference image2 is SAME CHARACTER IDENTITY: preserve same youthful face, hair shape/color and eye color; change outfit and prop only. Outfit: BLACK TECHNICAL FASHION COAT/JACKET with character-theme colored GLOWING SEAM LINES, black technical lower clothing, SHORT ANKLE BOOTS, small luminous accessories. Keep black dominant with themed accents. No office uniform, no hats. Subject: energetic teenage GIRL, GOLDEN BLONDE HIGH PONYTAIL and TEAL GREEN eyes, same as identity reference with cap removed. Theme color DARK TEAL GREEN luminous seam lines and accessories. Holding exactly ONE SCANNER GUN in an anatomically natural hand grip: compact futuristic black/teal scanner shaped like a small scanning pistol with glowing sensor tip and blank small screen, clearly a scanner not a weapon. Other hand relaxed. Lively cheerful smile. Single person entire head and both boot soles fully visible, frontal orientation facing viewer, centered, relaxed standing idle pose, breathing room above head and beneath feet; no cropping. Correct human hands/fingers/feet. Genuine transparent-alpha isolated cutout with clean empty negative space, no environmental backdrop or haze, no floor, ground shadow or cast shadow. No letters, words, digits, text, watermark or logo anywhere, including clothing, devices and holograms. Abstract geometric markings only where requested, never written symbols. One character only.",
+      "unsatisfactory": false,
+      "native_size": [
+        1024,
+        1536
+      ],
+      "normalization": "aspect-preserving fit and transparent padding, WebP quality90",
+      "file_bytes": 190596,
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "retries": 0
+    },
+    {
+      "path": "art/cast/neon/debugger-idle.webp",
+      "batch": 2,
+      "kind": "cast",
+      "theme": "neon",
+      "character": "debugger",
+      "expression": "idle",
+      "target_size": [
+        1024,
+        1536
+      ],
+      "actual_size": [
+        1024,
+        1536
+      ],
+      "format": "webp",
+      "webp_quality": 90,
+      "generation_tool": "image_gen.imagegen",
+      "model": "imagegen built-in (underlying model not disclosed)",
+      "model_disclosed": false,
+      "transparent": true,
+      "background_status": "transparent",
+      "status": "complete",
+      "reference_paths": [
+        "/Users/a1234/.codex/generated_images/01a11b61-02dd-7d92-acbc-373049ddb4c0/exec-114e2706-70ab-468b-a71d-8305c447cfc0.png",
+        "/Users/a1234/Desktop/牛马工作室设计/art/cast/sakura/debugger-idle.webp"
+      ],
+      "source_image_path": "/Users/a1234/.codex/generated_images/01a11b61-02dd-7d92-acbc-373049ddb4c0/exec-6069073d-a946-4267-895d-905d3a324342.png",
+      "generation_run": null,
+      "attempts": 1,
+      "qa_notes": [
+        "Teal spiky hair/orange eyes/red forehead headband retained; black technical jacket with teal glow and short boots, glowing wrench correct; pocket hardware close-up contains no legible text. Fullbody and hands/feet approved.",
+        "Final WebP white-background composite QA passed: coherent style/identity/props, complete head-to-boot figure, no floor/shadow/text."
+      ],
+      "qa_approved": true,
+      "background_requirement": "transparent preferred; pure white acceptable; no ground shadow",
+      "composition_requirement": "single character; frontal standing; full body; no cropped head/hands/feet; space above head",
+      "planned_reference_paths": [
+        "art/cast/sakura/debugger-idle.webp",
+        "art/cast/neon/shaniu-idle.webp"
+      ],
+      "prompt": "Use case: stylized-concept / identity-preserve. Asset: ONE fullbody standing original Japanese cyberpunk anime crew member idle sprite, portrait1024x1536. Reference image1 is STYLE reference (approved neon Shaniu): match her clean precise anime outlines, polished CEL SHADING, bright luminous accents, restrained neon RIM LIGHT along silhouette and high-quality visual-novel illustration. Reference image2 is SAME CHARACTER IDENTITY: preserve same youthful face, hair shape/color and eye color; change outfit and prop only. Outfit: BLACK TECHNICAL FASHION COAT/JACKET with character-theme colored GLOWING SEAM LINES, black technical lower clothing, SHORT ANKLE BOOTS, small luminous accessories. Keep black dominant with themed accents. No office uniform, no hats. Subject: determined teenage BOY, TEAL GREEN SPIKY hedgehog hair and ORANGE eyes, same as identity reference. KEEP RED FOREHEAD HEADBAND with tied tail ends visible. Theme color DARK TEAL GREEN luminous seam lines and accessories. Holding exactly ONE GLOWING WRENCH in an anatomically natural grip, recognizable silver-black open-ended wrench with teal glowing details. Other hand relaxed. Steadfast friendly confident expression. Single person entire head and both boot soles fully visible, frontal orientation facing viewer, centered, relaxed standing idle pose, breathing room above head and beneath feet; no cropping. Correct human hands/fingers/feet. Genuine transparent-alpha isolated cutout with clean empty negative space, no environmental backdrop or haze, no floor, ground shadow or cast shadow. No letters, words, digits, text, watermark or logo anywhere, including clothing, devices and holograms. Abstract geometric markings only where requested, never written symbols. One character only.",
+      "unsatisfactory": false,
+      "native_size": [
+        1024,
+        1536
+      ],
+      "normalization": "aspect-preserving fit and transparent padding, WebP quality90",
+      "file_bytes": 186190,
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "retries": 0
+    },
+    {
+      "path": "art/cast/neon/writer-idle.webp",
+      "batch": 2,
+      "kind": "cast",
+      "theme": "neon",
+      "character": "writer",
+      "expression": "idle",
+      "target_size": [
+        1024,
+        1536
+      ],
+      "actual_size": [
+        1024,
+        1536
+      ],
+      "format": "webp",
+      "webp_quality": 90,
+      "generation_tool": "image_gen.imagegen",
+      "model": "imagegen built-in (underlying model not disclosed)",
+      "model_disclosed": false,
+      "transparent": true,
+      "background_status": "transparent",
+      "status": "complete",
+      "reference_paths": [
+        "/Users/a1234/.codex/generated_images/01a11b61-02dd-7d92-acbc-373049ddb4c0/exec-114e2706-70ab-468b-a71d-8305c447cfc0.png",
+        "/Users/a1234/Desktop/牛马工作室设计/art/cast/sakura/writer-idle.webp"
+      ],
+      "source_image_path": "/Users/a1234/.codex/generated_images/01a11b61-02dd-7d92-acbc-373049ddb4c0/exec-269f5d09-3d35-47d5-bfb0-db79c6094755.png",
+      "generation_run": null,
+      "attempts": 1,
+      "qa_notes": [
+        "Blue ear-length bob/top bun/pink eyes identity retained; black technicalwear with blue luminous seams and short boots; compact electronic reader has blank dark screen. Gentle expression, fullbody, hands/feet approved.",
+        "Final WebP white-background composite QA passed: coherent style/identity/props, complete head-to-boot figure, no floor/shadow/text."
+      ],
+      "qa_approved": true,
+      "background_requirement": "transparent preferred; pure white acceptable; no ground shadow",
+      "composition_requirement": "single character; frontal standing; full body; no cropped head/hands/feet; space above head",
+      "planned_reference_paths": [
+        "art/cast/sakura/writer-idle.webp",
+        "art/cast/neon/shaniu-idle.webp"
+      ],
+      "prompt": "Use case: stylized-concept / identity-preserve. Asset: ONE fullbody standing original Japanese cyberpunk anime crew member idle sprite, portrait1024x1536. Reference image1 is STYLE reference (approved neon Shaniu): match her clean precise anime outlines, polished CEL SHADING, bright luminous accents, restrained neon RIM LIGHT along silhouette and high-quality visual-novel illustration. Reference image2 is SAME CHARACTER IDENTITY: preserve same youthful face, hair shape/color and eye color; change outfit and prop only. Outfit: BLACK TECHNICAL FASHION COAT/JACKET with character-theme colored GLOWING SEAM LINES, black technical lower clothing, SHORT ANKLE BOOTS, small luminous accessories. Keep black dominant with themed accents. No office uniform, no hats. Subject: gentle teenage GIRL, BLUE EAR-LENGTH BOB with SMALL TOP BUN on crown and PINK eyes, same as identity reference. Theme color BLUE luminous seam lines and accessories. Holding exactly ONE ELECTRONIC E-BOOK READER with natural correct hands: compact black rectangular reader with dark neutral blank screen and subtle blue luminous trim, no written content, no book pages or pen. Gentle warm smile. Single person entire head and both boot soles fully visible, frontal orientation facing viewer, centered, relaxed standing idle pose, breathing room above head and beneath feet; no cropping. Correct human hands/fingers/feet. Genuine transparent-alpha isolated cutout with clean empty negative space, no environmental backdrop or haze, no floor, ground shadow or cast shadow. No letters, words, digits, text, watermark or logo anywhere, including clothing, devices and holograms. Abstract geometric markings only where requested, never written symbols. One character only.",
+      "unsatisfactory": false,
+      "native_size": [
+        1024,
+        1536
+      ],
+      "normalization": "aspect-preserving fit and transparent padding, WebP quality90",
+      "file_bytes": 156626,
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "retries": 0
+    },
+    {
+      "path": "art/cast/neon/default-idle.webp",
+      "batch": 2,
+      "kind": "cast",
+      "theme": "neon",
+      "character": "default",
+      "expression": "idle",
+      "target_size": [
+        1024,
+        1536
+      ],
+      "actual_size": [
+        1024,
+        1536
+      ],
+      "format": "webp",
+      "webp_quality": 90,
+      "generation_tool": "image_gen.imagegen",
+      "model": "imagegen built-in (underlying model not disclosed)",
+      "model_disclosed": false,
+      "transparent": true,
+      "background_status": "transparent",
+      "status": "complete",
+      "reference_paths": [
+        "/Users/a1234/.codex/generated_images/01a11b61-02dd-7d92-acbc-373049ddb4c0/exec-114e2706-70ab-468b-a71d-8305c447cfc0.png",
+        "/Users/a1234/Desktop/牛马工作室设计/art/cast/sakura/default-idle.webp"
+      ],
+      "source_image_path": "/Users/a1234/.codex/generated_images/01a11b61-02dd-7d92-acbc-373049ddb4c0/exec-a99dd46b-3236-4711-908c-626ccfb691fe.png",
+      "generation_run": null,
+      "attempts": 1,
+      "qa_notes": [
+        "Golden long straight hair/blue eyes identity retained; black technicalwear with blue luminous seams and short boots; both hands tucked naturally in coat pockets. Friendly expression, fullbody and feet approved.",
+        "Final WebP white-background composite QA passed: coherent style/identity/props, complete head-to-boot figure, no floor/shadow/text."
+      ],
+      "qa_approved": true,
+      "background_requirement": "transparent preferred; pure white acceptable; no ground shadow",
+      "composition_requirement": "single character; frontal standing; full body; no cropped head/hands/feet; space above head",
+      "planned_reference_paths": [
+        "art/cast/sakura/default-idle.webp",
+        "art/cast/neon/shaniu-idle.webp"
+      ],
+      "prompt": "Use case: stylized-concept / identity-preserve. Asset: ONE fullbody standing original Japanese cyberpunk anime crew member idle sprite, portrait1024x1536. Reference image1 is STYLE reference (approved neon Shaniu): match her clean precise anime outlines, polished CEL SHADING, bright luminous accents, restrained neon RIM LIGHT along silhouette and high-quality visual-novel illustration. Reference image2 is SAME CHARACTER IDENTITY: preserve same youthful face, hair shape/color and eye color; change outfit and prop only. Outfit: BLACK TECHNICAL FASHION COAT/JACKET with character-theme colored GLOWING SEAM LINES, black technical lower clothing, SHORT ANKLE BOOTS, small luminous accessories. Keep black dominant with themed accents. No office uniform, no hats. Subject: friendly teenage GIRL, GOLDEN BLONDE LONG STRAIGHT hair and BLUE eyes, same as identity reference. Theme color BLUE luminous seam lines and accessories. BOTH HANDS naturally tucked inside her black coat POCKETS, relaxed friendly standing idle pose, no held prop or device. Welcoming friendly smile. Single person entire head and both boot soles fully visible, frontal orientation facing viewer, centered, relaxed standing idle pose, breathing room above head and beneath feet; no cropping. Correct human hands/fingers/feet. Genuine transparent-alpha isolated cutout with clean empty negative space, no environmental backdrop or haze, no floor, ground shadow or cast shadow. No letters, words, digits, text, watermark or logo anywhere, including clothing, devices and holograms. Abstract geometric markings only where requested, never written symbols. One character only.",
+      "unsatisfactory": false,
+      "native_size": [
+        1024,
+        1536
+      ],
+      "normalization": "aspect-preserving fit and transparent padding, WebP quality90",
+      "file_bytes": 205442,
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "retries": 0
     }
   ],
-  "completed_asset_count": 54,
+  "completed_asset_count": 63,
   "updated_date": "2026-10-11"
 }
