@@ -81,20 +81,25 @@
     return e
   }
 
-  // 内置立绘（Codex 画的一整套）：public/cast/<套>/<角色>-<表情>.webp。现在所有主题共用 sakura 这套，
-  // 以后有了主题专属的（园区、修仙、太空站……）在 THEME_CAST 里对上就行。
+  // 内置立绘：public/cast/<套>/<角色>-<表情>.webp。每个主题一套衣服（园区的卫衣工牌、修仙的汉服、太空站的连体服……），
+  // 夜班没有自己的就穿樱花那套。Q 版立绘（qcast）不分主题，都用 q 这套。
   const CAST_ROLES = ['shaniu', 'architect', 'frontend', 'reviewer', 'backend', 'tester', 'debugger', 'writer', 'default']
-  const CAST_SETS = ['sakura']
-  const THEME_CAST = {}
-  function builtinCast(skinId) {
-    const set = CAST_SETS.includes(THEME_CAST[skinId]) ? THEME_CAST[skinId] : 'sakura'
-    return Object.fromEntries(CAST_ROLES.map((r) => [r, Object.fromEntries(['idle', 'happy', 'error'].map((st) => [st, `cast/${set}/${r}-${st}.webp`]))]))
+  const CAST_SETS = ['sakura', 'park', 'xianxia', 'space', 'neon', 'neko', 'q']
+  const THEME_CAST = { park: 'park', xianxia: 'xianxia', space: 'space', neon: 'neon', neko: 'neko' }
+  function builtinCast(skinId, style = 'cast') {
+    const want = style === 'qcast' ? 'q' : THEME_CAST[skinId]
+    const set = CAST_SETS.includes(want) ? want : 'sakura'
+    const cast = Object.fromEntries(CAST_ROLES.map((r) => [r, Object.fromEntries(['idle', 'happy', 'error'].map((st) => [st, `cast/${set}/${r}-${st}.webp`]))]))
+    // 园区那套的傻妞手里本来就拿着电棍，不用再画一根
+    if (set === 'park') cast.shaniu.armed = true
+    return cast
   }
 
   class AnimeOffice {
     /**
      * skin：内置皮肤的名字，或者一份自制皮肤（NiumaSkinFormat.normalize 整理过的）
-     * art：人物画风，cast（内置立绘）/ anime（代码画的动漫风）/ chibi（Q 版）；不给就看皮肤里写的，再不行用立绘
+     * art：人物画风，cast（内置立绘）/ qcast（内置的 Q 版立绘）/ anime（代码画的动漫风）/ chibi（代码画的 Q 版）；
+     * 不给就看皮肤里写的，再不行用立绘
      */
     constructor(scene, overlay, skin = 'sakura', { art } = {}) {
       this.scene = scene
@@ -115,8 +120,12 @@
         this.S = SKINS[this.skinId]
       }
       const style = art || this.S.art || 'cast'
-      // 皮肤自带立绘就用自带的；不然选了「立绘」就用内置那套
-      if (!Object.keys(this.cast || {}).length) this.cast = style === 'cast' ? builtinCast(this.skinId) : {}
+      // 内置皮肤配插画人物时，窗外也换成同一套插画（public/scenes/<主题>-window.webp）；代码画的人物配代码画的窗外
+      if (typeof skin !== 'object' && (style === 'cast' || style === 'qcast')) {
+        this.S = { ...this.S, window: 'image', windowImage: `scenes/${this.skinId}-window.webp` }
+      }
+      // 皮肤自带立绘就用自带的；不然选了「立绘」「Q版立绘」就用内置那套
+      if (!Object.keys(this.cast || {}).length) this.cast = style === 'cast' || style === 'qcast' ? builtinCast(this.skinId, style) : {}
       this.avatars = new Map()
       this.onFaces = null // 立绘头像截好了：页面重画头像
       // 没有立绘的人用代码画：anime（动漫风）或 chibi（Q 版）
@@ -231,7 +240,7 @@
       const feet = this.FEET / K
       const paper = '<g class="paper"><rect x="74" y="-58" width="34" height="44" rx="3" fill="#fff" stroke="#b9b3c6" stroke-width="1.6"/><path d="M80,-48 h22 M80,-40 h22 M80,-32 h14" stroke="#c9c3d6" stroke-width="2.4"/></g>'
       const place = (m) => (!m ? { x: -220, y: feet - 560, w: 440, h: 560 } : m.half ? this.castFit(m, 370, feet - 60, 'bottom') : this.castFit(m, 545, feet, 'bottom'))
-      return this.castImages(cast, place, `${paper}${C.baton(84, -40, 0.9)}`)
+      return this.castImages(cast, place, `${paper}${cast.armed ? '' : C.baton(84, -40, 0.9)}`)
     }
 
     // ---- 布局 --------------------------------------------------------------------------------------
@@ -373,7 +382,7 @@
       s += `<rect y="${FLOOR_Y}" width="${W}" height="3" fill="#000" opacity=".06"/>`
       // 窗户：左右各一扇
       const winW = Math.min(190, (W - CENTERW) / 2 - 70)
-      for (const wx of [MARGIN + 30, W - MARGIN - 30 - winW]) s += this.windowSvg(wx, 20, winW, 70)
+      ;[MARGIN + 30, W - MARGIN - 30 - winW].forEach((wx, side) => (s += this.windowSvg(wx, 20, winW, 70, side)))
       // 钟、白板
       s += `<g class="clock" transform="translate(${this.cx - 58},46)"><circle r="15" fill="${S.frame}" stroke="${S.frameEdge}" stroke-width="3"/><circle r="1.8" fill="${S.ink}"/><path class="hh" d="M0,0 L0,-8" stroke="${S.ink}" stroke-width="2.4" stroke-linecap="round"/><path class="mh" d="M0,0 L0,-12" stroke="${S.ink}" stroke-width="1.6" stroke-linecap="round"/></g>`
       s += `<g transform="translate(${this.cx + 26},22)"><rect width="70" height="54" rx="5" fill="${S.dark ? '#e9e8f6' : '#ffffff'}" stroke="${S.frameEdge}" stroke-width="3"/>
@@ -432,12 +441,13 @@
       return s
     }
 
-    windowSvg(x, y, w, h) {
+    /** side：0 左窗、1 右窗。窗外是一张图时，左窗看左半边、右窗看右半边，两扇窗不重样。 */
+    windowSvg(x, y, w, h, side = 0) {
       const S = this.S
       let v = `<g transform="translate(${x},${y})"><rect x="-4" y="-4" width="${w + 8}" height="${h + 8}" rx="8" fill="${S.frame}" stroke="${S.frameEdge}" stroke-width="3"/>`
       v += `<svg x="0" y="0" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}"><rect width="${w}" height="${h}" fill="url(#an-sky)"/>`
       if (S.window === 'image' && S.windowImage) {
-        v += `<image href="${S.windowImage}" width="${w}" height="${h}" preserveAspectRatio="xMidYMid slice"/>`
+        v += `<image href="${S.windowImage}" width="${w}" height="${h}" preserveAspectRatio="${side ? 'xMax' : 'xMin'}YMid slice"/>`
       } else if (S.window === 'sea') {
         v += `<circle cx="${w * 0.76}" cy="${h * 0.34}" r="9" fill="#fff4c2"/><ellipse cx="${w * 0.28}" cy="16" rx="18" ry="6" fill="#fff" opacity=".9"/>`
         v += `<rect y="${h * 0.56}" width="${w}" height="${h * 0.44}" fill="#3fa9dc"/><rect y="${h * 0.56}" width="${w}" height="3" fill="#bfeaff" opacity=".8"/>`

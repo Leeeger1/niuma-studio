@@ -62,7 +62,7 @@
     "particles": "bubbles",
     // 墙上花纹：paws 猫爪 / dots 圆点 / stripes 竖条 / grid 霓虹格子 / none 没有
     "wallPattern": "dots",
-    // 人物画风：cast 内置立绘 / anime 代码画的动漫风 / chibi Q 版（大头小身子）。
+    // 人物画风：cast 内置立绘（按底板主题换衣服）/ qcast 内置的 Q 版立绘 / anime 代码画的动漫风 / chibi 代码画的 Q 版（大头小身子）。
     // 只在没动过皮肤栏「人物」开关时生效，选过开关就以开关为准；皮肤自带 cast 立绘时都用自带的
     "art": "cast",
     // 墙上摆设：park 园区横幅和打卡机 / xianxia 卷轴灯笼 / space 舱壁仪表 / none 没有

@@ -18,11 +18,12 @@ const SKINS = [
   ['space', '太空站'],
   ['pixel', '像素复古'],
 ]
-// 人物画风：立绘是内置的一整套插画，动漫风和 Q 版是代码画的
+// 人物画风：立绘和 Q 版立绘是内置的插画，动漫风和 Q 版是代码画的
 const ARTS = [
   ['cast', '立绘（默认）'],
+  ['qcast', 'Q 版立绘'],
   ['anime', '动漫风（代码画的）'],
-  ['chibi', 'Q 版'],
+  ['chibi', 'Q 版（代码画的）'],
 ]
 const REPO = 'https://github.com/Leeeger1/niuma-studio'
 
