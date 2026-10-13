@@ -50,22 +50,31 @@ export class Team {
       this.groups.set(g.id, w)
     }
 
+    // 放假的组（配置里 enabled: false）：不上班，它的岗位照样借调到别的组干活
+    this.offGroups = new Map((this.config.groups || []).filter((g) => g && g.id && g.enabled === false).map((g) => [g.id, g]))
+    const borrow = this.config.borrowStaff !== false
+    const seat = this.groups.keys().next().value
+
     this.skills = loadSkills(skillDirs(this.root, this.workdir))
     this.employees = []
+    // 组放假、又不许借调（或者一个组都没有）的员工：没地方坐，给「岗位安排」面板看
+    this.benched = []
     const add = ({ id, skill, group, name }) => {
       const s = this.skills.get(skill) || this.skills.get('generalist')
-      if (!s || !this.groups.has(group)) return
+      const parked = !this.groups.has(group) && this.offGroups.has(group) && borrow && seat
+      if (s && !this.groups.has(group) && this.offGroups.has(group) && !parked) this.benched.push({ id: String(id || s.id), skill: s, group, name: name || s.name })
+      if (!s || (!this.groups.has(group) && !parked)) return
       let eid = String(id || s.id)
       if (this.employees.some((e) => e.id === eid)) eid = `${eid}-${group}`
       if (this.employees.some((e) => e.id === eid)) return
-      // home：配置里安排的组；group：现在坐在哪个组（home 不在岗时会被借调走）
-      this.employees.push({ id: eid, name: name || s.name, skill: s, group, home: group })
+      // home：配置里安排的组；group：现在坐在哪个组（home 不在岗或放假时会被借调走）
+      this.employees.push({ id: eid, name: name || s.name, skill: s, group: parked ? seat : group, home: group })
     }
     for (const e of this.config.employees || []) if (e && e.enabled !== false) add(e)
     // 放假的员工（配置里 enabled: false），给「岗位安排」面板看
     this.offDuty = (this.config.employees || []).filter((e) => e && e.id && e.enabled === false)
     // Groups nobody was assigned to in the config get a generalist, even after skill files hire more people.
-    const staffed = new Set(this.employees.map((e) => e.group))
+    const staffed = new Set(this.employees.map((e) => e.home))
     for (const g of this.groups.values()) {
       if (!staffed.has(g.id)) add({ id: g.id, skill: 'generalist', group: g.id, name: `${g.name.replace(/\s*组$/, '')}通才` })
     }
@@ -87,13 +96,15 @@ export class Team {
    * 借调：员工原来的组不在岗（比如没装 Claude Code），就先坐到在岗的组里干活，岗位不会跟着放假。
    * 难的岗位找强模型，杂活找便宜模型，人多的组少分一点。原来的组回来了，下次点名就回去。
    * 通才是各组自己的，不借。配置里 borrowStaff: false 可以关掉。
+   * 组放假了也一样借调；一个在岗的组都没有时，先坐在第一个组的空位上等着。
    */
   reassign() {
-    for (const e of this.employees) e.group = e.home
+    const seat = this.groups.keys().next().value
+    for (const e of this.employees) e.group = this.groups.has(e.home) ? e.home : seat
     if (this.config.borrowStaff === false) return
     const on = [...this.groups.values()].filter((g) => g.available)
     if (!on.length) return
-    const load = new Map(on.map((g) => [g.id, this.employees.filter((e) => e.group === g.id).length]))
+    const load = new Map(on.map((g) => [g.id, this.employees.filter((e) => e.home === g.id).length]))
     for (const e of this.employees) {
       if (this.groups.get(e.home)?.available || e.skill.id === 'generalist') continue
       const level = SKILL_LEVEL[e.skill.id] || 'medium'
@@ -106,6 +117,11 @@ export class Team {
 
   employee(id) {
     return this.employees.find((e) => e.id === id)
+  }
+
+  /** 组名，放假的组也认得。 */
+  groupName(id) {
+    return this.groups.get(id)?.name || this.offGroups.get(id)?.name || id
   }
 
   groupOf(empId) {
@@ -188,7 +204,7 @@ export class Team {
         color: g.color,
         available: g.available,
         home: e.home !== e.group ? e.home : '',
-        homeName: e.home !== e.group ? this.groups.get(e.home)?.name || e.home : '',
+        homeName: e.home !== e.group ? this.groupName(e.home) : '',
       }
     })
     return { groups, employees }

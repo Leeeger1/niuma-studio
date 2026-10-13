@@ -139,3 +139,91 @@ test('a relay with many models: read the list, group by family, pick models by d
   assert.ok(onDisk.every((g) => g.baseUrl === relay.url && g.apiKey === 'sk-relay'))
   assert.match(coord.messages.at(-1).text, /中转站 Claude 组[\s\S]*不会调用工具/)
 })
+
+test('every group can be edited, sent home and called back from the panel, the default ones too', async (t) => {
+  process.env.HOME = tmp()
+  process.env.USERPROFILE = process.env.HOME
+  const api = await startFakeOpenAI()
+  const denied = await refuse(401)
+  t.after(() => (api.close(), denied.close()))
+  const workdir = tmp()
+  const load = () => loadConfig({ workdir })
+  const coord = new Coordinator(load(), { mode: 'live', root })
+  await coord.team.check()
+  const setup = createSetup({ coord, reload: () => coord.reconfigure(load()) })
+  const saved = () => JSON.parse(fs.readFileSync(userConfigFile(), 'utf8')).groups
+  const view = async (id) => (await setup.status()).groups.find((g) => g.id === id)
+  await setup.saveApi({ preset: 'relay', baseUrl: api.url, apiKey: 'sk-1', models: { medium: 'deepseek-v4-flash' } })
+
+  let g = await view('relay')
+  assert.equal(g.enabled, true)
+  assert.equal(g.key, 'saved')
+  assert.ok(!JSON.stringify(await setup.status()).includes('sk-1'), 'the key never goes to the page')
+
+  // 默认的 Claude 组放假：不上班，它的岗位借调到在岗的组
+  await setup.group({ id: 'claude', enabled: false })
+  assert.deepEqual(saved().find((x) => x.id === 'claude'), { id: 'claude', enabled: false })
+  assert.equal(coord.team.groups.has('claude'), false)
+  assert.equal(coord.team.employee('architect').home, 'claude')
+  assert.equal(coord.team.employee('architect').group, 'relay')
+  assert.equal(coord.brain().id, 'relay')
+  g = await view('claude')
+  assert.equal(g.enabled, false)
+  assert.equal(g.note, '放假中')
+  assert.match(coord.messages.at(-1).text, /Claude 组\*\*放假了[\s\S]*架构师/)
+  // 放假的组也能排岗位，先借调
+  await setup.staff({ id: 'backend', group: 'claude' })
+  assert.equal(coord.team.employee('backend').group, 'relay')
+
+  // 叫回来：配置里不留只剩 id 的条目
+  await setup.group({ id: 'claude', enabled: true })
+  assert.equal(saved().some((x) => x.id === 'claude'), false)
+  assert.equal(coord.team.groups.has('claude'), true)
+
+  // 换模型不用重新接入：命令行组不填的难度用它自己的默认模型
+  await setup.group({ id: 'claude', name: 'Claude 组', models: { hard: 'opus', medium: '', easy: 'haiku' } })
+  assert.deepEqual(saved().find((x) => x.id === 'claude'), { id: 'claude', name: 'Claude 组', models: { hard: 'opus', easy: 'haiku' } })
+  const claude = coord.team.groups.get('claude')
+  assert.deepEqual([claude.modelFor('hard'), claude.modelFor('medium'), claude.modelFor('easy')], ['opus', '', 'haiku'])
+
+  // API 组：Key 不填就用存着的，先测试再保存
+  const r = await setup.group({ id: 'relay', name: '主力组', baseUrl: api.url, apiKey: '', models: { hard: 'deepseek-v4-pro', medium: 'deepseek-v4-flash', easy: '' } })
+  assert.equal(r.ok, true, r.error)
+  const relay = saved().find((x) => x.id === 'relay')
+  assert.equal(relay.apiKey, 'sk-1')
+  assert.equal(relay.name, '主力组')
+  assert.deepEqual(relay.models, { hard: 'deepseek-v4-pro', medium: 'deepseek-v4-flash' })
+  assert.equal(coord.team.groups.get('relay').modelFor('easy'), 'deepseek-v4-flash')
+  assert.equal((await view('relay')).name, '主力组')
+
+  // 测试没通过就不保存
+  const bad = await setup.group({ id: 'relay', name: '主力组', baseUrl: denied.url, apiKey: '', models: { medium: 'x' } })
+  assert.equal(bad.ok, false)
+  assert.match(bad.error, /Key 不对/)
+  assert.equal(saved().find((x) => x.id === 'relay').baseUrl, api.url)
+
+  // 读模型列表：没填的地址和 Key 用组里存着的
+  const listed = await setup.listModels({ group: 'relay' })
+  assert.equal(listed.ok, true, listed.error)
+  assert.ok(listed.families.length > 0)
+
+  // 项目里的配置排在后面，那边写了就说清楚
+  fs.writeFileSync(path.join(workdir, 'niuma.config.json'), JSON.stringify({ groups: [{ id: 'codex', enabled: false }] }))
+  await setup.recheck()
+  assert.equal((await view('codex')).enabled, false)
+  const over = await setup.group({ id: 'codex', enabled: true })
+  assert.match(over.warning, /niuma\.config\.json/)
+  assert.match(coord.messages.at(-1).text, /以那边为准/)
+
+  // 只写在项目配置里的组不往 ~/.niuma/config.json 里写，免得带到别的项目
+  fs.writeFileSync(path.join(workdir, 'niuma.config.json'), JSON.stringify({ groups: [{ id: 'local', type: 'openai-api', baseUrl: api.url, noKey: true, model: 'qwen3-coder' }] }))
+  await setup.recheck()
+  await assert.rejects(setup.group({ id: 'local', enabled: false }), /niuma\.config\.json[\s\S]*去那里改/)
+  assert.equal(saved().some((x) => x.id === 'local'), false)
+
+  await assert.rejects(setup.group({ id: 'mars', enabled: false }), /没有这个项目组/)
+  await assert.rejects(setup.group({ id: 'claude', name: ' ' }), /组名/)
+  coord.busy = true
+  await assert.rejects(setup.group({ id: 'claude', enabled: false }), /还有活/)
+  coord.busy = false
+})

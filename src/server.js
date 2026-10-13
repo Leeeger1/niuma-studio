@@ -198,6 +198,7 @@ export function createServer(coord, { publicDir, host, token, setup, skins = ski
             test: () => (body.tool ? setup.testCli(body.tool) : setup.testApi(body.api || {}, { tools: true })),
             models: () => setup.listModels(body.api || {}),
             api: () => setup.saveApi(body),
+            group: () => setup.group(body),
             remove: () => setup.remove(body.id),
             recheck: () => setup.recheck(),
             staff: () => setup.staff(body),

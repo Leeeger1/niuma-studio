@@ -116,3 +116,27 @@ test('the 岗位安排 panel moves, rests, adds and resets staff without a resta
   await assert.rejects(setup.staff({ id: 'nobody', group: 'deepseek' }), /找不到/)
   await assert.rejects(setup.staff({ add: true, skill: 'frontend', group: 'mars' }), /没有这个项目组/)
 })
+
+test('a group that is sent home lends its staff out, and nobody is lost when nothing is on duty', () => {
+  const off = { id: 'claude', enabled: false }
+  const t = team([off, api('pro', 'deepseek-v4-pro')])
+  assert.equal(t.groups.has('claude'), false)
+  for (const g of t.groups.values()) g.available = g.id === 'pro'
+  t.reassign()
+  assert.equal(where(t).architect, 'pro', 'the architect works from a group that is on duty')
+  assert.equal(t.employee('architect').home, 'claude')
+  const r = t.roster().employees.find((e) => e.id === 'architect')
+  assert.equal(r.homeName, 'Claude 组', 'the page still knows the name of the group on leave')
+  assert.ok(!t.employees.some((e) => e.id === 'claude'), 'a group on leave gets no generalist')
+
+  // 一个在岗的组都没有：先坐在空位上，不会因为找不到组而出错
+  for (const g of t.groups.values()) g.available = false
+  t.reassign()
+  assert.ok(t.employees.every((e) => t.groups.has(e.group)))
+  assert.doesNotThrow(() => t.roster())
+
+  // 不许借调：放假组的人没地方坐，记下来给面板看
+  const t2 = team([off, api('pro', 'deepseek-v4-pro')], { borrowStaff: false })
+  assert.equal(t2.employee('architect'), undefined)
+  assert.ok(t2.benched.some((e) => e.id === 'architect' && e.group === 'claude'))
+})
