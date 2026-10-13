@@ -57,7 +57,7 @@
     "base_commit": "e65899afb16459eb36832f13037395997bf3466e",
     "preserves_existing_assets": true,
     "previous_asset_count": 27,
-    "included_asset_count": 63
+    "included_asset_count": 72
   },
   "global_qa": [
     "日系动漫、干净线稿、赛璐璐、明亮色彩，角色/场景/道具画风一致",
@@ -3388,8 +3388,446 @@
         254
       ],
       "retries": 0
+    },
+    {
+      "path": "art/cast/neko/shaniu-idle.webp",
+      "batch": 2,
+      "kind": "cast",
+      "theme": "neko",
+      "character": "shaniu",
+      "expression": "idle",
+      "target_size": [
+        1024,
+        1536
+      ],
+      "actual_size": [
+        1024,
+        1536
+      ],
+      "format": "webp",
+      "webp_quality": 90,
+      "generation_tool": "image_gen.imagegen",
+      "model": "imagegen built-in (underlying model not disclosed)",
+      "model_disclosed": false,
+      "transparent": true,
+      "background_status": "transparent",
+      "status": "complete",
+      "reference_paths": [
+        "/Users/a1234/.codex/generated_images/01a11b5e-2302-7e21-8d42-d409361c7d7b/exec-c3984659-629b-4929-8c25-6f1571621f1c.png"
+      ],
+      "source_image_path": "/Users/a1234/.codex/generated_images/01a11b5e-2302-7e21-8d42-d409361c7d7b/exec-28cfaf7b-7562-4f6d-894d-e0dedbca8999.png",
+      "generation_run": null,
+      "attempts": 2,
+      "qa_notes": [
+        "重画1次增加耳尖和脚下留白；猫耳、机器人天线、猫尾与托盘咖啡正确。",
+        "最终透明WebP白底复检通过：固定外貌、猫耳猫尾、主题围裙、道具和完整手脚，无文字/地面阴影。"
+      ],
+      "qa_approved": true,
+      "background_requirement": "transparent preferred; pure white acceptable; no ground shadow",
+      "composition_requirement": "single character; frontal standing; full body; no cropped head/hands/feet; space above head",
+      "planned_reference_paths": [
+        "art/cast/sakura/shaniu-idle.webp"
+      ],
+      "prompt": "Use case: identity-preserve precise framing edit. This is the neko shaniu edit target. Keep her entire exact character design, face, blackhair pinkeyes, catears, two robotantennae, pinkwhite maiduniform white laceapron, blackcattail, bowaccessories, coffee tray/cup, cheerfulpose, correct hands/feet and animeartstyle. Change ONLY framing: zoom out enough that there is clearly visible empty transparent margin ABOVE BOTH CAT EAR TIPS and ANTENNAE and BELOW SHOES, at least70pixels each on portrait1024x1536. No head appendage may touch anycanvas edge. Whole body centered from head to toes. Transparentbackground nofloor/groundshadow/scenery. No text/letters/digits/logo/watermark anywhere.",
+      "file_bytes": 189050,
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "retries": 1,
+      "unsatisfactory": false
+    },
+    {
+      "path": "art/cast/neko/architect-idle.webp",
+      "batch": 2,
+      "kind": "cast",
+      "theme": "neko",
+      "character": "architect",
+      "expression": "idle",
+      "target_size": [
+        1024,
+        1536
+      ],
+      "actual_size": [
+        1024,
+        1536
+      ],
+      "format": "webp",
+      "webp_quality": 90,
+      "generation_tool": "image_gen.imagegen",
+      "model": "imagegen built-in (underlying model not disclosed)",
+      "model_disclosed": false,
+      "transparent": true,
+      "background_status": "transparent",
+      "status": "complete",
+      "reference_paths": [
+        "/Users/a1234/.codex/generated_images/01a11b5e-2302-7e21-8d42-d409361c7d7b/exec-28cfaf7b-7562-4f6d-894d-e0dedbca8999.png",
+        "/Users/a1234/Desktop/牛马工作室设计/art/cast/sakura/architect-idle.webp"
+      ],
+      "source_image_path": "/Users/a1234/.codex/generated_images/01a11b5e-2302-7e21-8d42-d409361c7d7b/exec-ab99025c-302d-4b4f-8ea2-ecd8cbc99300.png",
+      "generation_run": null,
+      "attempts": 1,
+      "qa_notes": [
+        "最终透明WebP白底复检通过：固定外貌、猫耳猫尾、主题围裙、道具和完整手脚，无文字/地面阴影。"
+      ],
+      "qa_approved": true,
+      "background_requirement": "transparent preferred; pure white acceptable; no ground shadow",
+      "composition_requirement": "single character; frontal standing; full body; no cropped head/hands/feet; space above head",
+      "planned_reference_paths": [
+        "art/cast/sakura/architect-idle.webp",
+        "art/cast/neko/shaniu-idle.webp"
+      ],
+      "prompt": "Use case: identity-preserve style-transfer. Image1 is neko shaniu STYLE reference ONLY, warmcute original Japaneseanime crisp cleanlineart brightpolished celshading. Image2 architect is SAMECHARACTER identityreference: preserve exact recognizable face/hair/eyes/accessories, but replace officeoutfit and props. One young man: neat short brown hair, brown eyes, confident. Neko cafeuniform: white shirt, collarbow, orange apron, darktrousers, appropriateshoes. Add cat ears headband AND one visible cat tail; keep existing identityaccessories. holds a hand-pour coffee kettle. Fullbody frontalcenteredstanding, entirehead/ear tips/hair/tail/hands/feet framed with at least60px empty margin abovehead and belowshoes; portrait1024x1536. Correct anatomicallycoherent fivefingerhands/normalfeet. Genuinetransparent background nofloor/shadow/scenery. Absolutelynotext/letters/digits/logo/watermark on anyprop oruniform. Onlyoneperson, no extra characters or animals.",
+      "file_bytes": 131612,
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "retries": 0,
+      "unsatisfactory": false
+    },
+    {
+      "path": "art/cast/neko/frontend-idle.webp",
+      "batch": 2,
+      "kind": "cast",
+      "theme": "neko",
+      "character": "frontend",
+      "expression": "idle",
+      "target_size": [
+        1024,
+        1536
+      ],
+      "actual_size": [
+        1024,
+        1536
+      ],
+      "format": "webp",
+      "webp_quality": 90,
+      "generation_tool": "image_gen.imagegen",
+      "model": "imagegen built-in (underlying model not disclosed)",
+      "model_disclosed": false,
+      "transparent": true,
+      "background_status": "transparent",
+      "status": "complete",
+      "reference_paths": [
+        "/Users/a1234/.codex/generated_images/01a11b5e-2302-7e21-8d42-d409361c7d7b/exec-28cfaf7b-7562-4f6d-894d-e0dedbca8999.png",
+        "/Users/a1234/Desktop/牛马工作室设计/art/cast/sakura/frontend-idle.webp"
+      ],
+      "source_image_path": "/Users/a1234/.codex/generated_images/01a11b5e-2302-7e21-8d42-d409361c7d7b/exec-87210d1f-9a3c-4169-88ff-2eda33fe8ee1.png",
+      "generation_run": null,
+      "attempts": 1,
+      "qa_notes": [
+        "最终透明WebP白底复检通过：固定外貌、猫耳猫尾、主题围裙、道具和完整手脚，无文字/地面阴影。"
+      ],
+      "qa_approved": true,
+      "background_requirement": "transparent preferred; pure white acceptable; no ground shadow",
+      "composition_requirement": "single character; frontal standing; full body; no cropped head/hands/feet; space above head",
+      "planned_reference_paths": [
+        "art/cast/sakura/frontend-idle.webp",
+        "art/cast/neko/shaniu-idle.webp"
+      ],
+      "prompt": "Use case: identity-preserve style-transfer. Image1 is neko shaniu STYLE reference ONLY, warmcute original Japaneseanime crisp cleanlineart brightpolished celshading. Image2 frontend is SAMECHARACTER identityreference: preserve exact recognizable face/hair/eyes/accessories, but replace officeoutfit and props. One young woman: brown twin ponytails, blue eyes, lively. Neko cafeuniform: white shirt, collarbow, orange apron, darkpleatedskirt, appropriateshoes. Add cat ears headband AND one visible cat tail; keep existing identityaccessories. holds a milk frothing pitcher. Fullbody frontalcenteredstanding, entirehead/ear tips/hair/tail/hands/feet framed with at least60px empty margin abovehead and belowshoes; portrait1024x1536. Correct anatomicallycoherent fivefingerhands/normalfeet. Genuinetransparent background nofloor/shadow/scenery. Absolutelynotext/letters/digits/logo/watermark on anyprop oruniform. Onlyoneperson, no extra characters or animals.",
+      "unsatisfactory": false,
+      "file_bytes": 191782,
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "retries": 0
+    },
+    {
+      "path": "art/cast/neko/reviewer-idle.webp",
+      "batch": 2,
+      "kind": "cast",
+      "theme": "neko",
+      "character": "reviewer",
+      "expression": "idle",
+      "target_size": [
+        1024,
+        1536
+      ],
+      "actual_size": [
+        1024,
+        1536
+      ],
+      "format": "webp",
+      "webp_quality": 90,
+      "generation_tool": "image_gen.imagegen",
+      "model": "imagegen built-in (underlying model not disclosed)",
+      "model_disclosed": false,
+      "transparent": true,
+      "background_status": "transparent",
+      "status": "complete",
+      "reference_paths": [
+        "/Users/a1234/.codex/generated_images/01a11b5e-2302-7e21-8d42-d409361c7d7b/exec-28cfaf7b-7562-4f6d-894d-e0dedbca8999.png",
+        "/Users/a1234/Desktop/牛马工作室设计/art/cast/sakura/reviewer-idle.webp"
+      ],
+      "source_image_path": "/Users/a1234/.codex/generated_images/01a11b5e-2302-7e21-8d42-d409361c7d7b/exec-5a66318e-95bf-4b66-bc70-e86c0659b1f7.png",
+      "generation_run": null,
+      "attempts": 1,
+      "qa_notes": [
+        "最终透明WebP白底复检通过：固定外貌、猫耳猫尾、主题围裙、道具和完整手脚，无文字/地面阴影。"
+      ],
+      "qa_approved": true,
+      "background_requirement": "transparent preferred; pure white acceptable; no ground shadow",
+      "composition_requirement": "single character; frontal standing; full body; no cropped head/hands/feet; space above head",
+      "planned_reference_paths": [
+        "art/cast/sakura/reviewer-idle.webp",
+        "art/cast/neko/shaniu-idle.webp"
+      ],
+      "prompt": "Use case: identity-preserve style-transfer. Image1 is neko shaniu STYLE reference ONLY, warmcute original Japaneseanime crisp cleanlineart brightpolished celshading. Image2 reviewer is SAMECHARACTER identityreference: preserve exact recognizable face/hair/eyes/accessories, but replace officeoutfit and props. One young man: short black hair with side-swept bangs, blue eyes, thin-framed glasses, calm and serious. Neko cafeuniform: white shirt, collarbow, orange apron, darktrousers, appropriateshoes. Add cat ears headband AND one visible cat tail; keep existing identityaccessories. holds a blank menu folder. Fullbody frontalcenteredstanding, entirehead/ear tips/hair/tail/hands/feet framed with at least60px empty margin abovehead and belowshoes; portrait1024x1536. Correct anatomicallycoherent fivefingerhands/normalfeet. Genuinetransparent background nofloor/shadow/scenery. Absolutelynotext/letters/digits/logo/watermark on anyprop oruniform. Onlyoneperson, no extra characters or animals.",
+      "unsatisfactory": false,
+      "file_bytes": 117748,
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "retries": 0
+    },
+    {
+      "path": "art/cast/neko/backend-idle.webp",
+      "batch": 2,
+      "kind": "cast",
+      "theme": "neko",
+      "character": "backend",
+      "expression": "idle",
+      "target_size": [
+        1024,
+        1536
+      ],
+      "actual_size": [
+        1024,
+        1536
+      ],
+      "format": "webp",
+      "webp_quality": 90,
+      "generation_tool": "image_gen.imagegen",
+      "model": "imagegen built-in (underlying model not disclosed)",
+      "model_disclosed": false,
+      "transparent": true,
+      "background_status": "transparent",
+      "status": "complete",
+      "reference_paths": [
+        "/Users/a1234/.codex/generated_images/01a11b5e-2302-7e21-8d42-d409361c7d7b/exec-8520bc15-ea6c-477b-b2fb-8e814dee6016.png"
+      ],
+      "source_image_path": "/Users/a1234/.codex/generated_images/01a11b5e-2302-7e21-8d42-d409361c7d7b/exec-929bbb54-5cf3-410c-960d-ef6a9661ab7c.png",
+      "generation_run": null,
+      "attempts": 3,
+      "qa_notes": [
+        "最终透明WebP白底复检通过：固定外貌、猫耳猫尾、主题围裙、道具和完整手脚，无文字/地面阴影。",
+        "保留耳机并改为一摞甜点盘，重画2次。"
+      ],
+      "qa_approved": true,
+      "background_requirement": "transparent preferred; pure white acceptable; no ground shadow",
+      "composition_requirement": "single character; frontal standing; full body; no cropped head/hands/feet; space above head",
+      "planned_reference_paths": [
+        "art/cast/sakura/backend-idle.webp",
+        "art/cast/neko/shaniu-idle.webp"
+      ],
+      "prompt": "Use case: identity-preserve precise-object-edit. Neko backend is edit target. Add her mandatory large OVER-EAR HEADPHONES: clear silver ear cups with dark cushions covering both ears, black headband arch around crown BEHIND the cat-ear headband. Keep cat ears/lace and headphones BOTH distinctly visible. Preserve everything else EXACTLY: pale pink ear-length bob, purpleeyes, same face, tealapron white shirt skirt stockings shoes, cattail, same stacked white dessertplates withpastry, pose, cleananimecelstyle and fullbodyframe. No other changes. Transparentbackground nofloor/groundshadow/text/letters/digits/logos/watermark. Complete head/headphones/ears/hands/feetwithmargins portrait1024x1536. Onlyoneperson.",
+      "unsatisfactory": false,
+      "file_bytes": 138674,
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "retries": 2
+    },
+    {
+      "path": "art/cast/neko/tester-idle.webp",
+      "batch": 2,
+      "kind": "cast",
+      "theme": "neko",
+      "character": "tester",
+      "expression": "idle",
+      "target_size": [
+        1024,
+        1536
+      ],
+      "actual_size": [
+        1024,
+        1536
+      ],
+      "format": "webp",
+      "webp_quality": 90,
+      "generation_tool": "image_gen.imagegen",
+      "model": "imagegen built-in (underlying model not disclosed)",
+      "model_disclosed": false,
+      "transparent": true,
+      "background_status": "transparent",
+      "status": "complete",
+      "reference_paths": [
+        "/Users/a1234/.codex/generated_images/01a11b5e-2302-7e21-8d42-d409361c7d7b/exec-28cfaf7b-7562-4f6d-894d-e0dedbca8999.png",
+        "/Users/a1234/Desktop/牛马工作室设计/art/cast/sakura/tester-idle.webp"
+      ],
+      "source_image_path": "/Users/a1234/.codex/generated_images/01a11b5e-2302-7e21-8d42-d409361c7d7b/exec-9e58a116-d765-4673-a299-9679dbc6ff34.png",
+      "generation_run": null,
+      "attempts": 1,
+      "qa_notes": [
+        "最终透明WebP白底复检通过：固定外貌、猫耳猫尾、主题围裙、道具和完整手脚，无文字/地面阴影。"
+      ],
+      "qa_approved": true,
+      "background_requirement": "transparent preferred; pure white acceptable; no ground shadow",
+      "composition_requirement": "single character; frontal standing; full body; no cropped head/hands/feet; space above head",
+      "planned_reference_paths": [
+        "art/cast/sakura/tester-idle.webp",
+        "art/cast/neko/shaniu-idle.webp"
+      ],
+      "prompt": "Use case: identity-preserve style-transfer. Image1 is neko shaniu STYLE reference ONLY, warmcute original Japaneseanime crisp cleanlineart brightpolished celshading. Image2 tester is SAMECHARACTER identityreference: preserve exact recognizable face/hair/eyes/accessories, but replace officeoutfit and props. One young woman: blonde high ponytail, teal-green eyes, energetic. Neko cafeuniform: white shirt, collarbow, deep teal apron, darkpleatedskirt, appropriateshoes. Add cat ears headband AND one visible cat tail; keep existing identityaccessories. tastes a tiny bite using a small spoon. Fullbody frontalcenteredstanding, entirehead/ear tips/hair/tail/hands/feet framed with at least60px empty margin abovehead and belowshoes; portrait1024x1536. Correct anatomicallycoherent fivefingerhands/normalfeet. Genuinetransparent background nofloor/shadow/scenery. Absolutelynotext/letters/digits/logo/watermark on anyprop oruniform. Onlyoneperson, no extra characters or animals.",
+      "unsatisfactory": false,
+      "file_bytes": 164182,
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "retries": 0
+    },
+    {
+      "path": "art/cast/neko/debugger-idle.webp",
+      "batch": 2,
+      "kind": "cast",
+      "theme": "neko",
+      "character": "debugger",
+      "expression": "idle",
+      "target_size": [
+        1024,
+        1536
+      ],
+      "actual_size": [
+        1024,
+        1536
+      ],
+      "format": "webp",
+      "webp_quality": 90,
+      "generation_tool": "image_gen.imagegen",
+      "model": "imagegen built-in (underlying model not disclosed)",
+      "model_disclosed": false,
+      "transparent": true,
+      "background_status": "transparent",
+      "status": "complete",
+      "reference_paths": [
+        "/Users/a1234/.codex/generated_images/01a11b5e-2302-7e21-8d42-d409361c7d7b/exec-28cfaf7b-7562-4f6d-894d-e0dedbca8999.png",
+        "/Users/a1234/Desktop/牛马工作室设计/art/cast/sakura/debugger-idle.webp"
+      ],
+      "source_image_path": "/Users/a1234/.codex/generated_images/01a11b5e-2302-7e21-8d42-d409361c7d7b/exec-053109a5-6ac0-4770-b585-22cf41d7233d.png",
+      "generation_run": null,
+      "attempts": 1,
+      "qa_notes": [
+        "最终透明WebP白底复检通过：固定外貌、猫耳猫尾、主题围裙、道具和完整手脚，无文字/地面阴影。"
+      ],
+      "qa_approved": true,
+      "background_requirement": "transparent preferred; pure white acceptable; no ground shadow",
+      "composition_requirement": "single character; frontal standing; full body; no cropped head/hands/feet; space above head",
+      "planned_reference_paths": [
+        "art/cast/sakura/debugger-idle.webp",
+        "art/cast/neko/shaniu-idle.webp"
+      ],
+      "prompt": "Use case: identity-preserve style-transfer. Image1 neko shaniu STYLE ONLY warmcute originalJapaneseanime crispcleanlineart brightcelshading. Image2 debugger SAMECHARACTER identity, preserve recognizable face, hair/eyes/accessories. One young man, teal spiky short hair, orange eyes, red headband tied across forehead, determined. New nekocafeuniform whiteshirt collarbow deep teal apron darktrousers shoes. Catearsheadband+onevisiblecattail, preservefixedaccessories. hugs a plain bag filled with coffee beans. Uprightstanding fullbody FRONTcentered portrait1024x1536 whole head/ears/hair/tail/hands/feetframed 60pxmargin above/below. Correct fivefingerhands andnormalfeet. Transparentbackground nofloor/shadow/scenery/text/letters/digits/logos/watermarks. Onlyoneperson, no extra people/animals.",
+      "unsatisfactory": false,
+      "file_bytes": 141382,
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "retries": 0
+    },
+    {
+      "path": "art/cast/neko/writer-idle.webp",
+      "batch": 2,
+      "kind": "cast",
+      "theme": "neko",
+      "character": "writer",
+      "expression": "idle",
+      "target_size": [
+        1024,
+        1536
+      ],
+      "actual_size": [
+        1024,
+        1536
+      ],
+      "format": "webp",
+      "webp_quality": 90,
+      "generation_tool": "image_gen.imagegen",
+      "model": "imagegen built-in (underlying model not disclosed)",
+      "model_disclosed": false,
+      "transparent": true,
+      "background_status": "transparent",
+      "status": "complete",
+      "reference_paths": [
+        "/Users/a1234/.codex/generated_images/01a11b5e-2302-7e21-8d42-d409361c7d7b/exec-a5c13eaf-476d-4134-8780-d20fa80dd60b.png"
+      ],
+      "source_image_path": "/Users/a1234/.codex/generated_images/01a11b5e-2302-7e21-8d42-d409361c7d7b/exec-f2381c6b-90b8-448d-b771-f0ecf4ccdfe8.png",
+      "generation_run": null,
+      "attempts": 2,
+      "qa_notes": [
+        "最终透明WebP白底复检通过：固定外貌、猫耳猫尾、主题围裙、道具和完整手脚，无文字/地面阴影。"
+      ],
+      "qa_approved": true,
+      "background_requirement": "transparent preferred; pure white acceptable; no ground shadow",
+      "composition_requirement": "single character; frontal standing; full body; no cropped head/hands/feet; space above head",
+      "planned_reference_paths": [
+        "art/cast/sakura/writer-idle.webp",
+        "art/cast/neko/shaniu-idle.webp"
+      ],
+      "prompt": "Use case: precise-object-edit identity-preserve. This is the neko writer idle EDIT TARGET. Change ONLY the main apron fabric to BLUE matching the character theme/collar bow. Keep white lace edge trim, shirt and every other outfit part unchanged; apron front must clearly be blue, not white. Preserve exact same face/hair/eye colors, identityaccessories, catears/tail, fulloutfit except specified apron recolor, pose/legs/shoes, personality and cleancrisp bright Japaneseanime celstyle.  Entire head/ears/hands/feet in frame with empty margins on portrait1024x1536. Transparentbackground, nofloor/shadow/scenery, no text/letters/digits/logos/watermark. Oneperson only.",
+      "unsatisfactory": false,
+      "file_bytes": 155150,
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "retries": 1
+    },
+    {
+      "path": "art/cast/neko/default-idle.webp",
+      "batch": 2,
+      "kind": "cast",
+      "theme": "neko",
+      "character": "default",
+      "expression": "idle",
+      "target_size": [
+        1024,
+        1536
+      ],
+      "actual_size": [
+        1024,
+        1536
+      ],
+      "format": "webp",
+      "webp_quality": 90,
+      "generation_tool": "image_gen.imagegen",
+      "model": "imagegen built-in (underlying model not disclosed)",
+      "model_disclosed": false,
+      "transparent": true,
+      "background_status": "transparent",
+      "status": "complete",
+      "reference_paths": [
+        "/Users/a1234/.codex/generated_images/01a11b5e-2302-7e21-8d42-d409361c7d7b/exec-837902f6-01f7-4faf-b42f-01084eedcfcf.png"
+      ],
+      "source_image_path": "/Users/a1234/.codex/generated_images/01a11b5e-2302-7e21-8d42-d409361c7d7b/exec-f318b0e4-fd5f-44b3-b5ac-f7d792fc49fe.png",
+      "generation_run": null,
+      "attempts": 2,
+      "qa_notes": [
+        "最终透明WebP白底复检通过：固定外貌、猫耳猫尾、主题围裙、道具和完整手脚，无文字/地面阴影。"
+      ],
+      "qa_approved": true,
+      "background_requirement": "transparent preferred; pure white acceptable; no ground shadow",
+      "composition_requirement": "single character; frontal standing; full body; no cropped head/hands/feet; space above head",
+      "planned_reference_paths": [
+        "art/cast/sakura/default-idle.webp",
+        "art/cast/neko/shaniu-idle.webp"
+      ],
+      "prompt": "Use case: precise-object-edit identity-preserve. This is the neko default idle EDIT TARGET. Change ONLY the main apron fabric to BLUE matching the character theme/collar bow. Keep white lace edge trim, shirt and every other outfit part unchanged; apron front must clearly be blue, not white. Preserve exact same face/hair/eye colors, identityaccessories, catears/tail, fulloutfit except specified apron recolor, pose/legs/shoes, personality and cleancrisp bright Japaneseanime celstyle. Preserve the exact orange cat in her arms. Entire head/ears/hands/feet in frame with empty margins on portrait1024x1536. Transparentbackground, nofloor/shadow/scenery, no text/letters/digits/logos/watermark. Oneperson only.",
+      "unsatisfactory": false,
+      "file_bytes": 187642,
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "retries": 1
     }
   ],
-  "completed_asset_count": 63,
+  "completed_asset_count": 72,
   "updated_date": "2026-10-11"
 }
