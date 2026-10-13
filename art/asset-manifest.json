@@ -1,0 +1,1036 @@
+{
+  "schema_version": 1,
+  "project": "牛马工作室",
+  "created_date": "2026-10-08",
+  "expected_asset_count": 263,
+  "counts": {
+    "cast": 189,
+    "scene": 21,
+    "prop": 53
+  },
+  "batch_counts": {
+    "1": 18,
+    "2": 54,
+    "3": 65,
+    "4": 126
+  },
+  "batch_2_theme_order": [
+    "q",
+    "park",
+    "xianxia",
+    "space",
+    "neon",
+    "neko"
+  ],
+  "character_theme_order": [
+    "sakura",
+    "q",
+    "park",
+    "xianxia",
+    "space",
+    "neon",
+    "neko"
+  ],
+  "scene_prop_theme_order": [
+    "sakura",
+    "night",
+    "neon",
+    "neko",
+    "park",
+    "xianxia",
+    "space"
+  ],
+  "status": "in_progress",
+  "delivery": {
+    "git_repository_found": true,
+    "branch": "art",
+    "final_archive": "art.zip",
+    "completed_batches": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "completed_date": "2026-10-11",
+    "remote_repository": "https://github.com/Leeeger1/niuma-studio",
+    "delivery_mode": "append_only_git",
+    "base_commit": "e65899afb16459eb36832f13037395997bf3466e",
+    "preserves_existing_assets": true,
+    "previous_asset_count": 27,
+    "included_asset_count": 18
+  },
+  "global_qa": [
+    "日系动漫、干净线稿、赛璐璐、明亮色彩，角色/场景/道具画风一致",
+    "画面没有文字、字母、数字、水印和 logo",
+    "角色原创，无已知作品的角色设计",
+    "角色/道具优先透明，允许纯白，无地面阴影",
+    "人物完整，手、手指、脚正常，无裁切",
+    "每张最多重画 3 次；仍不满意需保留并说明",
+    "首位先画傻妞，每套其他人以傻妞为画风参考；跨套保持角色特征",
+    "happy/error 用该套 idle 编辑，维持人物、服装、道具和画风",
+    "WebP quality 90，保留 alpha；无法转换时保留 PNG"
+  ],
+  "assets": [
+    {
+      "path": "art/cast/sakura/shaniu-idle.webp",
+      "batch": 1,
+      "kind": "cast",
+      "theme": "sakura",
+      "character": "shaniu",
+      "expression": "idle",
+      "target_size": [
+        1024,
+        1536
+      ],
+      "actual_size": [
+        1024,
+        1536
+      ],
+      "format": "webp",
+      "webp_quality": 90,
+      "generation_tool": "image_gen.imagegen",
+      "model": "imagegen built-in (underlying model not disclosed)",
+      "model_disclosed": false,
+      "transparent": true,
+      "background_status": "transparent",
+      "status": "complete",
+      "reference_paths": [],
+      "source_image_path": "/Users/a1234/.codex/generated_images/01a11b5e-2302-7e21-8d42-d409361c7d7b/exec-c051f052-ab85-4106-9d8f-42f0baa9a04c.png",
+      "generation_run": "exec-c051f052-ab85-4106-9d8f-42f0baa9a04c",
+      "attempts": 1,
+      "qa_notes": [
+        "已按白底合成预览检查：全身完整、画风与角色特征符合，未见地面阴影。透明通道存在；透明区域的暗色 RGB 不构成可见黑色背景。"
+      ],
+      "qa_approved": true,
+      "background_requirement": "transparent preferred; pure white acceptable; no ground shadow",
+      "composition_requirement": "single character; frontal standing; full body; no cropped head/hands/feet; space above head",
+      "planned_reference_paths": [],
+      "retries": 0,
+      "file_bytes": 157856,
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "prompt": "Master shaniu generation; original Japanese anime full-body pink sailor uniform, black hair pink eyes robot antennae, tablet; transparent, no text, 1024x1536"
+    },
+    {
+      "path": "art/cast/sakura/architect-idle.webp",
+      "batch": 1,
+      "kind": "cast",
+      "theme": "sakura",
+      "character": "architect",
+      "expression": "idle",
+      "target_size": [
+        1024,
+        1536
+      ],
+      "actual_size": [
+        1024,
+        1536
+      ],
+      "format": "webp",
+      "webp_quality": 90,
+      "generation_tool": "image_gen.imagegen",
+      "model": "imagegen built-in (underlying model not disclosed)",
+      "model_disclosed": false,
+      "transparent": true,
+      "background_status": "transparent",
+      "status": "complete",
+      "reference_paths": [
+        "/Users/a1234/.codex/generated_images/01a11b5e-2302-7e21-8d42-d409361c7d7b/exec-c051f052-ab85-4106-9d8f-42f0baa9a04c.png"
+      ],
+      "source_image_path": "/Users/a1234/.codex/generated_images/01a11b5e-2302-7e21-8d42-d409361c7d7b/exec-9b339934-da69-4121-ab6e-82d8f7c21ae9.png",
+      "generation_run": null,
+      "attempts": 1,
+      "qa_notes": [
+        "已逐张目视接受并与本套三态及七套同角色作外貌对照；发型发色瞳色、服装道具保留，手脚全身完整，透明背景无文字或地面阴影。"
+      ],
+      "qa_approved": true,
+      "background_requirement": "transparent preferred; pure white acceptable; no ground shadow",
+      "composition_requirement": "single character; frontal standing; full body; no cropped head/hands/feet; space above head",
+      "planned_reference_paths": [
+        "art/cast/sakura/shaniu-idle.webp"
+      ],
+      "prompt": "Use case: stylized-concept. Reference image 1 is STYLE ONLY: match its crisp original Japanese anime lineart, bright cel colors and polished eyes. Create a DIFFERENT original character architect, one young man: neat short brown hair, brown eyes, confident. 1024x1536 portrait game standing sprite. Wearing orange tailored office blazer, white shirt, tie and dark trousers, blank chest ID badge, shoes. yellow construction hardhat on his head, one rolled blank blueprint tucked under arm. Full body centered FRONT-facing, entire head/hair/headgear and feet visible with margin above and below, upright standing pose. Anatomically correct hands and fingers and feet. Transparent background, NO floor or ground shadow. No text/letters/numerals/logos/watermark anywhere including badges/blueprint. Only one person. Do not copy the woman's gender, face, hair or outfit from reference. High quality illustration in same art style.",
+      "file_bytes": 118180,
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "retries": 0
+    },
+    {
+      "path": "art/cast/sakura/frontend-idle.webp",
+      "batch": 1,
+      "kind": "cast",
+      "theme": "sakura",
+      "character": "frontend",
+      "expression": "idle",
+      "target_size": [
+        1024,
+        1536
+      ],
+      "actual_size": [
+        1024,
+        1536
+      ],
+      "format": "webp",
+      "webp_quality": 90,
+      "generation_tool": "image_gen.imagegen",
+      "model": "imagegen built-in (underlying model not disclosed)",
+      "model_disclosed": false,
+      "transparent": true,
+      "background_status": "transparent",
+      "status": "complete",
+      "reference_paths": [
+        "/Users/a1234/.codex/generated_images/01a11b5e-2302-7e21-8d42-d409361c7d7b/exec-c051f052-ab85-4106-9d8f-42f0baa9a04c.png"
+      ],
+      "source_image_path": "/Users/a1234/.codex/generated_images/01a11b5e-2302-7e21-8d42-d409361c7d7b/exec-c8e97192-8e49-423f-afb3-62dc07e76014.png",
+      "generation_run": null,
+      "attempts": 1,
+      "qa_notes": [
+        "已逐张目视接受并与本套三态及七套同角色作外貌对照；发型发色瞳色、服装道具保留，手脚全身完整，透明背景无文字或地面阴影。"
+      ],
+      "qa_approved": true,
+      "background_requirement": "transparent preferred; pure white acceptable; no ground shadow",
+      "composition_requirement": "single character; frontal standing; full body; no cropped head/hands/feet; space above head",
+      "planned_reference_paths": [
+        "art/cast/sakura/shaniu-idle.webp"
+      ],
+      "prompt": "Use case: stylized-concept. Image 1 STYLE reference only; match crisp bright original Japanese anime mobile-game linework, polished eyes, cel shading. Create one different original young woman, frontend: brown twin ponytails, blue eyes, lively. Outfit: orange office blazer, white shirt, bow at collar, dark pleated skirt, blank chest ID badge, suitable socks/shoes. red beret on her head, holds a digital stylus and tablet. 1024x1536 portrait, upright full-body FRONT-facing character standing centered, entire head and toes visible, margin above head and below shoes. Correct hands with 5 fingers and correct feet. Genuinely transparent background, no scene, no floor, no ground shadow. No words, letters, digits, logos, watermark on anything. Only one person. Do not copy reference's face/hair/outfit.",
+      "file_bytes": 166314,
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "retries": 0
+    },
+    {
+      "path": "art/cast/sakura/reviewer-idle.webp",
+      "batch": 1,
+      "kind": "cast",
+      "theme": "sakura",
+      "character": "reviewer",
+      "expression": "idle",
+      "target_size": [
+        1024,
+        1536
+      ],
+      "actual_size": [
+        1024,
+        1536
+      ],
+      "format": "webp",
+      "webp_quality": 90,
+      "generation_tool": "image_gen.imagegen",
+      "model": "imagegen built-in (underlying model not disclosed)",
+      "model_disclosed": false,
+      "transparent": true,
+      "background_status": "transparent",
+      "status": "complete",
+      "reference_paths": [
+        "/Users/a1234/.codex/generated_images/01a11b5e-2302-7e21-8d42-d409361c7d7b/exec-c051f052-ab85-4106-9d8f-42f0baa9a04c.png"
+      ],
+      "source_image_path": "/Users/a1234/.codex/generated_images/01a11b5e-2302-7e21-8d42-d409361c7d7b/exec-be7203e0-b1e0-40f5-aada-52897a184b18.png",
+      "generation_run": null,
+      "attempts": 1,
+      "qa_notes": [
+        "黑短发、蓝眼、眼镜、橙色西装和写字板均正确；全身与手脚检查通过。"
+      ],
+      "qa_approved": true,
+      "background_requirement": "transparent preferred; pure white acceptable; no ground shadow",
+      "composition_requirement": "single character; frontal standing; full body; no cropped head/hands/feet; space above head",
+      "planned_reference_paths": [
+        "art/cast/sakura/shaniu-idle.webp"
+      ],
+      "prompt": "Use case: stylized-concept. Image1 is STYLE reference only, match clean crisp original Japanese anime linework, polished eyes, bright cel colors. One new original character reviewer: young man, short black hair with side-swept bangs, blue eyes, thin-framed glasses, calm and serious. orange tailored office blazer, white shirt, tie, dark suit trousers, blank chest badge, formal shoes. holds a blank clipboard. 1024x1536 portrait full-body front-facing centered standing sprite. Hair/head/hands/feet entirely in frame, a little margin above and below. Correct hands and five fingers, normal feet. Transparent background, no floor, no ground shadow or scenery. No words/letters/numerals/logos/watermark anywhere, including clipboard and badge. Only one person, don't copy girl's face or hair.",
+      "file_bytes": 102660,
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "retries": 0
+    },
+    {
+      "path": "art/cast/sakura/backend-idle.webp",
+      "batch": 1,
+      "kind": "cast",
+      "theme": "sakura",
+      "character": "backend",
+      "expression": "idle",
+      "target_size": [
+        1024,
+        1536
+      ],
+      "actual_size": [
+        1024,
+        1536
+      ],
+      "format": "webp",
+      "webp_quality": 90,
+      "generation_tool": "image_gen.imagegen",
+      "model": "imagegen built-in (underlying model not disclosed)",
+      "model_disclosed": false,
+      "transparent": true,
+      "background_status": "transparent",
+      "status": "complete",
+      "reference_paths": [
+        [
+          "/Users/a1234/.codex/generated_images/01a11b5e-2302-7e21-8d42-d409361c7d7b/exec-c051f052-ab85-4106-9d8f-42f0baa9a04c.png"
+        ]
+      ],
+      "source_image_path": "/Users/a1234/.codex/generated_images/01a11b5f-1b58-7731-b7a7-5ad1c470923a/exec-41b6e4e0-3c47-4268-bdcf-cdad6ff19491.png",
+      "generation_run": null,
+      "attempts": 1,
+      "qa_notes": [
+        "已逐张目视接受并与本套三态及七套同角色作外貌对照；发型发色瞳色、服装道具保留，手脚全身完整，透明背景无文字或地面阴影。"
+      ],
+      "qa_approved": true,
+      "background_requirement": "transparent preferred; pure white acceptable; no ground shadow",
+      "composition_requirement": "single character; frontal standing; full body; no cropped head/hands/feet; space above head",
+      "planned_reference_paths": [
+        "art/cast/sakura/shaniu-idle.webp"
+      ],
+      "prompt": "Use case: stylized-concept. Create one original Japanese anime visual-novel full-body character sprite, portrait 1024x1536 pixels.\nInput image is STYLE REFERENCE ONLY: match its bright clean lineart, polished cel shading, precise expressive anime eyes, character proportions and clothing rendering. Do not reproduce the reference girl's identity, black long hair, antennae, sailor uniform or pink color scheme.\nSubject: backend, a focused friendly teenage girl with light pale-pink ear-length bob hair, purple eyes, and over-ear headphones. Deep teal-green office blazer, crisp white shirt, deep teal bow at collar, dark pleated knee-length skirt, simple dark shoes, blank rectangular office badge on chest. She is holding a plain closed laptop gently against her torso with both hands; readable natural fingers and wrists. No markings on the laptop.\nExpression: calm attentive neutral idle, small closed-mouth smile. Front-facing standing, centered, only one person. Head through shoe soles fully visible with generous transparent margin above head and below both feet; normal hands and five fingers, normal feet. No crop. Arms and laptop are comfortably within frame.\nBackground: genuinely transparent RGBA cutout. No floor, no ground shadow, no colored glow, no background graphic. If transparency cannot be produced, clean pure white only.\nAbsolutely no text, letters, digits, watermark, logos, signatures or any readable badge details. No resemblance to an existing franchise character. High-quality bright Japanese anime cel-shaded game asset.",
+      "file_bytes": 108532,
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "retries": 0
+    },
+    {
+      "path": "art/cast/sakura/tester-idle.webp",
+      "batch": 1,
+      "kind": "cast",
+      "theme": "sakura",
+      "character": "tester",
+      "expression": "idle",
+      "target_size": [
+        1024,
+        1536
+      ],
+      "actual_size": [
+        1024,
+        1536
+      ],
+      "format": "webp",
+      "webp_quality": 90,
+      "generation_tool": "image_gen.imagegen",
+      "model": "imagegen built-in (underlying model not disclosed)",
+      "model_disclosed": false,
+      "transparent": true,
+      "background_status": "transparent",
+      "status": "complete",
+      "reference_paths": [
+        [
+          "/Users/a1234/.codex/generated_images/01a11b5e-2302-7e21-8d42-d409361c7d7b/exec-c051f052-ab85-4106-9d8f-42f0baa9a04c.png"
+        ]
+      ],
+      "source_image_path": "/Users/a1234/.codex/generated_images/01a11b5f-1b58-7731-b7a7-5ad1c470923a/exec-5adb50e1-ea26-42e0-be0d-01f402eb6711.png",
+      "generation_run": null,
+      "attempts": 1,
+      "qa_notes": [
+        "已逐张目视接受并与本套三态及七套同角色作外貌对照；发型发色瞳色、服装道具保留，手脚全身完整，透明背景无文字或地面阴影。"
+      ],
+      "qa_approved": true,
+      "background_requirement": "transparent preferred; pure white acceptable; no ground shadow",
+      "composition_requirement": "single character; frontal standing; full body; no cropped head/hands/feet; space above head",
+      "planned_reference_paths": [
+        "art/cast/sakura/shaniu-idle.webp"
+      ],
+      "prompt": "Use case: stylized-concept. Create one original Japanese anime visual-novel full-body character sprite, portrait 1024x1536 pixels.\nInput image is STYLE REFERENCE ONLY: match its bright clean lineart, polished cel shading, precise expressive anime eyes and clothing rendering. Change character identity completely to the specified character; do not copy black hair, pink sailor uniform or antennae.\nSubject: tester, an energetic cheerful teenage girl with golden-blonde hair in a high ponytail, clear teal-green eyes, wearing a plain blank baseball cap which accommodates the ponytail. Deep teal-green office blazer, crisp white shirt, deep teal bow at collar, dark pleated skirt, simple dark shoes, blank rectangular badge at chest. She holds a plain handheld magnifying glass in one hand at chest height; her other arm is relaxed naturally. The magnifying glass has a circular clear lens and simple handle. No symbols on cap, badge or clothing.\nExpression: enthusiastic friendly idle smile, eyes open. Front-facing upright standing, centered, exactly one person, head/cap/ponytail and both complete shoes fully inside frame with visible transparent space above head and below soles. Natural anatomically correct arms, hands, five fingers and feet. All props fully visible.\nBackground: genuinely transparent RGBA cutout. No ground, ground shadow, colored glow or backdrop. If transparency fails, pure white only.\nNo text, letters, numbers, logos, watermark or signatures. Original character unrelated to existing franchises. Bright high-quality Japanese anime cel-shaded game asset in exactly the visual style of the reference.",
+      "file_bytes": 141952,
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "retries": 0
+    },
+    {
+      "path": "art/cast/sakura/debugger-idle.webp",
+      "batch": 1,
+      "kind": "cast",
+      "theme": "sakura",
+      "character": "debugger",
+      "expression": "idle",
+      "target_size": [
+        1024,
+        1536
+      ],
+      "actual_size": [
+        1024,
+        1536
+      ],
+      "format": "webp",
+      "webp_quality": 90,
+      "generation_tool": "image_gen.imagegen",
+      "model": "imagegen built-in (underlying model not disclosed)",
+      "model_disclosed": false,
+      "transparent": true,
+      "background_status": "transparent",
+      "status": "complete",
+      "reference_paths": [
+        [
+          "/Users/a1234/.codex/generated_images/01a11b5e-2302-7e21-8d42-d409361c7d7b/exec-c051f052-ab85-4106-9d8f-42f0baa9a04c.png"
+        ]
+      ],
+      "source_image_path": "/Users/a1234/.codex/generated_images/01a11b5f-1b58-7731-b7a7-5ad1c470923a/exec-7e759b9e-f4e4-4724-81a5-fe9c70e0dde2.png",
+      "generation_run": null,
+      "attempts": 1,
+      "qa_notes": [
+        "已逐张目视接受并与本套三态及七套同角色作外貌对照；发型发色瞳色、服装道具保留，手脚全身完整，透明背景无文字或地面阴影。"
+      ],
+      "qa_approved": true,
+      "background_requirement": "transparent preferred; pure white acceptable; no ground shadow",
+      "composition_requirement": "single character; frontal standing; full body; no cropped head/hands/feet; space above head",
+      "planned_reference_paths": [
+        "art/cast/sakura/shaniu-idle.webp"
+      ],
+      "prompt": "Use case: stylized-concept. Create one original Japanese anime visual-novel full-body character sprite, portrait 1024x1536 pixels.\nInput image is STYLE REFERENCE ONLY: match bright clean anime lineart, polished cel shading, detailed expressive eyes and finish. This is a DIFFERENT character: a boy, not the reference girl. Do not copy her long black hair, sailor outfit, antennae, skirt or feminine body proportions.\nSubject: debugger, a determined teenage boy with short tousled spiky teal-green hair, orange eyes, and a plain bright red headband across his forehead. Deep teal-green office suit blazer, crisp white shirt, neat tie, dark straight suit trousers, dark dress shoes, blank rectangular chest badge. He holds one plain metal wrench naturally in one hand beside his thigh, other arm relaxed. The wrench clearly has an open-ended spanner head, no text, brand or decorative symbols.\nExpression: confident determined friendly neutral idle, eyes open, slight smile. Front-facing upright standing, centered, single character. Masculine youthful build. Head, spikes, red headband, both hands and both complete shoes fully inside the canvas, with visible transparent margins above and below. Natural hands with five fingers each and correctly drawn feet. No cropped limbs.\nBackground: genuinely transparent RGBA cutout, no floor, no ground shadow, no colored glow or backdrop. If transparency cannot be made, pure white only.\nNo text, letters, numbers, logos, watermark or signature anywhere including badge and wrench. Original character unrelated to any existing franchise. Bright high-quality Japanese anime cel-shaded game asset consistent with the style reference.",
+      "file_bytes": 123710,
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "retries": 0
+    },
+    {
+      "path": "art/cast/sakura/writer-idle.webp",
+      "batch": 1,
+      "kind": "cast",
+      "theme": "sakura",
+      "character": "writer",
+      "expression": "idle",
+      "target_size": [
+        1024,
+        1536
+      ],
+      "actual_size": [
+        1024,
+        1536
+      ],
+      "format": "webp",
+      "webp_quality": 90,
+      "generation_tool": "image_gen.imagegen",
+      "model": "imagegen built-in (underlying model not disclosed)",
+      "model_disclosed": false,
+      "transparent": true,
+      "background_status": "transparent",
+      "status": "complete",
+      "reference_paths": [
+        [
+          "/Users/a1234/.codex/generated_images/01a11b5e-2302-7e21-8d42-d409361c7d7b/exec-c051f052-ab85-4106-9d8f-42f0baa9a04c.png"
+        ]
+      ],
+      "source_image_path": "/Users/a1234/.codex/generated_images/01a11b5f-1b58-7731-b7a7-5ad1c470923a/exec-618fefc6-38dc-4ec7-ad30-810979bfc7ff.png",
+      "generation_run": null,
+      "attempts": 1,
+      "qa_notes": [
+        "已逐张目视接受并与本套三态及七套同角色作外貌对照；发型发色瞳色、服装道具保留，手脚全身完整，透明背景无文字或地面阴影。"
+      ],
+      "qa_approved": true,
+      "background_requirement": "transparent preferred; pure white acceptable; no ground shadow",
+      "composition_requirement": "single character; frontal standing; full body; no cropped head/hands/feet; space above head",
+      "planned_reference_paths": [
+        "art/cast/sakura/shaniu-idle.webp"
+      ],
+      "prompt": "Use case: stylized-concept. Create one original Japanese anime visual-novel full-body character sprite, portrait 1024x1536 pixels.\nInput image is STYLE REFERENCE ONLY: match the bright clean lineart, polished cel shading, detailed expressive anime eyes, proportions and clothes finish. Do not copy the reference girl's black long hair, antennae, sailor uniform or pink outfit.\nSubject: writer, a gentle teenage girl with medium blue ear-length bob hair AND one small round top bun tied on the crown of her head. Pink eyes. Blue office suit blazer, crisp white shirt, blue bow at collar, dark pleated skirt, plain dark shoes, blank rectangular office badge at chest. She holds a small plain closed notebook in one hand and a fountain pen in the other hand, hands visible and natural. Notebook cover blank, pen has a simple recognizable nib, no lettering.\nExpression: gentle warm idle closed-mouth smile, eyes open. Front-facing upright standing centered, exactly one character. Full head including top bun through both complete shoe soles in frame, small visible transparent margin above head and below feet. Both arms and both props wholly inside canvas. Natural anatomy, hands with five fingers and correct feet.\nBackground: genuinely transparent RGBA cutout, no ground, no floor, no ground shadow, no colored halo or backdrop. If transparency is impossible, use only pure white.\nNo text, letters, numbers, watermark, logos, signature or readable symbols anywhere. Badge, notebook, pen and clothing blank. Original character unrelated to existing franchises. High-quality bright Japanese anime cel-shaded game asset consistent with reference rendering.",
+      "file_bytes": 115526,
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "retries": 0
+    },
+    {
+      "path": "art/cast/sakura/default-idle.webp",
+      "batch": 1,
+      "kind": "cast",
+      "theme": "sakura",
+      "character": "default",
+      "expression": "idle",
+      "target_size": [
+        1024,
+        1536
+      ],
+      "actual_size": [
+        1024,
+        1536
+      ],
+      "format": "webp",
+      "webp_quality": 90,
+      "generation_tool": "image_gen.imagegen",
+      "model": "imagegen built-in (underlying model not disclosed)",
+      "model_disclosed": false,
+      "transparent": true,
+      "background_status": "transparent",
+      "status": "complete",
+      "reference_paths": [
+        [
+          "/Users/a1234/.codex/generated_images/01a11b5e-2302-7e21-8d42-d409361c7d7b/exec-c051f052-ab85-4106-9d8f-42f0baa9a04c.png"
+        ]
+      ],
+      "source_image_path": "/Users/a1234/.codex/generated_images/01a11b5f-1b58-7731-b7a7-5ad1c470923a/exec-f42a62e9-45a6-41b5-937a-ad39e131aa7f.png",
+      "generation_run": null,
+      "attempts": 1,
+      "qa_notes": [
+        "已逐张目视接受并与本套三态及七套同角色作外貌对照；发型发色瞳色、服装道具保留，手脚全身完整，透明背景无文字或地面阴影。"
+      ],
+      "qa_approved": true,
+      "background_requirement": "transparent preferred; pure white acceptable; no ground shadow",
+      "composition_requirement": "single character; frontal standing; full body; no cropped head/hands/feet; space above head",
+      "planned_reference_paths": [
+        "art/cast/sakura/shaniu-idle.webp"
+      ],
+      "prompt": "Use case: stylized-concept. Create one original Japanese anime visual-novel full-body character sprite, portrait 1024x1536 pixels.\nInput image is STYLE REFERENCE ONLY: match its bright clean lineart, polished cel shading, precise expressive anime eyes and character proportions. Do not copy her black hair, pink sailor uniform, antennae or tablet.\nSubject: default, a friendly teenage girl with long straight golden-blonde hair and bright blue eyes. Blue office blazer, crisp white shirt, blue bow at collar, dark pleated skirt, simple dark shoes, blank rectangular chest badge. She carries NO prop. Both arms hang naturally down at her sides, both hands visible relaxed with natural fingers. No hats or head accessories.\nExpression: friendly calm idle closed-mouth smile, eyes open. Front-facing upright standing, centered, single character. Full head and long hair through both complete shoes wholly inside the canvas. Leave visible transparent space above her head and below the feet. Natural anatomy, no cropped limbs, five fingers on each hand, correct feet.\nBackground: genuinely transparent RGBA cutout. No floor, no ground shadow, no colored halo or backdrop. If transparency is impossible, pure white only.\nNo text, letters, numbers, watermark, logos, signature or symbols on badge/clothing. Original character not resembling any existing franchise. High-quality bright Japanese anime cel-shaded game asset perfectly consistent with the reference's rendering style.",
+      "file_bytes": 160002,
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "retries": 0
+    },
+    {
+      "path": "art/scenes/sakura/wall.webp",
+      "batch": 1,
+      "kind": "scene",
+      "theme": "sakura",
+      "character": null,
+      "expression": null,
+      "target_size": [
+        1024,
+        1024
+      ],
+      "actual_size": [
+        1024,
+        1024
+      ],
+      "format": "webp",
+      "webp_quality": 90,
+      "generation_tool": "image_gen.imagegen",
+      "model": "imagegen built-in (underlying model not disclosed)",
+      "model_disclosed": false,
+      "transparent": false,
+      "background_status": "opaque scene",
+      "status": "complete",
+      "reference_paths": [
+        "/Users/a1234/.codex/generated_images/01a11b5e-2302-7e21-8d42-d409361c7d7b/exec-c051f052-ab85-4106-9d8f-42f0baa9a04c.png"
+      ],
+      "source_image_path": "/Users/a1234/.codex/generated_images/01a11b60-caa4-7fe2-9158-f8344375bc93/exec-ef3fecd7-5e7e-48bf-87e1-84ef5116160b.png",
+      "generation_run": null,
+      "attempts": 1,
+      "qa_notes": [
+        "透明=false。原图仅尺寸缩至1024，WebP质量90。视觉无明显左右接缝；不是像素级完全一致。"
+      ],
+      "qa_approved": true,
+      "background_requirement": "opaque scene; no people or text",
+      "composition_requirement": "front level view; horizontal seamless repeat; no windows/furniture",
+      "planned_reference_paths": [],
+      "file_bytes": 47268,
+      "alpha_extrema": [
+        255,
+        255
+      ],
+      "retries": 0,
+      "unsatisfactory": false,
+      "attempt_history": [
+        {
+          "prompt": "Use case: stylized-concept. Asset type: sakura office wall texture for a 2D anime game / visual novel. Generate exactly one 1024x1024 square image, fully opaque. Image 1 is a STYLE REFERENCE ONLY: match its polished Japanese anime clean lineart, bright restrained cel-shaded colors; do not reproduce the character. Primary request: a flat front-facing orthographic milk-white wallpaper with a very light blush pink undertone and delicate low-contrast pale pink cherry-blossom watermark motifs. Full image is only the wall surface, no floor, no furniture, no windows, no people, no trim, no corners, no perspective. Perfectly seamless repeat horizontally: the left and right edge must align in pattern and color when tiled, wallpaper motif scale uniform. Even flat lighting, no directional shadow or gradient. No text, letters, numbers, symbols resembling writing, logos, or watermark signatures.",
+          "source": "/Users/a1234/.codex/generated_images/01a11b60-caa4-7fe2-9158-f8344375bc93/exec-ef3fecd7-5e7e-48bf-87e1-84ef5116160b.png",
+          "qa": "视觉检查通过：淡粉奶白樱花暗纹、正视、无人物/家具/文字；左右边界匹配良好。边界 RGB 平均差 1.0625/255，内部相邻列平均差 0.912/255。生成图不是像素级完全相同边界。"
+        }
+      ],
+      "prompt": "Use case: stylized-concept. Asset type: sakura office wall texture for a 2D anime game / visual novel. Generate exactly one 1024x1024 square image, fully opaque. Image 1 is a STYLE REFERENCE ONLY: match its polished Japanese anime clean lineart, bright restrained cel-shaded colors; do not reproduce the character. Primary request: a flat front-facing orthographic milk-white wallpaper with a very light blush pink undertone and delicate low-contrast pale pink cherry-blossom watermark motifs. Full image is only the wall surface, no floor, no furniture, no windows, no people, no trim, no corners, no perspective. Perfectly seamless repeat horizontally: the left and right edge must align in pattern and color when tiled, wallpaper motif scale uniform. Even flat lighting, no directional shadow or gradient. No text, letters, numbers, symbols resembling writing, logos, or watermark signatures.",
+      "native_size": [
+        1254,
+        1254
+      ]
+    },
+    {
+      "path": "art/scenes/sakura/floor.webp",
+      "batch": 1,
+      "kind": "scene",
+      "theme": "sakura",
+      "character": null,
+      "expression": null,
+      "target_size": [
+        1024,
+        1024
+      ],
+      "actual_size": [
+        1024,
+        1024
+      ],
+      "format": "webp",
+      "webp_quality": 90,
+      "generation_tool": "image_gen.imagegen",
+      "model": "imagegen built-in (underlying model not disclosed)",
+      "model_disclosed": false,
+      "transparent": false,
+      "background_status": "opaque scene",
+      "status": "needs_review",
+      "reference_paths": [
+        "/Users/a1234/.codex/generated_images/01a11b5e-2302-7e21-8d42-d409361c7d7b/exec-c051f052-ab85-4106-9d8f-42f0baa9a04c.png"
+      ],
+      "source_image_path": "/Users/a1234/.codex/generated_images/01a11b60-caa4-7fe2-9158-f8344375bc93/exec-059a5e63-c8a7-40a7-9602-a08812a23505.png",
+      "generation_run": null,
+      "attempts": 4,
+      "qa_notes": [
+        "原图仅缩到1024，WebP质量90。重画3次后保留最后版；板条间距略不均匀，生成器仍未保证像素级严格无缝，README应列作轻微不满意项。"
+      ],
+      "qa_approved": false,
+      "background_requirement": "opaque scene; no people or text",
+      "composition_requirement": "top down texture; seamless repeat on all four edges",
+      "planned_reference_paths": [],
+      "file_bytes": 23792,
+      "alpha_extrema": [
+        255,
+        255
+      ],
+      "retries": 3,
+      "unsatisfactory": true,
+      "attempt_history": [
+        {
+          "prompt": "Use case: stylized-concept. Asset type: sakura office floor texture for 2D Japanese anime game / visual novel. Generate exactly one 1024x1024 square image, opaque. Image 1 is a STYLE REFERENCE ONLY: match clean polished anime asset rendering, crisp controlled linework, bright colors and restrained cel shading. Primary request: light natural maple wood plank floor texture viewed directly from above in perfect flat orthographic top-down view, honey-cream pale wood with delicate stylized wood grain, narrow fine joints between horizontal planks, regular repeating staggered plank arrangement. This entire square is floor material only. Strictly seamless tileable on all four sides: matching wood grain and plank joints at top/bottom and left/right; create one repeat tile, no frame. Uniform diffuse color and flat lighting across whole image, no vignette or directional gradient. No furniture, people, objects, text, letters, numbers, logo or watermark; no perspective, no shadows, no realistic photographic texture.",
+          "source": "/Users/a1234/.codex/generated_images/01a11b60-caa4-7fe2-9158-f8344375bc93/exec-1480d88a-36ed-4ade-aa1d-b57295806a8b.png",
+          "edge_mae": {
+            "lr": 2.6832682291666665,
+            "tb": 4.055989583333333
+          },
+          "qa": "木纹跨边界略跳变，重画。"
+        },
+        {
+          "prompt": "Use case: precise-object-edit. Asset type: seamless sakura office floor texture. Image 1 is the EDIT TARGET. Preserve its light maple wood palette, clean anime cel shaded texture, flat orthographic top-down camera, horizontal planks and fine joints. Change ONLY repeat continuity: make this a mathematically periodic repeat tile in both directions, 1024x1024. Left and right boundaries must continue identical grain strokes at matching vertical positions; top and bottom must continue the same planks and wood grain with matched vertical joint positions. Ensure uniform base wood color at all four edges, no edge-specific dark band. Make subtle wood grain short and centered within planks when needed for clean edge continuity. No perspective, furniture, objects, people, text, letters, numbers, watermark, logo.",
+          "source": "/Users/a1234/.codex/generated_images/01a11b60-caa4-7fe2-9158-f8344375bc93/exec-2cb8cf72-7c91-43b3-a345-2cb3c5c35e66.png",
+          "edge_mae": {
+            "lr": 1.6263020833333333,
+            "tb": 3.3365885416666665
+          },
+          "qa": "接缝改善但上下面木纹仍不连贯。"
+        },
+        {
+          "prompt": "Use case: stylized-concept. Create exactly one opaque 1024x1024 tileable anime-game floor texture. Image 1 is only a style reference for polished Japanese anime illustration, clean lines and soft cel shading. Subject: flat top-down pale maple wood flooring, creamy light wood palette and restrained short wood-grain strokes. Design as a deliberate repeating wallpaper-like texture tile. Use EIGHT equal-height horizontal board rows. Half a board row at top and matching half at bottom, so top/bottom share the same board and seamless grain. Keep board seams evenly spaced and truly straight. Offset vertical plank seams in an orderly repeated brick bond. All four image edges must use the identical creamy base tone, match each other's features exactly across repeat boundaries, and avoid any wood-grain marks that reach image boundaries. Uniform flat lighting, no gradient. Only the wooden floor fills all pixels; no frame, objects, furniture, people, writing, lettering, numbers, logo, watermark, perspective or shadow.",
+          "source": "/Users/a1234/.codex/generated_images/01a11b60-caa4-7fe2-9158-f8344375bc93/exec-edc8bfa1-b2b7-4e9e-aa28-1082eb879ab6.png",
+          "edge_mae": {
+            "lr": 2.9593098958333335,
+            "tb": 2.1458333333333335
+          },
+          "qa": "上下面有所改善，左右边差升高。"
+        },
+        {
+          "prompt": "Use case: stylized-concept. Asset type: seamless light wood floor game texture. Use image 1 only as anime style reference. Generate a single opaque 1024x1024 square, full surface directly top-down, no perspective. A very clean, pale cream maple wood plank floor, fine thin caramel horizontal board joints, subtle sparse short oval wood-grain motifs centered inside each board. Seamless four-way tile design is the priority. All rows share exactly the same flat cream base color; every horizontal board joint lies at a fixed straight height across the whole width; all grain motifs end well before the left or right border; no wood-grain shapes touch any border. At top and bottom, show a matching plain flat cream half-board with no vertical plank joints and no grain near boundary, allowing an imperceptible vertical repeat. This is stylized anime cel-shaded game material with almost flat colors, not photographic or textured with lighting variations. No border, people, furniture, objects, shadows, gradient, text, letters, numbers, logo, watermark.",
+          "source": "/Users/a1234/.codex/generated_images/01a11b60-caa4-7fe2-9158-f8344375bc93/exec-059a5e63-c8a7-40a7-9602-a08812a23505.png",
+          "edge_mae": {
+            "lr": 0.912109375,
+            "tb": 0.693359375
+          },
+          "qa": "最后选择。平面顶视、无字无人；木纹收于边界内，四边色差降至约1/255以下。板条间距略不均匀，边界不是数学上像素相同。"
+        }
+      ],
+      "prompt": "Use case: stylized-concept. Asset type: seamless light wood floor game texture. Use image 1 only as anime style reference. Generate a single opaque 1024x1024 square, full surface directly top-down, no perspective. A very clean, pale cream maple wood plank floor, fine thin caramel horizontal board joints, subtle sparse short oval wood-grain motifs centered inside each board. Seamless four-way tile design is the priority. All rows share exactly the same flat cream base color; every horizontal board joint lies at a fixed straight height across the whole width; all grain motifs end well before the left or right border; no wood-grain shapes touch any border. At top and bottom, show a matching plain flat cream half-board with no vertical plank joints and no grain near boundary, allowing an imperceptible vertical repeat. This is stylized anime cel-shaded game material with almost flat colors, not photographic or textured with lighting variations. No border, people, furniture, objects, shadows, gradient, text, letters, numbers, logo, watermark.",
+      "native_size": [
+        1254,
+        1254
+      ]
+    },
+    {
+      "path": "art/scenes/sakura/window.webp",
+      "batch": 1,
+      "kind": "scene",
+      "theme": "sakura",
+      "character": null,
+      "expression": null,
+      "target_size": [
+        1536,
+        1024
+      ],
+      "actual_size": [
+        1536,
+        1024
+      ],
+      "format": "webp",
+      "webp_quality": 90,
+      "generation_tool": "image_gen.imagegen",
+      "model": "imagegen built-in (underlying model not disclosed)",
+      "model_disclosed": false,
+      "transparent": false,
+      "background_status": "opaque scene",
+      "status": "complete",
+      "reference_paths": [
+        "/Users/a1234/.codex/generated_images/01a11b5e-2302-7e21-8d42-d409361c7d7b/exec-c051f052-ab85-4106-9d8f-42f0baa9a04c.png"
+      ],
+      "source_image_path": "/Users/a1234/.codex/generated_images/01a11b60-caa4-7fe2-9158-f8344375bc93/exec-3208d48d-e916-4fb6-a4e6-3458f85bbf4a.png",
+      "generation_run": null,
+      "attempts": 1,
+      "qa_notes": [
+        "透明=false。原尺寸保存，WebP质量90。"
+      ],
+      "qa_approved": true,
+      "background_requirement": "opaque scene; no people or text",
+      "composition_requirement": "landscape without window frame; key content in central horizontal strip",
+      "planned_reference_paths": [],
+      "file_bytes": 500344,
+      "alpha_extrema": [
+        255,
+        255
+      ],
+      "retries": 0,
+      "unsatisfactory": false,
+      "attempt_history": [
+        {
+          "prompt": "Use case: illustration-story. Asset type: sakura office outdoor view background for a Japanese anime game / visual novel. Generate one 1536x1024 landscape 3:2 illustration, opaque. Image 1 is a STYLE REFERENCE ONLY: match polished Japanese anime, clean crisp outlines, bright cel shading, elegant detailed illustration, same aesthetic as character. Primary request: beautiful blooming pink cherry blossom trees under fresh clear blue sky and soft white clouds, a pleasant spring view seen from an office window but WITHOUT any window frame or building interior. Composition critical: place the recognizable pink canopies, central tree trunks and blue-sky/cloud shapes in the horizontal middle band between 30% and 70% image height; main scenery must remain understandable when top and bottom are cropped. The outer top and bottom can contain quiet continuation of sky and lawn. Eye-level outdoor scene, detailed yet clean, high-quality Japanese anime background art. No people, no characters, no window frames, no interior furnishings, no signs, no text, letters, numbers, logo or watermark.",
+          "source": "/Users/a1234/.codex/generated_images/01a11b60-caa4-7fe2-9158-f8344375bc93/exec-3208d48d-e916-4fb6-a4e6-3458f85bbf4a.png",
+          "qa": "通过：樱花树/蓝天白云中央带构图清晰；无窗框/人物/文字。"
+        }
+      ],
+      "prompt": "Use case: illustration-story. Asset type: sakura office outdoor view background for a Japanese anime game / visual novel. Generate one 1536x1024 landscape 3:2 illustration, opaque. Image 1 is a STYLE REFERENCE ONLY: match polished Japanese anime, clean crisp outlines, bright cel shading, elegant detailed illustration, same aesthetic as character. Primary request: beautiful blooming pink cherry blossom trees under fresh clear blue sky and soft white clouds, a pleasant spring view seen from an office window but WITHOUT any window frame or building interior. Composition critical: place the recognizable pink canopies, central tree trunks and blue-sky/cloud shapes in the horizontal middle band between 30% and 70% image height; main scenery must remain understandable when top and bottom are cropped. The outer top and bottom can contain quiet continuation of sky and lawn. Eye-level outdoor scene, detailed yet clean, high-quality Japanese anime background art. No people, no characters, no window frames, no interior furnishings, no signs, no text, letters, numbers, logo or watermark.",
+      "native_size": [
+        1536,
+        1024
+      ]
+    },
+    {
+      "path": "art/props/sakura/desk.webp",
+      "batch": 1,
+      "kind": "prop",
+      "theme": "sakura",
+      "character": null,
+      "expression": null,
+      "target_size": [
+        1024,
+        1024
+      ],
+      "actual_size": [
+        1024,
+        1024
+      ],
+      "format": "webp",
+      "webp_quality": 90,
+      "generation_tool": "image_gen.imagegen",
+      "model": "imagegen built-in (underlying model not disclosed)",
+      "model_disclosed": false,
+      "transparent": true,
+      "background_status": "transparent",
+      "status": "complete",
+      "reference_paths": [
+        "/Users/a1234/.codex/generated_images/01a11b5e-2302-7e21-8d42-d409361c7d7b/exec-c051f052-ab85-4106-9d8f-42f0baa9a04c.png"
+      ],
+      "source_image_path": "/Users/a1234/.codex/generated_images/01a11b61-02dd-7d92-acbc-373049ddb4c0/exec-23bd210c-e704-4195-a3a3-0d8d31bcfbed.png",
+      "generation_run": null,
+      "attempts": 4,
+      "qa_notes": [
+        "Final redraw accepted: about2.2:1 silhouette width-to-height, close to requested ~2:1.",
+        "Correct orthographic front view, front modesty panel and narrow tabletop edge only, empty desktop, whole object visible.",
+        "No people, writing, ground shadow or cropping; genuine transparent alpha retained."
+      ],
+      "qa_approved": true,
+      "background_requirement": "transparent preferred; pure white acceptable; no ground shadow",
+      "composition_requirement": "single centered object; frontal level view; clear margins; no people/text; no overhead/angled perspective",
+      "planned_reference_paths": [],
+      "prompt": "Use case: stylized-concept. Create ONE isolated sakura-office DESK sprite, square1024x1024 transparent image. Reference image is art STYLE only: Japanese anime, clean precise outlines, bright pink/white, pale blond wood, polished cel shading. Do not include character. A COMPACT single-person workstation desk with realistic proportions: its width is equivalent to140cm and its height equivalent to75cm. This desk is only a little under TWICE as wide as tall, NOT a long wide reception counter. Draw a pale wood thin horizontal tabletop EDGE, a large ivory FRONT modesty panel with pastel-pink border, two tall pastel-pink/ivory legs with small feet. Front panel should be fairly TALL, not a shallow strip. Camera: perfectly STRAIGHT FRONT ELEVATION at eye level, no perspective, absolutely NO visible top surface or side faces. Empty desktop. Entire desk centered, square canvas generous transparent margins on all sides. The complete object silhouette width to total height should look about1.9:1. No dimension markings; the proportions are guidance only. NO letters, digits, text, logos, watermark, people, shadows, glow or floor. Genuine transparent alpha everywhere outside desk.",
+      "attempt_history": [
+        {
+          "source": "/Users/a1234/.codex/generated_images/01a11b61-02dd-7d92-acbc-373049ddb4c0/exec-c451720a-078d-421e-b8ca-ca4edc246f31.png",
+          "prompt": "Use case: stylized-concept. Asset type: individual 2D Japanese mobile-game / visual-novel furniture sprite, square 1024x1024. Reference image 1 is STYLE ONLY: match its clean precise anime linework, bright pink and white palette, crisp cel shading and high-quality illustrated finish. Do not include the character. Subject: exactly ONE cute office workstation desk made of pale blond wood with soft pastel-pink and ivory panels. TRUE ORTHOGRAPHIC STRAIGHT FRONT VIEW at eye level, symmetrical, perfectly horizontal tabletop, NO three-quarter view, NO visible side faces, NO top-down perspective. The person would sit behind it facing the viewer, so show a large clean FRONT MODESTY PANEL, two slim legs, and ONLY a NARROW tabletop edge; the tabletop's upper surface must not be visible. Empty desk, no objects on it. Desk width roughly twice its height, single desk centered with generous transparent margins on all four sides, whole desk entirely within frame. Scene/backdrop: genuinely transparent alpha, isolated cutout. No floor, no ground shadow, no cast shadow. No writing, letters, digits, logos, watermarks, badges, people, windows or decor. Cute coherent sakura-office furniture asset. All negative space must be transparent, without glows."
+        },
+        {
+          "source": "/Users/a1234/.codex/generated_images/01a11b61-02dd-7d92-acbc-373049ddb4c0/exec-dbe83687-613e-4bbd-80d5-dd7dea8c3969.png",
+          "prompt": "Edit the desk in reference image 1. Keep identical pink-white-pale-wood design, linework, shading, straight frontal orthographic view, empty tabletop, transparent background and all details. Change ONLY its structural proportions: make the desk substantially TALLER, increasing the HEIGHT of the front panel and legs, so the whole desk's WIDTH is TWO TIMES its total HEIGHT, a 2:1 ratio rather than the current almost 3:1. Tall comfortable office desk, not a low console. Do not stretch a finished image; redraw the taller panel and legs cleanly. Preserve the thin horizontal tabletop edge with NO top surface visible and no side face visible. Square1024x1024 transparent canvas, desk centered with margins. No people, no writing, no words, no digits, no shadow, no floor, no extra objects, no text or watermark."
+        },
+        {
+          "source": "/Users/a1234/.codex/generated_images/01a11b61-02dd-7d92-acbc-373049ddb4c0/exec-6475f13f-798e-4d6e-8fe8-a9da4862376e.png",
+          "prompt": "Edit reference image 1, the pink ivory pale-wood office desk. Keep all design and details, perfect straight frontal view, clean anime linework, coloring, empty desktop, transparent background, square canvas. Change ONLY the height: this version is too tall. Redraw the legs and modesty panel about25% SHORTER while preserving current width. The complete desk must be TWICE AS WIDE AS TALL, exactly a 2:1 object silhouette proportion. On the square canvas a desk approximately900 pixels wide and450 pixels tall, centered with big transparent margins top and bottom. Preserve the narrow tabletop edge and show no desktop top surface. No side faces, floor, shadow, people, writing, text, logos, digits or extra objects."
+        },
+        {
+          "source": "/Users/a1234/.codex/generated_images/01a11b61-02dd-7d92-acbc-373049ddb4c0/exec-23bd210c-e704-4195-a3a3-0d8d31bcfbed.png",
+          "prompt": "Use case: stylized-concept. Create ONE isolated sakura-office DESK sprite, square1024x1024 transparent image. Reference image is art STYLE only: Japanese anime, clean precise outlines, bright pink/white, pale blond wood, polished cel shading. Do not include character. A COMPACT single-person workstation desk with realistic proportions: its width is equivalent to140cm and its height equivalent to75cm. This desk is only a little under TWICE as wide as tall, NOT a long wide reception counter. Draw a pale wood thin horizontal tabletop EDGE, a large ivory FRONT modesty panel with pastel-pink border, two tall pastel-pink/ivory legs with small feet. Front panel should be fairly TALL, not a shallow strip. Camera: perfectly STRAIGHT FRONT ELEVATION at eye level, no perspective, absolutely NO visible top surface or side faces. Empty desktop. Entire desk centered, square canvas generous transparent margins on all sides. The complete object silhouette width to total height should look about1.9:1. No dimension markings; the proportions are guidance only. NO letters, digits, text, logos, watermark, people, shadows, glow or floor. Genuine transparent alpha everywhere outside desk."
+        }
+      ],
+      "unsatisfactory": false,
+      "normalization": "aspect-preserving fit and transparent padding; WebP quality90",
+      "native_size": [
+        1254,
+        1254
+      ],
+      "file_bytes": 33412,
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "retries": 3
+    },
+    {
+      "path": "art/props/sakura/desk-boss.webp",
+      "batch": 1,
+      "kind": "prop",
+      "theme": "sakura",
+      "character": null,
+      "expression": null,
+      "target_size": [
+        1024,
+        1024
+      ],
+      "actual_size": [
+        1024,
+        1024
+      ],
+      "format": "webp",
+      "webp_quality": 90,
+      "generation_tool": "image_gen.imagegen",
+      "model": "imagegen built-in (underlying model not disclosed)",
+      "model_disclosed": false,
+      "transparent": true,
+      "background_status": "transparent",
+      "status": "complete",
+      "reference_paths": [
+        "/Users/a1234/.codex/generated_images/01a11b61-02dd-7d92-acbc-373049ddb4c0/exec-23bd210c-e704-4195-a3a3-0d8d31bcfbed.png"
+      ],
+      "source_image_path": "/Users/a1234/.codex/generated_images/01a11b61-02dd-7d92-acbc-373049ddb4c0/exec-e717fc14-4e38-4126-8aa5-33ce7bc18d91.png",
+      "generation_run": null,
+      "attempts": 3,
+      "qa_notes": [
+        "Final revision accepted: keeps accepted normal desk silhouette about2.2:1 width-to-height.",
+        "Correct front view, empty desktop, central pink heart and grander decorative front panel.",
+        "No people, writing, ground shadow or cropping; genuine transparent alpha retained."
+      ],
+      "qa_approved": true,
+      "background_requirement": "transparent preferred; pure white acceptable; no ground shadow",
+      "composition_requirement": "single centered object; frontal level view; clear margins; no people/text; no overhead/angled perspective",
+      "planned_reference_paths": [],
+      "prompt": "Edit reference image 1, this front-facing pink ivory pale-wood desk. Turn it into the sakura-office supervisor's grander desk. KEEP the exact current overall desk width and total height and silhouette proportions, about2.2:1 width-to-height, with same square transparent canvas, perfectly straight frontal eye-level view, only narrow tabletop edge visible and no top surface. Keep clean Japanese anime linework and cel shading, pale wood tabletop edge, pink/ivory colors. Change design details ONLY: add ONE large soft PINK HEART ornament centered on the front panel, make the front-panel decorative border more elegant, make the two supporting legs slightly more substantial with a rounded sculpted column treatment. Preserve current structural height and width: do NOT make it wider or lower. Nothing on desktop. Entire single object centered with margins, genuine transparent alpha. No people, letters, text, digits, logo, watermark, floor or shadows.",
+      "attempt_history": [
+        {
+          "source": "/Users/a1234/.codex/generated_images/01a11b61-02dd-7d92-acbc-373049ddb4c0/exec-36e3b22c-f60c-471d-af91-89a8140a71c5.png",
+          "prompt": "Use case: stylized-concept. Asset type: individual 2D Japanese mobile-game / visual-novel furniture sprite. MUST use a SQUARE 1024x1024 canvas, with LARGE transparent empty space above and below the wide object. Reference image 1 is STYLE ONLY: match clean precise anime linework, bright pink and white palette, crisp cel shading, high-quality illustration; do not include the character. Subject: exactly ONE grand cute office supervisor desk, pale blond wood narrow tabletop edge, pink and ivory front panel, gracefully substantial pale-pink legs and rounded corners. A single soft PINK HEART decoration centered on the FRONT panel, no other symbols. TRUE ORTHOGRAPHIC STRAIGHT FRONT VIEW at eye level, perfectly horizontal and symmetrical; NO three-quarter view, NO visible side faces, NO top-down view. The person would sit behind it facing the viewer, so show a large FRONT MODESTY PANEL and ONLY a NARROW tabletop edge, no upper desktop surface. Empty desk, no objects on it. The desk is roughly twice as wide as tall, occupies about 80% canvas width and only 40% canvas height, centered vertically in the SQUARE image with broad blank TRANSPARENT top and bottom margins. Whole desk fully visible. Background: genuine transparent alpha, isolated cutout, no floor, no ground shadow, no glows. No text, letters, digits, logos, watermarks, people, windows or extra objects."
+        },
+        {
+          "source": "/Users/a1234/.codex/generated_images/01a11b61-02dd-7d92-acbc-373049ddb4c0/exec-beee04ab-67f8-4dab-b79c-711a3f1cfd64.png",
+          "prompt": "Edit the boss desk in reference image 1. Keep identical pink-white-pale-wood design, central pink HEART, linework, shading, straight frontal orthographic view, empty tabletop, transparent background and all details. Change ONLY structural proportions: moderately increase HEIGHT of the front panel and legs by about 40 percent, so the complete desk is TWICE AS WIDE AS TALL, a 2:1 width-to-height ratio rather than current 3:1. Specifically on a square canvas: desk width about900 pixels and total height about450 pixels. Narrow horizontal tabletop edge, NO tabletop upper surface and no side faces. Tall enough for sitting comfortably behind, elegant substantial supervisor desk. Square1024x1024 transparent canvas, desk centered with margins. No people, no writing, no words, no digits, no shadow, no floor, no extra objects, no text or watermark."
+        },
+        {
+          "source": "/Users/a1234/.codex/generated_images/01a11b61-02dd-7d92-acbc-373049ddb4c0/exec-e717fc14-4e38-4126-8aa5-33ce7bc18d91.png",
+          "prompt": "Edit reference image 1, this front-facing pink ivory pale-wood desk. Turn it into the sakura-office supervisor's grander desk. KEEP the exact current overall desk width and total height and silhouette proportions, about2.2:1 width-to-height, with same square transparent canvas, perfectly straight frontal eye-level view, only narrow tabletop edge visible and no top surface. Keep clean Japanese anime linework and cel shading, pale wood tabletop edge, pink/ivory colors. Change design details ONLY: add ONE large soft PINK HEART ornament centered on the front panel, make the front-panel decorative border more elegant, make the two supporting legs slightly more substantial with a rounded sculpted column treatment. Preserve current structural height and width: do NOT make it wider or lower. Nothing on desktop. Entire single object centered with margins, genuine transparent alpha. No people, letters, text, digits, logo, watermark, floor or shadows."
+        }
+      ],
+      "unsatisfactory": false,
+      "normalization": "aspect-preserving fit and transparent padding; WebP quality90",
+      "native_size": [
+        1254,
+        1254
+      ],
+      "file_bytes": 51942,
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "retries": 2
+    },
+    {
+      "path": "art/props/sakura/chair.webp",
+      "batch": 1,
+      "kind": "prop",
+      "theme": "sakura",
+      "character": null,
+      "expression": null,
+      "target_size": [
+        1024,
+        1024
+      ],
+      "actual_size": [
+        1024,
+        1024
+      ],
+      "format": "webp",
+      "webp_quality": 90,
+      "generation_tool": "image_gen.imagegen",
+      "model": "imagegen built-in (underlying model not disclosed)",
+      "model_disclosed": false,
+      "transparent": true,
+      "background_status": "transparent",
+      "status": "complete",
+      "reference_paths": [
+        "/Users/a1234/.codex/generated_images/01a11b5e-2302-7e21-8d42-d409361c7d7b/exec-c051f052-ab85-4106-9d8f-42f0baa9a04c.png"
+      ],
+      "source_image_path": "/Users/a1234/.codex/generated_images/01a11b61-02dd-7d92-acbc-373049ddb4c0/exec-00c4d522-a686-400d-8961-9bfcb72e3198.png",
+      "generation_run": null,
+      "attempts": 1,
+      "qa_notes": [
+        "Front of backrest faces viewer; complete chair visible.",
+        "Independent final WebP QA also passed: no words, people, cropping or ground shadow."
+      ],
+      "qa_approved": true,
+      "background_requirement": "transparent preferred; pure white acceptable; no ground shadow",
+      "composition_requirement": "single centered object; frontal level view; clear margins; no people/text; no overhead/angled perspective",
+      "planned_reference_paths": [],
+      "prompt": "Use case: stylized-concept. Asset type: individual 2D Japanese mobile-game / visual-novel furniture sprite on SQUARE 1024x1024 canvas. Reference image 1 is STYLE ONLY: use clean precise anime linework, bright pink and white palette, crisp cel shading, high-quality illustration. DO NOT include the character. Exactly ONE cute office swivel chair, ivory and pastel-pink upholstery, pink cushioned tall backrest, pink seat, ivory armrests and ivory five-spoke caster base. TRUE ORTHOGRAPHIC STRAIGHT FRONT VIEW at eye level, symmetrical, facing the viewer: show the FRONT of the backrest where a person's back would rest, visible above the empty seat. NO back of chair, NO three-quarter view, NO tilted camera or top-down view. Full object entirely in frame and centered, about 72% image height, generous transparent margins on all sides. Genuine transparent alpha backdrop, isolated cutout. No floor, no ground shadow, no glow. No people, writing, letters, digits, watermark, logo or other objects.",
+      "unsatisfactory": false,
+      "normalization": "aspect-preserving fit and transparent padding; WebP quality90",
+      "native_size": [
+        1254,
+        1254
+      ],
+      "file_bytes": 95668,
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "retries": 0
+    },
+    {
+      "path": "art/props/sakura/monitor.webp",
+      "batch": 1,
+      "kind": "prop",
+      "theme": "sakura",
+      "character": null,
+      "expression": null,
+      "target_size": [
+        1024,
+        1024
+      ],
+      "actual_size": [
+        1024,
+        1024
+      ],
+      "format": "webp",
+      "webp_quality": 90,
+      "generation_tool": "image_gen.imagegen",
+      "model": "imagegen built-in (underlying model not disclosed)",
+      "model_disclosed": false,
+      "transparent": true,
+      "background_status": "transparent",
+      "status": "complete",
+      "reference_paths": [
+        "/Users/a1234/.codex/generated_images/01a11b5e-2302-7e21-8d42-d409361c7d7b/exec-c051f052-ab85-4106-9d8f-42f0baa9a04c.png"
+      ],
+      "source_image_path": "/Users/a1234/.codex/generated_images/01a11b61-02dd-7d92-acbc-373049ddb4c0/exec-9306de1b-9de6-4fe0-aa30-a4cc2aec534a.png",
+      "generation_run": null,
+      "attempts": 1,
+      "qa_notes": [
+        "Rear casing faces viewer with stand; no screen visible.",
+        "Independent final WebP QA also passed: no words, people, cropping or ground shadow."
+      ],
+      "qa_approved": true,
+      "background_requirement": "transparent preferred; pure white acceptable; no ground shadow",
+      "composition_requirement": "single centered object; frontal level view; clear margins; no people/text; no overhead/angled perspective",
+      "planned_reference_paths": [],
+      "prompt": "Use case: stylized-concept. Asset type: individual 2D Japanese mobile-game / visual-novel furniture sprite, SQUARE 1024x1024 canvas. Reference image 1 is STYLE ONLY: match clean precise anime linework, bright pink and ivory palette, crisp cel shading, high-quality illustration. DO NOT include the character. Exactly ONE desktop computer monitor seen entirely FROM THE BACK: its blank IVORY REAR plastic casing is facing the viewer, the screen faces AWAY and is never visible. Wide rectangular monitor casing with subtly rounded corners, narrow pastel-pink trim, discreet symmetrical plain ventilation slits without labels, central pale-pink upright stem and stable ivory base. No logo. TRUE ORTHOGRAPHIC STRAIGHT BACK ELEVATION at eye level, centered and symmetrical, horizontal rectangle, NO three-quarter side angle, NO top-down perspective. Full monitor and base within frame, about 72% canvas width, generous TRANSPARENT margins on all four sides. Genuine transparent alpha isolated cutout, no floor, no cast shadow, no ground shadow, no glow, no cords sprawling outside. No people, text, letters, digits, watermark, logo, extra objects. This is a monitor BACK asset for a character working at a desk behind it.",
+      "unsatisfactory": false,
+      "normalization": "aspect-preserving fit and transparent padding; WebP quality90",
+      "native_size": [
+        1254,
+        1254
+      ],
+      "file_bytes": 56668,
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "retries": 0
+    },
+    {
+      "path": "art/props/sakura/plant.webp",
+      "batch": 1,
+      "kind": "prop",
+      "theme": "sakura",
+      "character": null,
+      "expression": null,
+      "target_size": [
+        1024,
+        1024
+      ],
+      "actual_size": [
+        1024,
+        1024
+      ],
+      "format": "webp",
+      "webp_quality": 90,
+      "generation_tool": "image_gen.imagegen",
+      "model": "imagegen built-in (underlying model not disclosed)",
+      "model_disclosed": false,
+      "transparent": true,
+      "background_status": "transparent",
+      "status": "complete",
+      "reference_paths": [
+        "/Users/a1234/.codex/generated_images/01a11b5e-2302-7e21-8d42-d409361c7d7b/exec-c051f052-ab85-4106-9d8f-42f0baa9a04c.png"
+      ],
+      "source_image_path": "/Users/a1234/.codex/generated_images/01a11b61-02dd-7d92-acbc-373049ddb4c0/exec-bb0461c9-c520-462e-9fca-9d2224509845.png",
+      "generation_run": null,
+      "attempts": 1,
+      "qa_notes": [
+        "Complete leafy plant in pastel-pink pot, front view.",
+        "Independent final WebP QA also passed: no words, people, cropping or ground shadow."
+      ],
+      "qa_approved": true,
+      "background_requirement": "transparent preferred; pure white acceptable; no ground shadow",
+      "composition_requirement": "single centered object; frontal level view; clear margins; no people/text; no overhead/angled perspective",
+      "planned_reference_paths": [],
+      "prompt": "Use case: stylized-concept. Asset type: individual 2D Japanese mobile-game / visual-novel furniture sprite on SQUARE 1024x1024 canvas. Reference image 1 is STYLE ONLY: match clean precise anime linework, bright coherent colors, crisp cel shading and high-quality illustrated finish. DO NOT include the character. Subject: exactly ONE cute potted office plant, a healthy cluster of broad fresh green leaves and slim green stems growing from a plain rounded pastel-pink ceramic pot with ivory rim. Clean friendly sakura office aesthetic. TRUE ORTHOGRAPHIC STRAIGHT FRONT VIEW at eye level, no tilted view or three-quarter side perspective; no overhead view into the pot. Entire plant, leaves and pot fully inside frame, centered and occupying about 72% canvas height, generous transparent margins on all four sides. Genuine transparent alpha backdrop, isolated cutout. No floor, no ground shadow, no cast shadow, no glow, no extra decorative objects. No people, writing, letters, digits, logos or watermarks.",
+      "unsatisfactory": false,
+      "normalization": "aspect-preserving fit and transparent padding; WebP quality90",
+      "native_size": [
+        1254,
+        1254
+      ],
+      "file_bytes": 188422,
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "retries": 0
+    },
+    {
+      "path": "art/props/sakura/whiteboard.webp",
+      "batch": 1,
+      "kind": "prop",
+      "theme": "sakura",
+      "character": null,
+      "expression": null,
+      "target_size": [
+        1024,
+        1024
+      ],
+      "actual_size": [
+        1024,
+        1024
+      ],
+      "format": "webp",
+      "webp_quality": 90,
+      "generation_tool": "image_gen.imagegen",
+      "model": "imagegen built-in (underlying model not disclosed)",
+      "model_disclosed": false,
+      "transparent": true,
+      "background_status": "transparent",
+      "status": "complete",
+      "reference_paths": [
+        "/Users/a1234/.codex/generated_images/01a11b5e-2302-7e21-8d42-d409361c7d7b/exec-c051f052-ab85-4106-9d8f-42f0baa9a04c.png"
+      ],
+      "source_image_path": "/Users/a1234/.codex/generated_images/01a11b61-02dd-7d92-acbc-373049ddb4c0/exec-f39bcb70-d5b4-48f4-ad2e-ceab6818a571.png",
+      "generation_run": null,
+      "attempts": 1,
+      "qa_notes": [
+        "Completely blank task board, front view, all stand feet visible.",
+        "Independent final WebP QA also passed: no words, people, cropping or ground shadow."
+      ],
+      "qa_approved": true,
+      "background_requirement": "transparent preferred; pure white acceptable; no ground shadow",
+      "composition_requirement": "single centered object; frontal level view; clear margins; no people/text; no overhead/angled perspective",
+      "planned_reference_paths": [],
+      "prompt": "Use case: stylized-concept. Asset type: individual 2D Japanese mobile-game / visual-novel furniture sprite, SQUARE 1024x1024 canvas. Reference image 1 is STYLE ONLY: match clean precise anime linework, bright pink and ivory palette, crisp cel shading, high-quality illustrated finish. DO NOT include the character. Subject: exactly ONE cute office TASK WHITEBOARD, a large PERFECTLY BLANK WHITE RECTANGULAR BOARD in soft pastel-pink rounded rectangular frame, supported by a simple ivory and pastel-pink upright freestanding stand with two feet. The whiteboard surface is totally empty: NO marks, NO lines, NO notes, NO charts, NO magnets, NO pins, NO text, NO writing implements or extra items. TRUE ORTHOGRAPHIC STRAIGHT FRONT VIEW at eye level, symmetrical and perpendicular to viewer, NO top-down or angled view. The broad board faces directly forward and is never foreshortened. Whole board and stand fully visible centered within SQUARE canvas, about 76% canvas height, generous transparent margins on all sides. Genuine transparent alpha backdrop, isolated cutout, no floor, no ground shadow, no cast shadow, no glow. No people, letters, digits, watermark or logos.",
+      "unsatisfactory": false,
+      "normalization": "aspect-preserving fit and transparent padding; WebP quality90",
+      "native_size": [
+        1254,
+        1254
+      ],
+      "file_bytes": 57184,
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "retries": 0
+    }
+  ],
+  "completed_asset_count": 18,
+  "updated_date": "2026-10-11"
+}
