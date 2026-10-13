@@ -57,7 +57,7 @@
     "base_commit": "e65899afb16459eb36832f13037395997bf3466e",
     "preserves_existing_assets": true,
     "previous_asset_count": 27,
-    "included_asset_count": 27
+    "included_asset_count": 36
   },
   "global_qa": [
     "日系动漫、干净线稿、赛璐璐、明亮色彩，角色/场景/道具画风一致",
@@ -1459,8 +1459,483 @@
         254
       ],
       "retries": 0
+    },
+    {
+      "path": "art/cast/park/shaniu-idle.webp",
+      "batch": 2,
+      "kind": "cast",
+      "theme": "park",
+      "character": "shaniu",
+      "expression": "idle",
+      "target_size": [
+        1024,
+        1536
+      ],
+      "actual_size": [
+        1024,
+        1536
+      ],
+      "format": "webp",
+      "webp_quality": 90,
+      "generation_tool": "image_gen.imagegen",
+      "model": "imagegen built-in (underlying model not disclosed)",
+      "model_disclosed": false,
+      "transparent": true,
+      "background_status": "transparent",
+      "status": "complete",
+      "reference_paths": [
+        "/Users/a1234/.codex/generated_images/01a11b5e-2302-7e21-8d42-d409361c7d7b/exec-c051f052-ab85-4106-9d8f-42f0baa9a04c.png"
+      ],
+      "source_image_path": "/Users/a1234/.codex/generated_images/01a11b5f-1b58-7731-b7a7-5ad1c470923a/exec-9e4612de-a31b-4c31-9e26-81d6d534c423.png",
+      "generation_run": null,
+      "attempts": 1,
+      "qa_notes": [
+        "Identity matches sakura Shaniu: black long straight hair, pink eyes, robot antennae and pink headband. Pink business suit, headset, right-hand black stun baton with blue-white tip sparks and left tablet present. Full-body and normal hands/feet; no text or ground shadow."
+      ],
+      "qa_approved": true,
+      "background_requirement": "transparent preferred; pure white acceptable; no ground shadow",
+      "composition_requirement": "single character; frontal standing; full body; no cropped head/hands/feet; space above head",
+      "planned_reference_paths": [
+        "art/cast/sakura/shaniu-idle.webp"
+      ],
+      "prompt": "Use case: identity-preserve. Asset type: original Japanese anime visual-novel full-body character sprite, portrait 1024x1536.\nInput image 1 is the IDENTITY and ART STYLE reference for Shaniu. Keep the exact same recognizable youthful face, long straight black hair, pink eyes, two little robot antennae on both sides of her head, pink headband, clean linework, bright polished cel shading and detailed eyes.\nCreate her 996 technology park idle outfit: pink professional office suit, fitted pink blazer, white blouse, matching pink modest knee-length business skirt, pink dress shoes. She wears a small headset with a microphone near her mouth. In HER RIGHT HAND (viewer's left) she grips a black police-baton-shaped stun baton with tiny blue-white electrical sparks only at its top tip. In HER LEFT HAND (viewer's right) she carries a plain data tablet. Show natural hands, correct five-finger anatomy and secure believable grips. No lettering or markings on tablet, baton or suit.\nExpression: smiling with cheerful closed-mouth grin and a slightly intimidating mischievous look, pink eyes clearly visible. Upright standing front-facing, character centered, exactly one girl. Head including both antenna tips and both entire shoes fully in frame, visible margin above and below, arms and props entirely inside canvas. Do not copy the reference sailor uniform; change only outfit and idle pose while preserving her identity and rendering style.\nGenuinely transparent RGBA background; if impossible, pure white. No floor, ground shadow, colored backdrop, halo, lettering, letters, digits, numbers, text, watermark, signature, logos or extra people. Original character not from an existing franchise. High-quality bright clean Japanese anime cel-shaded game asset.",
+      "unsatisfactory": false,
+      "native_size": [
+        1024,
+        1536
+      ],
+      "file_bytes": 158484,
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "retries": 0
+    },
+    {
+      "path": "art/cast/park/architect-idle.webp",
+      "batch": 2,
+      "kind": "cast",
+      "theme": "park",
+      "character": "architect",
+      "expression": "idle",
+      "target_size": [
+        1024,
+        1536
+      ],
+      "actual_size": [
+        1024,
+        1536
+      ],
+      "format": "webp",
+      "webp_quality": 90,
+      "generation_tool": "image_gen.imagegen",
+      "model": "imagegen built-in (underlying model not disclosed)",
+      "model_disclosed": false,
+      "transparent": true,
+      "background_status": "transparent",
+      "status": "complete",
+      "reference_paths": [
+        "/Users/a1234/.codex/generated_images/01a11b5f-1b58-7731-b7a7-5ad1c470923a/exec-9e4612de-a31b-4c31-9e26-81d6d534c423.png",
+        "/Users/a1234/.codex/generated_images/01a11b5e-2302-7e21-8d42-d409361c7d7b/exec-9b339934-da69-4121-ab6e-82d8f7c21ae9.png"
+      ],
+      "source_image_path": "/Users/a1234/.codex/generated_images/01a11b5f-1b58-7731-b7a7-5ad1c470923a/exec-d0124006-b2de-4740-8e73-411bd0707d72.png",
+      "generation_run": null,
+      "attempts": 1,
+      "qa_notes": [
+        "Same short brown hair/brown eyes/youthful boy face and yellow hardhat. Orange hoodie, large blank lanyard badge, dark long pants and sneakers. Rolled blueprint present, subtle dark circles, full head/feet and normal hands."
+      ],
+      "qa_approved": true,
+      "background_requirement": "transparent preferred; pure white acceptable; no ground shadow",
+      "composition_requirement": "single character; frontal standing; full body; no cropped head/hands/feet; space above head",
+      "planned_reference_paths": [
+        "art/cast/sakura/architect-idle.webp",
+        "art/cast/park/shaniu-idle.webp"
+      ],
+      "prompt": "Use case: identity-preserve. Asset type: 1024x1536 portrait original Japanese anime visual-novel full-body character sprite.\nImage 1 is only the park theme ART STYLE reference: match its bright colors, clean lineart, polished cel shading and anatomy, but do not copy the girl, pink professional suit, antennae or props. Image 2 is this character's IDENTITY reference: keep that exact recognizable face, hair color, hairstyle, eye color, sex and distinguishing accessories, and change outfit/props to the requested 996 park look.\nAll these workers look tired after working late: visible subtle dark circles under eyes, slightly exhausted but still persevering. Theme-colored plain hoodie or company T-shirt, large completely BLANK rectangular office badge on a neck lanyard, dark full-length trousers, sneakers. No suits or skirts for these workers.\nStanding front-facing upright centered; exactly one person, full head through entire shoes in canvas, visible margin above head and below feet. Props and hands fully inside frame. Natural normal hands, five fingers and feet, believable grips.\nGenuinely transparent RGBA cutout; if impossible, pure white only. No floor, no ground shadow, no colored backdrop or halo. Absolutely no text, letters, numbers, glyphs, logos, signatures or watermarks anywhere on clothing, badge, papers, screens, containers or props. Papers/screens/labels may be plain white or blank abstract panels. Original non-franchise character. High-quality bright cel-shaded Japanese anime, same renderer as references.\nSubject: architect, the exact same youthful BOY from image 2: neat short brown hair, brown eyes, same recognizable facial features and yellow safety hardhat. In this park version he wears a plain ORANGE hoodie, big blank lanyard badge, dark pants and sneakers. He holds a rolled pale-blue blueprint in one hand, the other hand relaxed naturally. Blueprint has absolutely no text or visible symbols. Confident persevering slight smile but tired eyelids and subtle under-eye dark circles. Keep the yellow helmet. Do not retain his office blazer/tie or formal shoes.",
+      "unsatisfactory": false,
+      "native_size": [
+        1024,
+        1536
+      ],
+      "file_bytes": 125612,
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "retries": 0
+    },
+    {
+      "path": "art/cast/park/frontend-idle.webp",
+      "batch": 2,
+      "kind": "cast",
+      "theme": "park",
+      "character": "frontend",
+      "expression": "idle",
+      "target_size": [
+        1024,
+        1536
+      ],
+      "actual_size": [
+        1024,
+        1536
+      ],
+      "format": "webp",
+      "webp_quality": 90,
+      "generation_tool": "image_gen.imagegen",
+      "model": "imagegen built-in (underlying model not disclosed)",
+      "model_disclosed": false,
+      "transparent": true,
+      "background_status": "transparent",
+      "status": "complete",
+      "reference_paths": [
+        "/Users/a1234/.codex/generated_images/01a11b5f-1b58-7731-b7a7-5ad1c470923a/exec-9e4612de-a31b-4c31-9e26-81d6d534c423.png",
+        "/Users/a1234/.codex/generated_images/01a11b5e-2302-7e21-8d42-d409361c7d7b/exec-c8e97192-8e49-423f-afb3-62dc07e76014.png"
+      ],
+      "source_image_path": "/Users/a1234/.codex/generated_images/01a11b5f-1b58-7731-b7a7-5ad1c470923a/exec-ea26cf4d-a486-49af-bb38-bd7c336bfdf2.png",
+      "generation_run": null,
+      "attempts": 1,
+      "qa_notes": [
+        "Same brown twin ponytails and blue eyes. Orange hoodie, large blank lanyard badge, dark pants/sneakers; blank energy-drink can and laptop present. Fatigued dark circles, full head/feet and normal hands."
+      ],
+      "qa_approved": true,
+      "background_requirement": "transparent preferred; pure white acceptable; no ground shadow",
+      "composition_requirement": "single character; frontal standing; full body; no cropped head/hands/feet; space above head",
+      "planned_reference_paths": [
+        "art/cast/sakura/frontend-idle.webp",
+        "art/cast/park/shaniu-idle.webp"
+      ],
+      "prompt": "Use case: identity-preserve. Asset type: 1024x1536 portrait original Japanese anime visual-novel full-body character sprite.\nImage 1 is only the park theme ART STYLE reference: match its bright colors, clean lineart, polished cel shading and anatomy, but do not copy the girl, pink professional suit, antennae or props. Image 2 is this character's IDENTITY reference: keep that exact recognizable face, hair color, hairstyle, eye color, sex and distinguishing accessories, and change outfit/props to the requested 996 park look.\nAll these workers look tired after working late: visible subtle dark circles under eyes, slightly exhausted but still persevering. Theme-colored plain hoodie or company T-shirt, large completely BLANK rectangular office badge on a neck lanyard, dark full-length trousers, sneakers. No suits or skirts for these workers.\nStanding front-facing upright centered; exactly one person, full head through entire shoes in canvas, visible margin above head and below feet. Props and hands fully inside frame. Natural normal hands, five fingers and feet, believable grips.\nGenuinely transparent RGBA cutout; if impossible, pure white only. No floor, no ground shadow, no colored backdrop or halo. Absolutely no text, letters, numbers, glyphs, logos, signatures or watermarks anywhere on clothing, badge, papers, screens, containers or props. Papers/screens/labels may be plain white or blank abstract panels. Original non-franchise character. High-quality bright cel-shaded Japanese anime, same renderer as references.\nSubject: frontend, the same youthful GIRL as image 2 with exactly her brown twin ponytails and blue eyes, cheerful face and recognizable facial features. Plain ORANGE hoodie, large blank lanyard badge, dark full-length pants and sneakers. She cradles a plain closed laptop against her torso with one arm and holds a blank energy-drink can in her other hand. Laptop and can are featureless with no branding or writing. She looks upbeat but visibly tired with dark circles and a small weary smile. Remove the old red beret, stylus, bow tie, blazer and skirt; keep her brown twin ponytails. Both props fully visible and normal hands securely hold them.",
+      "unsatisfactory": false,
+      "native_size": [
+        1024,
+        1536
+      ],
+      "file_bytes": 161792,
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "retries": 0
+    },
+    {
+      "path": "art/cast/park/reviewer-idle.webp",
+      "batch": 2,
+      "kind": "cast",
+      "theme": "park",
+      "character": "reviewer",
+      "expression": "idle",
+      "target_size": [
+        1024,
+        1536
+      ],
+      "actual_size": [
+        1024,
+        1536
+      ],
+      "format": "webp",
+      "webp_quality": 90,
+      "generation_tool": "image_gen.imagegen",
+      "model": "imagegen built-in (underlying model not disclosed)",
+      "model_disclosed": false,
+      "transparent": true,
+      "background_status": "transparent",
+      "status": "complete",
+      "reference_paths": [
+        "/Users/a1234/.codex/generated_images/01a11b5f-1b58-7731-b7a7-5ad1c470923a/exec-9e4612de-a31b-4c31-9e26-81d6d534c423.png",
+        "/Users/a1234/.codex/generated_images/01a11b5e-2302-7e21-8d42-d409361c7d7b/exec-be7203e0-b1e0-40f5-aada-52897a184b18.png"
+      ],
+      "source_image_path": "/Users/a1234/.codex/generated_images/01a11b5f-1b58-7731-b7a7-5ad1c470923a/exec-55b65f77-cec6-49b4-a2f0-ec53267c2189.png",
+      "generation_run": null,
+      "attempts": 1,
+      "qa_notes": [
+        "Same black side-swept short hair, blue eyes and thin-framed glasses. Orange T-shirt, large blank lanyard badge, dark full-length pants/sneakers. Thick stack of papers, blank faces/faint gray rectangles without characters, natural arms and fingers, complete head and shoes."
+      ],
+      "qa_approved": true,
+      "background_requirement": "transparent preferred; pure white acceptable; no ground shadow",
+      "composition_requirement": "single character; frontal standing; full body; no cropped head/hands/feet; space above head",
+      "planned_reference_paths": [
+        "art/cast/sakura/reviewer-idle.webp",
+        "art/cast/park/shaniu-idle.webp"
+      ],
+      "prompt": "Use case: identity-preserve. Asset type: 1024x1536 portrait original Japanese anime visual-novel full-body character sprite.\nImage 1 is only the park theme ART STYLE reference: match its bright colors, clean lineart, polished cel shading and anatomy, but do not copy the girl, pink professional suit, antennae or props. Image 2 is this character's IDENTITY reference: keep that exact recognizable face, hair color, hairstyle, eye color, sex and distinguishing accessories, and change outfit/props to the requested 996 park look.\nAll these workers look tired after working late: visible subtle dark circles under eyes, slightly exhausted but still persevering. Theme-colored plain hoodie or company T-shirt, large completely BLANK rectangular office badge on a neck lanyard, dark full-length trousers, sneakers. No suits or skirts for these workers.\nStanding front-facing upright centered; exactly one person, full head through entire shoes in canvas, visible margin above head and below feet. Props and hands fully inside frame. Natural normal hands, five fingers and feet, believable grips.\nGenuinely transparent RGBA cutout; if impossible, pure white only. No floor, no ground shadow, no colored backdrop or halo. Absolutely no text, letters, numbers, glyphs, logos, signatures or watermarks anywhere on clothing, badge, papers, screens, containers or props. Papers/screens/labels may be plain white or blank abstract panels. Original non-franchise character. High-quality bright cel-shaded Japanese anime, same renderer as references.\nSubject: reviewer, the exact same youthful BOY in image 2 with black short hair and side-swept fringe, blue eyes, same calm serious face and thin-framed eyeglasses. In park version he wears a plain ORANGE company T-shirt, large blank rectangular neck-lanyard badge, dark full-length pants and sneakers. He hugs one LARGE THICK STACK of loose white printed-code papers against his torso with both arms, with many clearly visible sheet edges. Keep all paper faces empty or faint non-text gray blocks only; absolutely no letters or numbers. Calm serious tired expression, visible under-eye dark circles, still concentrating after midnight. No office blazer, tie, clipboard or pen. Eyeglasses must remain, both hands grip the stack naturally and have correct finger anatomy.",
+      "unsatisfactory": false,
+      "native_size": [
+        1024,
+        1536
+      ],
+      "file_bytes": 113558,
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "retries": 0
+    },
+    {
+      "path": "art/cast/park/backend-idle.webp",
+      "batch": 2,
+      "kind": "cast",
+      "theme": "park",
+      "character": "backend",
+      "expression": "idle",
+      "target_size": [
+        1024,
+        1536
+      ],
+      "actual_size": [
+        1024,
+        1536
+      ],
+      "format": "webp",
+      "webp_quality": 90,
+      "generation_tool": "image_gen.imagegen",
+      "model": "imagegen built-in (underlying model not disclosed)",
+      "model_disclosed": false,
+      "transparent": true,
+      "background_status": "transparent",
+      "status": "complete",
+      "reference_paths": [
+        "/Users/a1234/.codex/generated_images/01a11b5f-1b58-7731-b7a7-5ad1c470923a/exec-9e4612de-a31b-4c31-9e26-81d6d534c423.png",
+        "/Users/a1234/.codex/generated_images/01a11b5f-1b58-7731-b7a7-5ad1c470923a/exec-41b6e4e0-3c47-4268-bdcf-cdad6ff19491.png"
+      ],
+      "source_image_path": "/Users/a1234/.codex/generated_images/01a11b5f-1b58-7731-b7a7-5ad1c470923a/exec-6e1f1b37-6160-42ba-ae8b-be423afa5dd0.png",
+      "generation_run": null,
+      "attempts": 1,
+      "qa_notes": [
+        "Same pale-pink bob, purple eyes and over-ear headphones. Deep teal hoodie, large blank lanyard badge, dark pants/sneakers; takeaway coffee cup and laptop present. Visible dark circles, full head/feet, natural grips and fingers."
+      ],
+      "qa_approved": true,
+      "background_requirement": "transparent preferred; pure white acceptable; no ground shadow",
+      "composition_requirement": "single character; frontal standing; full body; no cropped head/hands/feet; space above head",
+      "planned_reference_paths": [
+        "art/cast/sakura/backend-idle.webp",
+        "art/cast/park/shaniu-idle.webp"
+      ],
+      "prompt": "Use case: identity-preserve. Asset type: 1024x1536 portrait original Japanese anime visual-novel full-body character sprite.\nImage 1 is only the park theme ART STYLE reference: match its bright colors, clean lineart, polished cel shading and anatomy, but do not copy the girl, pink professional suit, antennae or props. Image 2 is this character's IDENTITY reference: keep that exact recognizable face, hair color, hairstyle, eye color, sex and distinguishing accessories, and change outfit/props to the requested 996 park look.\nAll these workers look tired after working late: visible subtle dark circles under eyes, slightly exhausted but still persevering. Theme-colored plain hoodie or company T-shirt, large completely BLANK rectangular office badge on a neck lanyard, dark full-length trousers, sneakers. No suits or skirts for these workers.\nStanding front-facing upright centered; exactly one person, full head through entire shoes in canvas, visible margin above head and below feet. Props and hands fully inside frame. Natural normal hands, five fingers and feet, believable grips.\nGenuinely transparent RGBA cutout; if impossible, pure white only. No floor, no ground shadow, no colored backdrop or halo. Absolutely no text, letters, numbers, glyphs, logos, signatures or watermarks anywhere on clothing, badge, papers, screens, containers or props. Papers/screens/labels may be plain white or blank abstract panels. Original non-franchise character. High-quality bright cel-shaded Japanese anime, same renderer as references.\nSubject: backend, the exact same youthful GIRL from image 2 with her light pale-pink ear-length bob hair, purple eyes, same gentle focused face and same over-ear headphones. In park version she wears a plain DEEP TEAL-GREEN hoodie, large blank neck-lanyard badge, dark full-length trousers and sneakers. She cradles a plain closed laptop with one arm and holds a plain takeaway coffee cup with a lid in her other hand. Laptop and cup are blank without markings. She looks focused, fatigued and persevering after a long night, visible subtle dark circles and a small weary closed-mouth smile. Keep the over-ear headphones and pink bob; remove office blazer, bow and skirt. Both props visible, natural hand grips and fingers.",
+      "unsatisfactory": false,
+      "native_size": [
+        1024,
+        1536
+      ],
+      "file_bytes": 108886,
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "retries": 0
+    },
+    {
+      "path": "art/cast/park/tester-idle.webp",
+      "batch": 2,
+      "kind": "cast",
+      "theme": "park",
+      "character": "tester",
+      "expression": "idle",
+      "target_size": [
+        1024,
+        1536
+      ],
+      "actual_size": [
+        1024,
+        1536
+      ],
+      "format": "webp",
+      "webp_quality": 90,
+      "generation_tool": "image_gen.imagegen",
+      "model": "imagegen built-in (underlying model not disclosed)",
+      "model_disclosed": false,
+      "transparent": true,
+      "background_status": "transparent",
+      "status": "complete",
+      "reference_paths": [
+        "/Users/a1234/.codex/generated_images/01a11b5f-1b58-7731-b7a7-5ad1c470923a/exec-9e4612de-a31b-4c31-9e26-81d6d534c423.png",
+        "/Users/a1234/.codex/generated_images/01a11b5f-1b58-7731-b7a7-5ad1c470923a/exec-5adb50e1-ea26-42e0-be0d-01f402eb6711.png"
+      ],
+      "source_image_path": "/Users/a1234/.codex/generated_images/01a11b5f-1b58-7731-b7a7-5ad1c470923a/exec-f95bcde7-70ff-4146-8837-50762232a99a.png",
+      "generation_run": null,
+      "attempts": 1,
+      "qa_notes": [
+        "Same blonde high ponytail and teal-green eyes. Deep teal T-shirt, blank lanyard badge, dark full-length pants/sneakers; one phone per hand with completely blank screens. Dark circles, natural phone grips and normal hands/shoes, complete head/feet."
+      ],
+      "qa_approved": true,
+      "background_requirement": "transparent preferred; pure white acceptable; no ground shadow",
+      "composition_requirement": "single character; frontal standing; full body; no cropped head/hands/feet; space above head",
+      "planned_reference_paths": [
+        "art/cast/sakura/tester-idle.webp",
+        "art/cast/park/shaniu-idle.webp"
+      ],
+      "prompt": "Use case: identity-preserve. Asset type: 1024x1536 portrait original Japanese anime visual-novel full-body character sprite.\nImage 1 is only the park theme ART STYLE reference: match its bright colors, clean lineart, polished cel shading and anatomy, but do not copy the girl, pink professional suit, antennae or props. Image 2 is this character's IDENTITY reference: keep that exact recognizable face, hair color, hairstyle, eye color, sex and distinguishing accessories, and change outfit/props to the requested 996 park look.\nAll these workers look tired after working late: visible subtle dark circles under eyes, slightly exhausted but still persevering. Theme-colored plain hoodie or company T-shirt, large completely BLANK rectangular office badge on a neck lanyard, dark full-length trousers, sneakers. No suits or skirts for these workers.\nStanding front-facing upright centered; exactly one person, full head through entire shoes in canvas, visible margin above head and below feet. Props and hands fully inside frame. Natural normal hands, five fingers and feet, believable grips.\nGenuinely transparent RGBA cutout; if impossible, pure white only. No floor, no ground shadow, no colored backdrop or halo. Absolutely no text, letters, numbers, glyphs, logos, signatures or watermarks anywhere on clothing, badge, papers, screens, containers or props. Papers/screens/labels may be plain white or blank abstract panels. Original non-franchise character. High-quality bright cel-shaded Japanese anime, same renderer as references.\nSubject: tester, the exact same youthful GIRL from image 2 with golden-blonde high ponytail, teal-green eyes and same energetic cheerful face. Park version wears a plain DEEP TEAL-GREEN company T-shirt, big blank rectangular lanyard badge, dark long trousers and sneakers. She holds TWO smartphones, exactly one in each hand, hands raised near the sides of her chest so both phones are visible. Phone screens are completely blank, no UI, icons, lettering or numbers; she is enthusiastically testing both devices despite visible subtle under-eye dark circles and a tired small smile. Keep the golden high ponytail and teal eyes; remove baseball cap, magnifying glass, blazer, bow and skirt. Natural correctly formed hands and fingers visibly grip the phones.",
+      "unsatisfactory": false,
+      "native_size": [
+        1024,
+        1536
+      ],
+      "file_bytes": 130850,
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "retries": 0
+    },
+    {
+      "path": "art/cast/park/debugger-idle.webp",
+      "batch": 2,
+      "kind": "cast",
+      "theme": "park",
+      "character": "debugger",
+      "expression": "idle",
+      "target_size": [
+        1024,
+        1536
+      ],
+      "actual_size": [
+        1024,
+        1536
+      ],
+      "format": "webp",
+      "webp_quality": 90,
+      "generation_tool": "image_gen.imagegen",
+      "model": "imagegen built-in (underlying model not disclosed)",
+      "model_disclosed": false,
+      "transparent": true,
+      "background_status": "transparent",
+      "status": "complete",
+      "reference_paths": [
+        "/Users/a1234/.codex/generated_images/01a11b5f-1b58-7731-b7a7-5ad1c470923a/exec-9e4612de-a31b-4c31-9e26-81d6d534c423.png",
+        "/Users/a1234/.codex/generated_images/01a11b5f-1b58-7731-b7a7-5ad1c470923a/exec-7e759b9e-f4e4-4724-81a5-fe9c70e0dde2.png"
+      ],
+      "source_image_path": "/Users/a1234/.codex/generated_images/01a11b5f-1b58-7731-b7a7-5ad1c470923a/exec-de636586-d9cb-4255-91d3-d9c686d907b6.png",
+      "generation_run": null,
+      "attempts": 1,
+      "qa_notes": [
+        "Same teal spiky hair, orange eyes and red forehead headband. Deep teal hoodie, large blank lanyard badge, dark pants/sneakers; wrench and small head/temple sweat droplets present, under-eye dark circles. Complete head/feet and normal fingers."
+      ],
+      "qa_approved": true,
+      "background_requirement": "transparent preferred; pure white acceptable; no ground shadow",
+      "composition_requirement": "single character; frontal standing; full body; no cropped head/hands/feet; space above head",
+      "planned_reference_paths": [
+        "art/cast/sakura/debugger-idle.webp",
+        "art/cast/park/shaniu-idle.webp"
+      ],
+      "prompt": "Use case: identity-preserve. Asset type: 1024x1536 portrait original Japanese anime visual-novel full-body character sprite.\nImage 1 is only the park theme ART STYLE reference: match its bright colors, clean lineart, polished cel shading and anatomy, but do not copy the girl, pink professional suit, antennae or props. Image 2 is this character's IDENTITY reference: keep that exact recognizable face, hair color, hairstyle, eye color, sex and distinguishing accessories, and change outfit/props to the requested 996 park look.\nAll these workers look tired after working late: visible subtle dark circles under eyes, slightly exhausted but still persevering. Theme-colored plain hoodie or company T-shirt, large completely BLANK rectangular office badge on a neck lanyard, dark full-length trousers, sneakers. No suits or skirts for these workers.\nStanding front-facing upright centered; exactly one person, full head through entire shoes in canvas, visible margin above head and below feet. Props and hands fully inside frame. Natural normal hands, five fingers and feet, believable grips.\nGenuinely transparent RGBA cutout; if impossible, pure white only. No floor, no ground shadow, no colored backdrop or halo. Absolutely no text, letters, numbers, glyphs, logos, signatures or watermarks anywhere on clothing, badge, papers, screens, containers or props. Papers/screens/labels may be plain white or blank abstract panels. Original non-franchise character. High-quality bright cel-shaded Japanese anime, same renderer as references.\nSubject: debugger, the exact same youthful BOY from image 2 with spiky tousled teal-green hair, orange eyes, red forehead headband and same determined recognizable face. Park version wears a plain DEEP TEAL-GREEN hoodie, large blank neck-lanyard badge, dark long trousers and sneakers. He grips a plain metal wrench in one hand beside his thigh, the other arm naturally relaxed. Several small clear sweat droplets on his forehead/temple near the red headband, visible subtle dark under-eye circles; determined but stressed after working late. No office blazer, shirt or tie. Red headband remains. Wrench has recognizable open-ended spanner head, no text/brand. Natural anatomy and fingers.",
+      "unsatisfactory": false,
+      "native_size": [
+        1024,
+        1536
+      ],
+      "file_bytes": 135848,
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "retries": 0
+    },
+    {
+      "path": "art/cast/park/writer-idle.webp",
+      "batch": 2,
+      "kind": "cast",
+      "theme": "park",
+      "character": "writer",
+      "expression": "idle",
+      "target_size": [
+        1024,
+        1536
+      ],
+      "actual_size": [
+        1024,
+        1536
+      ],
+      "format": "webp",
+      "webp_quality": 90,
+      "generation_tool": "image_gen.imagegen",
+      "model": "imagegen built-in (underlying model not disclosed)",
+      "model_disclosed": false,
+      "transparent": true,
+      "background_status": "transparent",
+      "status": "complete",
+      "reference_paths": [
+        "/Users/a1234/.codex/generated_images/01a11b5f-1b58-7731-b7a7-5ad1c470923a/exec-9e4612de-a31b-4c31-9e26-81d6d534c423.png",
+        "/Users/a1234/.codex/generated_images/01a11b5f-1b58-7731-b7a7-5ad1c470923a/exec-618fefc6-38dc-4ec7-ad30-810979bfc7ff.png"
+      ],
+      "source_image_path": "/Users/a1234/.codex/generated_images/01a11b5f-1b58-7731-b7a7-5ad1c470923a/exec-e6989a64-3e6d-4d6d-aadb-317926fdef6a.png",
+      "generation_run": null,
+      "attempts": 1,
+      "qa_notes": [
+        "Same blue bob plus top bun and pink eyes. Blue hoodie, blank large lanyard badge, dark pants/sneakers. Several blank file folders held naturally with both arms; visible under-eye fatigue; complete head/feet and normal hands."
+      ],
+      "qa_approved": true,
+      "background_requirement": "transparent preferred; pure white acceptable; no ground shadow",
+      "composition_requirement": "single character; frontal standing; full body; no cropped head/hands/feet; space above head",
+      "planned_reference_paths": [
+        "art/cast/sakura/writer-idle.webp",
+        "art/cast/park/shaniu-idle.webp"
+      ],
+      "prompt": "Use case: identity-preserve. Asset type: 1024x1536 portrait original Japanese anime visual-novel full-body character sprite.\nImage 1 is only the park theme ART STYLE reference: match its bright colors, clean lineart, polished cel shading and anatomy, but do not copy the girl, pink professional suit, antennae or props. Image 2 is this character's IDENTITY reference: keep that exact recognizable face, hair color, hairstyle, eye color, sex and distinguishing accessories, and change outfit/props to the requested 996 park look.\nAll these workers look tired after working late: visible subtle dark circles under eyes, slightly exhausted but still persevering. Theme-colored plain hoodie or company T-shirt, large completely BLANK rectangular office badge on a neck lanyard, dark full-length trousers, sneakers. No suits or skirts for these workers.\nStanding front-facing upright centered; exactly one person, full head through entire shoes in canvas, visible margin above head and below feet. Props and hands fully inside frame. Natural normal hands, five fingers and feet, believable grips.\nGenuinely transparent RGBA cutout; if impossible, pure white only. No floor, no ground shadow, no colored backdrop or halo. Absolutely no text, letters, numbers, glyphs, logos, signatures or watermarks anywhere on clothing, badge, papers, screens, containers or props. Papers/screens/labels may be plain white or blank abstract panels. Original non-franchise character. High-quality bright cel-shaded Japanese anime, same renderer as references.\nSubject: writer, the exact same youthful GIRL from image 2: medium-blue ear-length bob hair with one small round TOP BUN on the crown, pink eyes and same gentle recognizable face. Park version wears a plain BLUE hoodie, large blank rectangular lanyard badge, dark full-length trousers and sneakers. With both arms she hugs a STACK OF SEVERAL OFFICE FILE FOLDERS against her torso; plain folder covers and tabs, no labels or text. The stack visibly consists of different thick document folders. Gentle weary closed-mouth smile, visible under-eye dark circles from working late. Keep blue bob plus top bun and pink eyes. Remove blazer, bow, skirt, pen and single notebook. Natural arms/hands securely support the folder stack.",
+      "unsatisfactory": false,
+      "native_size": [
+        1024,
+        1536
+      ],
+      "file_bytes": 114150,
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "retries": 0
+    },
+    {
+      "path": "art/cast/park/default-idle.webp",
+      "batch": 2,
+      "kind": "cast",
+      "theme": "park",
+      "character": "default",
+      "expression": "idle",
+      "target_size": [
+        1024,
+        1536
+      ],
+      "actual_size": [
+        1024,
+        1536
+      ],
+      "format": "webp",
+      "webp_quality": 90,
+      "generation_tool": "image_gen.imagegen",
+      "model": "imagegen built-in (underlying model not disclosed)",
+      "model_disclosed": false,
+      "transparent": true,
+      "background_status": "transparent",
+      "status": "complete",
+      "reference_paths": [
+        "/Users/a1234/.codex/generated_images/01a11b5f-1b58-7731-b7a7-5ad1c470923a/exec-9e4612de-a31b-4c31-9e26-81d6d534c423.png",
+        "/Users/a1234/.codex/generated_images/01a11b5f-1b58-7731-b7a7-5ad1c470923a/exec-f42a62e9-45a6-41b5-937a-ad39e131aa7f.png"
+      ],
+      "source_image_path": "/Users/a1234/.codex/generated_images/01a11b5f-1b58-7731-b7a7-5ad1c470923a/exec-a09f47f4-bc64-4aeb-90e6-79d9c2a21050.png",
+      "generation_run": null,
+      "attempts": 1,
+      "qa_notes": [
+        "Same long straight blonde hair and blue eyes. Blue hoodie, large blank lanyard badge, dark pants/sneakers. Open cardboard box full of blank notebooks/folders, pen cup and stapler; natural supporting hands, tired new-hire smile, full head/feet."
+      ],
+      "qa_approved": true,
+      "background_requirement": "transparent preferred; pure white acceptable; no ground shadow",
+      "composition_requirement": "single character; frontal standing; full body; no cropped head/hands/feet; space above head",
+      "planned_reference_paths": [
+        "art/cast/sakura/default-idle.webp",
+        "art/cast/park/shaniu-idle.webp"
+      ],
+      "prompt": "Use case: identity-preserve. Asset type: 1024x1536 portrait original Japanese anime visual-novel full-body character sprite.\nImage 1 is only the park theme ART STYLE reference: match its bright colors, clean lineart, polished cel shading and anatomy, but do not copy the girl, pink professional suit, antennae or props. Image 2 is this character's IDENTITY reference: keep that exact recognizable face, hair color, hairstyle, eye color, sex and distinguishing accessories, and change outfit/props to the requested 996 park look.\nAll these workers look tired after working late: visible subtle dark circles under eyes, slightly exhausted but still persevering. Theme-colored plain hoodie or company T-shirt, large completely BLANK rectangular office badge on a neck lanyard, dark full-length trousers, sneakers. No suits or skirts for these workers.\nStanding front-facing upright centered; exactly one person, full head through entire shoes in canvas, visible margin above head and below feet. Props and hands fully inside frame. Natural normal hands, five fingers and feet, believable grips.\nGenuinely transparent RGBA cutout; if impossible, pure white only. No floor, no ground shadow, no colored backdrop or halo. Absolutely no text, letters, numbers, glyphs, logos, signatures or watermarks anywhere on clothing, badge, papers, screens, containers or props. Papers/screens/labels may be plain white or blank abstract panels. Original non-franchise character. High-quality bright cel-shaded Japanese anime, same renderer as references.\nSubject: default, the exact same youthful GIRL from image 2 with long straight golden-blonde hair, blue eyes and same friendly recognizable face. Park version wears a plain BLUE hoodie, large blank neck-lanyard badge, dark full-length trousers and sneakers. A newly hired worker, she hugs an open plain brown cardboard BOX FILLED WITH OFFICE SUPPLIES using both arms: visible blank notebooks, plain folders, pencil cup with a few pens, and a simple stapler. Supplies and box have no labels, writing, icons or brand marks. Friendly slightly nervous and tired small smile, subtle under-eye dark circles. Keep long straight blonde hair and blue eyes; remove office blazer, bow and skirt. Box is fully visible and hands naturally support its lower corners. Full head through feet in canvas with top/bottom margins.",
+      "unsatisfactory": false,
+      "native_size": [
+        1024,
+        1536
+      ],
+      "file_bytes": 159540,
+      "alpha_extrema": [
+        0,
+        254
+      ],
+      "retries": 0
     }
   ],
-  "completed_asset_count": 27,
+  "completed_asset_count": 36,
   "updated_date": "2026-10-11"
 }
