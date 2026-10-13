@@ -7,7 +7,7 @@ import os from 'node:os'
 import path from 'node:path'
 import { DEFAULTS } from './config.js'
 import { COST_ZH, FAMILIES, TIER_ZH, familyOf, isChatModel, modelProfile, suggestModels } from './models.js'
-import { isWin, truncate } from './util.js'
+import { fillEnv, isWin, truncate } from './util.js'
 
 export const PRESETS = [
   { id: 'deepseek', name: 'DeepSeek', group: 'DeepSeek 组', baseUrl: 'https://api.deepseek.com', models: { hard: 'deepseek-v4-pro', medium: 'deepseek-v4-flash', easy: 'deepseek-v4-flash' }, keyUrl: 'https://platform.deepseek.com/api_keys', note: '便宜，写代码很能打' },
@@ -27,6 +27,27 @@ const CLI = {
 }
 
 export const userConfigFile = () => path.join(os.homedir(), '.niuma', 'config.json')
+
+const GROUP_TYPES = ['claude-cli', 'codex-cli', 'openai-api']
+const DIFFS = ['hard', 'medium', 'easy']
+
+/** 面板上填的按难度用的模型。fill：没填中档就拿难活或杂活的顶上（API 组找不到模型名会直接失败）。 */
+function cleanModels(m, fill = true) {
+  const models = Object.fromEntries(DIFFS.map((k) => [k, String(m?.[k] || '').trim()]).filter(([, v]) => v))
+  if (fill && !models.medium && (models.hard || models.easy)) models.medium = models.hard || models.easy
+  return models
+}
+
+/** 一个组每个难度实际用哪个模型，和 BaseWorker.modelFor 一个算法。 */
+function modelsOf(g) {
+  const m = g.models || {}
+  return Object.fromEntries(DIFFS.map((d) => [d, m[d] || m.medium || g.model || '']))
+}
+
+/** API 组存着的 Key，和 OpenAIWorker.apiKey 一个算法。 */
+function groupKey(g) {
+  return fillEnv(g.apiKey || '') || (g.apiKeyEnv ? process.env[g.apiKeyEnv] || '' : '')
+}
 
 /** Windows 上刚装好的 Node / npm 全局命令不会出现在已经打开的程序的 PATH 里，补上常见目录。 */
 export function ensurePath() {
@@ -281,19 +302,6 @@ export function createSetup({ coord, reload, fake = false }) {
       run('claude', ['--version'], { timeoutMs: 20000 }),
       run('codex', ['--version'], { timeoutMs: 20000 }),
     ])
-    const cfg = readUserConfigSafe()
-    const mine = new Set((cfg.groups || []).map((g) => g.id))
-    const groups = [...coord.team.groups.values()].map((g) => ({
-      id: g.id,
-      name: g.name,
-      type: g.type,
-      available: g.available,
-      note: g.note,
-      version: g.version,
-      model: g.modelFor('medium'),
-      baseUrl: g.type === 'openai-api' ? g.cfg.baseUrl || '' : '',
-      removable: g.type === 'openai-api' && mine.has(g.id),
-    }))
     const cli = (tool, r) => ({ tool, name: CLI[tool].name, installed: r.ok, version: version(r), loggedIn: r.ok ? loggedIn(tool) : false, installing: installing.has(tool), hint: CLI[tool].loginHint })
     return {
       platform: process.platform,
@@ -302,12 +310,42 @@ export function createSetup({ coord, reload, fake = false }) {
       node: { ok: node.ok, version: version(node) },
       npm: { ok: npm.ok, version: version(npm) },
       cli: [cli('claude', claude), cli('codex', codex)],
-      groups,
+      groups: groupsView(),
       presets: PRESETS,
       staff: staffView(),
       skills: [...coord.team.skills.values()].filter((sk) => sk.id !== 'generalist').map((sk) => ({ id: sk.id, name: sk.name, description: sk.description })),
       configFile: userConfigFile(),
     }
+  }
+
+  /** 配置里的项目组（放假的也算）。 */
+  const configGroups = () => (coord.config.groups || []).filter((g) => g && g.id && GROUP_TYPES.includes(g.type))
+
+  /**
+   * 现在的项目组，放假的也列出来。models 是配置里写的样子，给「编辑」用；
+   * Key 不往网页上送，只说有没有、存在哪。
+   */
+  function groupsView() {
+    const mine = new Set((readUserConfigSafe().groups || []).map((g) => g?.id))
+    return configGroups().map((g) => {
+      const w = coord.team.groups.get(g.id)
+      const m = g.models || {}
+      const api = g.type === 'openai-api'
+      return {
+        id: g.id,
+        name: coord.team.groupName(g.id),
+        type: g.type,
+        enabled: g.enabled !== false,
+        available: !!w?.available,
+        note: w ? w.note : '放假中',
+        version: w?.version || '',
+        model: modelsOf(g).medium,
+        models: { hard: m.hard || '', medium: m.medium || g.model || '', easy: m.easy || '' },
+        baseUrl: api ? g.baseUrl || '' : '',
+        key: !api ? '' : g.noKey ? 'none' : g.apiKeyEnv && !g.apiKey ? `env:${g.apiKeyEnv}` : g.apiKey ? 'saved' : '',
+        removable: api && mine.has(g.id),
+      }
+    })
   }
 
   /** 岗位安排：每个员工排在哪个组（group）、现在实际坐在哪（now，借调时不一样）。各组自动配的通才不列。 */
@@ -319,6 +357,7 @@ export function createSetup({ coord, reload, fake = false }) {
     const rows = team.employees
       .filter((e) => !(e.skill.id === 'generalist' && team.groups.has(e.id)))
       .map((e) => row(e, { name: e.name, skill: e.skill.id, skillName: e.skill.name, group: e.home, now: e.group, enabled: true }))
+    for (const e of team.benched) rows.push(row(e, { name: e.name, skill: e.skill.id, skillName: e.skill.name, group: e.group, now: '', enabled: true }))
     for (const e of team.offDuty) {
       const sk = team.skills.get(e.skill || e.id)
       rows.push(row(e, { name: e.name || sk?.name || e.id, skill: e.skill || e.id, skillName: sk?.name || e.id, group: e.group || '', now: '', enabled: false }))
@@ -337,12 +376,13 @@ export function createSetup({ coord, reload, fake = false }) {
     const team = coord.team
     const cfg = readUserConfig()
     let list = Array.isArray(cfg.employees) ? cfg.employees.filter((e) => e && e.id) : []
-    const groupName = (gid) => team.groups.get(gid)?.name || gid
+    const groupName = (gid) => team.groupName(gid)
+    const known = (gid) => configGroups().some((g) => g.id === gid)
     let msg
     if (add) {
       const sk = team.skills.get(skill)
       if (!sk) throw new Error('没有这个岗位')
-      if (!team.groups.has(group)) throw new Error('没有这个项目组')
+      if (!known(group)) throw new Error('没有这个项目组')
       const taken = new Set([...team.employees.map((e) => e.id), ...team.offDuty.map((e) => e.id), ...list.map((e) => e.id), ...team.groups.keys()])
       let nid = skill
       let n = 1
@@ -357,7 +397,7 @@ export function createSetup({ coord, reload, fake = false }) {
         list = list.filter((e) => e.id !== id)
         msg = cur.defaultStaff ? `${cur.name}恢复成默认安排了。` : `${cur.name}离职了。`
       } else {
-        if (group && !team.groups.has(group)) throw new Error('没有这个项目组')
+        if (group && !known(group)) throw new Error('没有这个项目组')
         let entry = list.find((e) => e.id === id)
         if (!entry) list.push((entry = { id }))
         entry.skill = cur.skill
@@ -365,7 +405,8 @@ export function createSetup({ coord, reload, fake = false }) {
         if (cur.name !== team.skills.get(cur.skill)?.name) entry.name = cur.name
         if (enabled === false) entry.enabled = false
         else delete entry.enabled
-        msg = enabled === false ? `${cur.name}放假了，要用再叫回来。` : `${cur.name}去${groupName(entry.group)}上班了。`
+        const away = team.offGroups.has(entry.group) ? `（${groupName(entry.group)}在放假，先借调到别的组）` : ''
+        msg = enabled === false ? `${cur.name}放假了，要用再叫回来。` : `${cur.name}去${groupName(entry.group)}上班了${away}。`
       }
     }
     writeUserConfig({ ...cfg, employees: list })
@@ -452,12 +493,6 @@ export function createSetup({ coord, reload, fake = false }) {
     guard()
     if (coord.busy) throw new Error('傻妞手上还有活，等这一轮做完再接入新员工')
     const preset = PRESETS.find((p) => p.id === input.preset) || PRESETS.find((p) => p.id === 'custom')
-    const cleanModels = (m) => {
-      const models = Object.fromEntries(['hard', 'medium', 'easy'].map((k) => [k, String(m?.[k] || '').trim()]).filter(([, v]) => v))
-      // 没填中档就拿难活或杂活的模型顶上：派活时找不到模型名会直接失败。
-      if (!models.medium && (models.hard || models.easy)) models.medium = models.hard || models.easy
-      return models
-    }
     const conn = {
       baseUrl: normalizeBase(input.baseUrl || preset.baseUrl),
       apiKey: String(input.apiKey || '').trim(),
@@ -515,6 +550,93 @@ export function createSetup({ coord, reload, fake = false }) {
     return { ok: true, id: first?.id, reply: first?.reply, available: results.some((r) => r.available), tools: first?.tools, results }
   }
 
+  /**
+   * 调整一个项目组，默认的 Claude 组、Codex 组也一样：
+   * - 只给 enabled：放假（false）/ 叫回来（true）。放假的组不上班，它的岗位借调到别的组接着干活。
+   * - 给 name / models：改组名、按难度用的模型；API 组还能改 baseUrl 和 apiKey（Key 不填就不改）。
+   *   API 组改了模型或连接，先测试，通过了才保存。
+   * 改动按 id 写进 ~/.niuma/config.json 的 groups。
+   */
+  async function group({ id, enabled, name, models, baseUrl, apiKey } = {}) {
+    guard()
+    if (coord.busy) throw new Error('傻妞手上还有活，等这一轮做完再调整')
+    const cur = configGroups().find((g) => g.id === id)
+    if (!cur) throw new Error('没有这个项目组')
+    const api = cur.type === 'openai-api'
+    const cfg = readUserConfig()
+    const groups = Array.isArray(cfg.groups) ? cfg.groups.filter((g) => g && g.id) : []
+    const others = (coord.config.sources || []).filter((f) => path.resolve(f) !== path.resolve(userConfigFile()))
+    // 只写在项目配置里的组：改动写进 ~/.niuma/config.json 会带到别的项目去，让主人去那边改
+    if (!DEFAULTS.groups.some((g) => g.id === id) && !groups.some((g) => g.id === id)) {
+      throw new Error(`这个组写在${others.map((f) => ` ${f} `).join('、') || '别的配置文件'}里，去那里改`)
+    }
+    let entry = groups.find((g) => g.id === id)
+    if (!entry) groups.push((entry = { id }))
+    const toggle = typeof enabled === 'boolean' && name == null && models == null && baseUrl == null && apiKey == null
+    const edit = {}
+    let test = null
+    if (toggle) {
+      if (enabled) delete entry.enabled
+      else entry.enabled = false
+    } else {
+      if (name != null) {
+        edit.name = String(name).trim()
+        if (!edit.name) throw new Error('组名不能空着')
+      }
+      if (models != null) edit.models = cleanModels(models, api)
+      if (api) {
+        if (String(baseUrl || '').trim()) edit.baseUrl = normalizeBase(baseUrl)
+        if (String(apiKey || '').trim()) edit.apiKey = String(apiKey).trim()
+        const next = { ...cur, ...edit }
+        if (edit.models && !edit.models.medium) throw new Error('还没填模型名')
+        if (edit.models || edit.baseUrl || edit.apiKey) {
+          test = await testApi({ baseUrl: fillEnv(next.baseUrl || ''), apiKey: groupKey(next), noKey: next.noKey, models: modelsOf(next) }, { tools: true })
+          if (!test.ok) return test
+        }
+      }
+      Object.assign(entry, edit)
+      // 按难度写了模型，就不再用旧的单个 model 兜底
+      if (edit.models) delete entry.model
+    }
+    // 只剩 id 的条目（比如默认组叫回来了）没用了，不留在配置里
+    writeUserConfig({ ...cfg, groups: groups.filter((g) => Object.keys(g).length > 1) })
+    await reload()
+
+    // 项目里的 niuma.config.json 或 --config 文件排在后面，也写了这个组的话以那边为准
+    const now = configGroups().find((g) => g.id === id) || {}
+    const lost =
+      (toggle && (now.enabled !== false) !== enabled) ||
+      (edit.name && now.name !== edit.name) ||
+      (edit.models && JSON.stringify(modelsOf(now)) !== JSON.stringify(modelsOf({ models: edit.models }))) ||
+      (edit.baseUrl && normalizeBase(now.baseUrl) !== edit.baseUrl) ||
+      (edit.apiKey && now.apiKey !== edit.apiKey)
+    const warning = lost ? `${others.map((f) => `\`${f}\``).join('、') || '别的配置文件'}里也写了这个组，以那边为准，要去那里改。` : ''
+
+    const team = coord.team
+    const w = team.groups.get(id)
+    const label = team.groupName(id)
+    let msg
+    if (toggle && !enabled) {
+      const lent = team.employees.filter((e) => e.home === id).map((e) => e.name)
+      const benched = team.benched.filter((e) => e.group === id).map((e) => e.name)
+      msg = `**${label}**放假了。${lent.length ? `${lent.join('、')}先借调到别的组接着干活。` : ''}${benched.length ? `${benched.join('、')}没地方借调，跟着放假。` : ''}`
+    } else if (toggle) {
+      msg = w?.available ? `**${label}**回来上班了。` : `**${label}**回来了，可是检查没通过：${w?.note || '不在岗'}。`
+    } else {
+      msg = `**${label}**改好了。${w ? team.modelsLine(w) : '这个组在放假，叫回来才上班。'}`
+      if (test?.tools === false) msg += '（⚠️ 这个模型好像不会调用工具，只能帮傻妞动脑子，改不了文件）'
+    }
+    coord.addMessage('shaniu', `好的～ ${msg}${warning ? `\n不过${warning}` : ''}`)
+    return { ok: true, available: !!w?.available, tools: test?.tools, warning }
+  }
+
+  /** 读模型列表。api.group 是已经接好的 API 组时，没填的地址和 Key 用它存着的。 */
+  function groupModels({ group: gid, ...conn } = {}) {
+    const g = gid && configGroups().find((x) => x.id === gid && x.type === 'openai-api')
+    if (!g) return listModels(conn)
+    return listModels({ baseUrl: conn.baseUrl || fillEnv(g.baseUrl || ''), apiKey: conn.apiKey || groupKey(g), noKey: g.noKey })
+  }
+
   async function remove(id) {
     guard()
     if (coord.busy) throw new Error('傻妞手上还有活，等这一轮做完再调整')
@@ -535,5 +657,5 @@ export function createSetup({ coord, reload, fake = false }) {
     return { ok: true }
   }
 
-  return { status, install, installInTerminal, login, testCli, testApi, listModels, saveApi, remove, recheck, staff }
+  return { status, install, installInTerminal, login, testCli, testApi, listModels: groupModels, saveApi, group, remove, recheck, staff }
 }

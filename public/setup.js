@@ -9,6 +9,9 @@
     codex: 'OpenAI 的编程助手。默认后端、测试、排错专家在 Codex 组，下面「岗位安排」里可以调。',
   }
   const TYPE = { 'claude-cli': 'Claude Code', 'codex-cli': 'Codex', 'openai-api': 'API' }
+  // 编辑项目组时模型名的候选：Claude Code 认得 opus / sonnet / haiku 这些简称
+  const CLI_MODELS = { 'claude-cli': ['opus', 'sonnet', 'haiku'] }
+  const CLI_DEFAULT = { 'claude-cli': 'Claude Code', 'codex-cli': 'Codex' }
 
   // 网页演示里没有服务器：给一份看得见的样子。
   const DEMO = {
@@ -21,9 +24,9 @@
       { tool: 'codex', name: 'Codex', installed: false, version: '', loggedIn: false },
     ],
     groups: [
-      { id: 'claude', name: 'Claude 组', type: 'claude-cli', available: true, model: 'sonnet' },
-      { id: 'codex', name: 'Codex 组', type: 'codex-cli', available: false, note: '没找到 codex 命令' },
-      { id: 'deepseek', name: 'DeepSeek 组', type: 'openai-api', available: true, model: 'deepseek-v4-flash', removable: true },
+      { id: 'claude', name: 'Claude 组', type: 'claude-cli', enabled: true, available: true, model: 'sonnet', models: { hard: 'opus', medium: 'sonnet', easy: 'haiku' } },
+      { id: 'codex', name: 'Codex 组', type: 'codex-cli', enabled: false, available: false, note: '放假中', model: '', models: { hard: '', medium: '', easy: '' } },
+      { id: 'deepseek', name: 'DeepSeek 组', type: 'openai-api', enabled: true, available: true, model: 'deepseek-v4-flash', models: { hard: 'deepseek-v4-pro', medium: 'deepseek-v4-flash', easy: '' }, baseUrl: 'https://api.deepseek.com/v1', key: 'saved', removable: true },
     ],
     presets: [
       { id: 'deepseek', name: 'DeepSeek', note: '便宜，写代码很能打', group: 'DeepSeek 组', baseUrl: 'https://api.deepseek.com', models: { hard: 'deepseek-v4-pro', medium: 'deepseek-v4-flash', easy: 'deepseek-v4-flash' }, keyUrl: 'https://platform.deepseek.com/api_keys' },
@@ -57,6 +60,9 @@
   let pick = null // 正在填的 API 预设
   let found = null // 「读取模型列表」读到的：{ preset, total, skipped, families }
   let typed = {} // 表单里已经填的（重画面板时留住）
+  let editing = null // 正在编辑的项目组 id
+  let editTyped = null // 编辑表单里已经填的
+  const listed = {} // 编辑时「读取模型列表」读到的模型名，按组 id 存
   const logs = { claude: [], codex: [] }
   const notes = {} // 各卡片下面的一行结果
 
@@ -130,22 +136,66 @@
   }
 
   function groupRow(g) {
-    const state = g.available ? chip('在岗', 'ok') : chip(g.note || '未到岗', 'warn')
-    return `<li><b>${esc(g.name)}</b><span class="muted">${esc(TYPE[g.type] || g.type)}${g.model ? ` · ${esc(g.model)}` : ''}</span>${state}${
-      g.removable ? `<button type="button" class="ghost" data-act="remove" data-id="${esc(g.id)}">移除</button>` : ''
-    }</li>`
+    const on = g.enabled !== false
+    const state = !on ? chip('放假中', 'muted') : g.available ? chip('在岗', 'ok') : chip(g.note || '未到岗', 'warn')
+    const id = esc(g.id)
+    const buttons =
+      `<button type="button" class="ghost" data-act="group-edit" data-id="${id}" aria-expanded="${editing === g.id}">${editing === g.id ? '收起' : '编辑'}</button>` +
+      `<button type="button" class="ghost" data-act="group-toggle" data-id="${id}" data-on="${on ? '' : '1'}" title="${on ? '这个组先不上班，它的岗位借调到别的组' : ''}">${on ? '放假' : '叫回来'}</button>` +
+      (g.removable ? `<button type="button" class="ghost" data-act="remove" data-id="${id}">移除</button>` : '')
+    const row = `<li${on ? '' : ' class="off"'}><b>${esc(g.name)}</b><span class="muted">${esc(TYPE[g.type] || g.type)}${g.model ? ` · ${esc(g.model)}` : ''}</span>${state}${buttons}</li>`
+    return editing === g.id ? `${row}<li class="edit-row">${groupForm(g)}</li>` : row
+  }
+
+  /** 编辑项目组：组名、按难度用的模型；API 组还有地址和 Key（不填就不改）。 */
+  function groupForm(g) {
+    const api = g.type === 'openai-api'
+    const v = editTyped?.id === g.id ? editTyped : { name: g.name, baseUrl: g.baseUrl, models: g.models || {} }
+    const names = listed[g.id] || CLI_MODELS[g.type] || []
+    const dl = names.length ? `edit-models-${esc(g.id)}` : ''
+    const field = (name, label, value, attrs = '') => `<label><span>${label}</span><input name="${name}" value="${esc(value || '')}" ${attrs}></label>`
+    const model = (k, label, hint) => field(k, label, v.models?.[k], `placeholder="${hint}" autocomplete="off"${dl ? ` list="${dl}"` : ''}${api && k === 'medium' ? ' required' : ''}`)
+    const keyHint = g.key === 'saved' ? '已经存好了，不换就留空' : g.key?.startsWith('env:') ? `现在用环境变量 ${g.key.slice(4)}，不换就留空` : 'sk-…'
+    const mid = api ? '平台上的模型全名' : `不填就用 ${CLI_DEFAULT[g.type] || ''} 自己的默认模型`
+    return `<form class="card api-form" data-group="${esc(g.id)}">
+      <div class="head"><b>编辑 ${esc(g.name)}</b><span class="muted">${esc(TYPE[g.type] || g.type)}</span><button type="button" class="ghost close-form" data-act="group-edit" data-id="${esc(g.id)}">收起</button></div>
+      ${field('name', '组名', v.name, 'required')}
+      ${api ? field('baseUrl', '接口地址', v.baseUrl, 'placeholder="https://…/v1" required') : ''}
+      ${api && g.key !== 'none' ? `<label><span>API Key</span><input name="apiKey" type="password" autocomplete="off" placeholder="${esc(keyHint)}" value="${esc(v.apiKey || '')}"${g.key ? '' : ' required'}></label>` : ''}
+      ${model('medium', '中档', mid)}${model('hard', '难活用', '不填就用中档')}${model('easy', '杂活用', '不填就用中档')}
+      ${dl ? `<datalist id="${dl}">${names.map((n) => `<option value="${esc(n)}"></option>`).join('')}</datalist>` : ''}
+      <div class="row">${api ? '<button type="button" data-act="group-models">读取模型列表</button>' : ''}<button type="submit" class="primary">${api ? '测试并保存' : '保存'}</button></div>
+      ${noteHtml('group-edit')}
+    </form>`
+  }
+
+  function groupFormData(form) {
+    const f = new FormData(form)
+    const get = (k) => String(f.get(k) ?? '').trim()
+    const d = { id: form.dataset.group, name: get('name'), models: { hard: get('hard'), medium: get('medium'), easy: get('easy') } }
+    if (f.has('baseUrl')) d.baseUrl = get('baseUrl')
+    if (f.has('apiKey')) d.apiKey = get('apiKey')
+    return d
   }
 
   function staffSection() {
     if (!st.staff) return ''
     const groups = st.groups || []
     const gname = (id) => groups.find((g) => g.id === id)?.name || id
+    const resting = (id) => groups.find((g) => g.id === id)?.enabled === false
+    const gopt = (g) => `${esc(g.name)}${g.enabled === false ? '（放假）' : g.available ? '' : '（未到岗）'}`
     const options = (sel, off) =>
-      groups.map((g) => `<option value="${esc(g.id)}"${!off && g.id === sel ? ' selected' : ''}>${esc(g.name)}${g.available ? '' : '（未到岗）'}</option>`).join('') +
+      groups.map((g) => `<option value="${esc(g.id)}"${!off && g.id === sel ? ' selected' : ''}>${gopt(g)}</option>`).join('') +
       `<option value="__off"${off ? ' selected' : ''}>放假</option>`
     const rows = st.staff
       .map((r) => {
-        const borrowed = r.enabled && r.now && r.now !== r.group ? chip(`${gname(r.group)}不在岗，暂时借调到${gname(r.now)}`, 'busy') : ''
+        const why = resting(r.group) ? '在放假' : '不在岗'
+        const borrowed =
+          r.enabled && r.now && r.now !== r.group
+            ? chip(`${gname(r.group)}${why}，暂时借调到${gname(r.now)}`, 'busy')
+            : r.enabled && !r.now
+              ? chip(`${gname(r.group)}${why}，没地方借调`, 'warn')
+              : ''
         const sub = r.name !== r.skillName ? `<span class="muted">${esc(r.skillName)}</span>` : ''
         const undo = r.removable
           ? `<button type="button" class="ghost" data-act="staff-remove" data-id="${esc(r.id)}">删掉</button>`
@@ -158,7 +208,7 @@
     const skills = (st.skills || []).map((k) => `<option value="${esc(k.id)}">${esc(k.name)}</option>`).join('')
     return `<section><h3>岗位安排 <small>谁去哪个组干活都能调，不调就是默认安排</small></h3>
       <ul class="groups staff-list">${rows}</ul>
-      <div class="row staff-add"><span>再加一个</span><select id="add-skill" aria-label="岗位">${skills}</select><span>坐到</span><select id="add-group" aria-label="项目组">${groups.map((g) => `<option value="${esc(g.id)}">${esc(g.name)}</option>`).join('')}</select><button type="button" data-act="staff-add">加上</button></div>
+      <div class="row staff-add"><span>再加一个</span><select id="add-skill" aria-label="岗位">${skills}</select><span>坐到</span><select id="add-group" aria-label="项目组">${groups.map((g) => `<option value="${esc(g.id)}">${gopt(g)}</option>`).join('')}</select><button type="button" data-act="staff-add">加上</button></div>
       <p class="desc">想要新岗位（比如数据库专家、产品经理）：<button type="button" class="btn-link-inline" data-act="hire">跟傻妞说「/招人 …」</button>，她会写好岗位说明。</p>
       ${noteHtml('staff')}</section>`
   }
@@ -203,8 +253,10 @@
 
   function render(loading) {
     if (!dlg) return
-    const form = dlg.querySelector('form.api-form')
+    const form = dlg.querySelector('form.api-form[data-preset]')
     if (form) typed = formData(form)
+    const gform = dlg.querySelector('form[data-group]')
+    if (gform) editTyped = groupFormData(gform)
     if (loading || !st) {
       dlg.innerHTML = `<div class="setup-head"><h2>接入员工</h2><button type="button" class="ghost" data-act="close">关闭</button></div><p class="loading">正在看看电脑上都装了什么…</p>`
       return
@@ -228,7 +280,7 @@
     dlg.innerHTML = `
       <div class="setup-head"><h2>接入员工</h2><button type="button" class="ghost" data-act="recheck">重新检查</button><button type="button" class="ghost" data-act="close">关闭</button></div>
       ${banner}
-      <section><h3>现在的项目组</h3><ul class="groups">${st.groups.map(groupRow).join('') || '<li class="muted">还没有项目组</li>'}</ul>${noteHtml('groups')}</section>
+      <section><h3>现在的项目组 <small>「编辑」能换模型、改名；放假的组不上班，它的岗位借调到别的组</small></h3><ul class="groups">${st.groups.map(groupRow).join('') || '<li class="muted">还没有项目组</li>'}</ul>${noteHtml('groups')}</section>
       ${staffSection()}
       <section><h3>命令行员工</h3>${node}<div class="cards">${st.cli.map(cliCard).join('')}</div></section>
       <section><h3>API 员工 <small>选一家，填上 Key 就能接</small></h3><div class="presets">${presets}</div>${pick ? apiForm(pick) : ''}</section>
@@ -282,6 +334,37 @@
     if (act === 'close-form') {
       pick = null
       return render()
+    }
+    if (act === 'group-edit') {
+      editing = editing === id ? null : id
+      editTyped = null
+      notes['group-edit'] = null
+      notes.groups = null
+      render()
+      dlg.querySelector('form[data-group] input')?.focus()
+      return
+    }
+    if (act === 'group-toggle') {
+      const on = !!b.dataset.on
+      const r = await call('/api/setup/group', { id, enabled: on }, 'groups', on ? '正在叫回来…' : '正在安排放假…')
+      if (!r?.ok) return
+      await refresh()
+      const name = st.groups?.find((g) => g.id === id)?.name || id
+      if (r.warning) return note('groups', r.warning, 'bad')
+      if (!on) return note('groups', `${name}放假了，它的岗位先借调到别的组。要用的时候点「叫回来」。`, 'ok')
+      return note('groups', r.available ? `${name}回来上班了。` : `${name}回来了，可是检查没通过，看看上面的提示。`, r.available ? 'ok' : 'bad')
+    }
+    if (act === 'group-models') {
+      const form = b.closest('form')
+      const d = groupFormData(form)
+      const r = await call('/api/setup/models', { api: { group: d.id, baseUrl: d.baseUrl, apiKey: d.apiKey } }, 'group-edit', '正在读模型列表…')
+      if (!r?.ok) return
+      const names = r.families.flatMap((f) => f.models.map((m) => m.id))
+      if (!names.length) return note('group-edit', '没读到能写代码的模型，直接填模型名吧。', 'bad')
+      listed[d.id] = names
+      editTyped = d
+      render()
+      return note('group-edit', `读到 ${names.length} 个模型，点模型输入框就能选。`, 'ok')
     }
     if (act === 'recheck') {
       const r = await call('/api/setup/recheck', {}, 'groups', '傻妞正在重新点名…')
@@ -391,6 +474,19 @@
   }
 
   async function onSubmit(e) {
+    const gform = e.target.closest('form[data-group]')
+    if (gform) {
+      e.preventDefault()
+      const d = groupFormData(gform)
+      const api = 'baseUrl' in d
+      const r = await call('/api/setup/group', d, 'group-edit', api ? '正在测试并保存…' : '正在保存…')
+      if (!r?.ok) return
+      editing = null
+      editTyped = null
+      await refresh()
+      const msg = r.warning || (r.tools === false ? '保存了，可是这个模型好像不会调用工具：只能帮傻妞动脑子，改不了文件。' : '改好了，下一个活就按新设置派。')
+      return note('groups', msg, r.warning || r.tools === false ? 'bad' : 'ok')
+    }
     const form = e.target.closest('form.api-form')
     if (!form) return
     e.preventDefault()

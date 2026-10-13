@@ -595,6 +595,9 @@ html[data-skin="pixel"] .skins button { border-radius: 0; }
 .setup .groups li:first-child { border-top: 0; }
 .setup .groups li .chip { margin-left: auto; }
 .setup .groups li .ghost { padding: 2px 8px; }
+.setup .groups li.off > b { color: var(--muted); }
+.setup .groups li.edit-row { display: block; padding: 0 12px 12px; border-top: 0; }
+.setup .groups li.edit-row .api-form { margin-top: 0; }
 .setup .presets { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; }
 .setup .preset {
   display: grid; gap: 2px; padding: 8px 10px; text-align: left; min-width: 0;
