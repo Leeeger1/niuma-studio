@@ -117,3 +117,7 @@ ${lines.join('\n')}
   按 Ctrl+C 退出
 `)
 if (args.open) openBrowser(url)
+
+coord.on('event', (ev) => {
+  if (ev.type === 'update') console.log(`\n  ✨ 有新版本 v${ev.update.latest}（现在是 v${ev.update.current}）。更新：${ev.update.command}\n     更新了什么：${ev.update.url}\n`)
+})

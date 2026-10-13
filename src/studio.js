@@ -33,8 +33,9 @@ function listen(server, port, host, tries = 10) {
  * @param {string} [o.configFile]
  * @param {object} [o.overrides] config overrides (port, host, autonomy…)
  * @param {boolean} [o.fake]    rehearsal mode with stand-in employees
+ * @param {object} [o.updater]  desktop app only: downloads and installs new versions by itself
  */
-export async function startStudio({ root, workdir, configFile, overrides = {}, fake = false }) {
+export async function startStudio({ root, workdir, configFile, overrides = {}, fake = false, updater = null }) {
   if (!fs.existsSync(workdir) || !fs.statSync(workdir).isDirectory()) throw new Error(`目录不存在：${workdir}`)
   ensurePath()
   let config = loadConfig({ workdir, configFile, overrides })
@@ -44,7 +45,7 @@ export async function startStudio({ root, workdir, configFile, overrides = {}, f
     config = { ...r.config, workdir, sources: config.sources }
     closeFake = r.close
   }
-  const coord = new Coordinator(config, { mode: fake ? 'fake' : 'live', root })
+  const coord = new Coordinator(config, { mode: fake ? 'fake' : 'live', root, updater })
   const token = isLoopback(config.host) ? '' : crypto.randomBytes(12).toString('hex')
   // 「接入员工」面板：改完配置后按同样的来源重新读一遍，让傻妞重新点名。
   const setup = createSetup({ coord, fake, reload: () => coord.reconfigure(loadConfig({ workdir, configFile, overrides })) })
@@ -52,11 +53,19 @@ export async function startStudio({ root, workdir, configFile, overrides = {}, f
   await coord.init()
   const port = await listen(server, config.port || 7777, config.host)
   const local = `http://127.0.0.1:${port}/${token ? `?token=${token}` : ''}`
+  // 自动检查更新：开工几秒后看一眼，之后每 6 小时看一眼。
+  const timers = []
+  if (config.updateCheck !== false) {
+    const check = () => coord.checkForUpdate().catch(() => {})
+    timers.push(setTimeout(check, 5000), setInterval(check, 6 * 60 * 60 * 1000))
+    for (const t of timers) t.unref?.()
+  }
   let closed = false
   const close = () =>
     new Promise((resolve) => {
       if (closed) return resolve()
       closed = true
+      for (const t of timers) clearTimeout(t)
       coord.stopAll()
       closeFake()
       server.closeAllConnections?.()
